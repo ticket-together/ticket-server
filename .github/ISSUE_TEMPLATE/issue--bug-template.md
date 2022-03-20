@@ -2,7 +2,7 @@
 name: 'Issue: BUG TEMPLATE'
 about: 버그용 이슈 템플릿입니다.
 title: "[백엔드] 명사형으로 제목 작성"
-labels: ''
+labels: "\U0001F41B 버그"
 assignees: ''
 
 ---
