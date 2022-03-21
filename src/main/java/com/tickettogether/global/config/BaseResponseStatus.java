@@ -1,4 +1,4 @@
-package com.tickettogether.config;
+package com.tickettogether.global.config;
 
 import lombok.Getter;
 

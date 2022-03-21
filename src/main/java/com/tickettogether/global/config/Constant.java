@@ -1,4 +1,4 @@
-package com.tickettogether.config;
+package com.tickettogether.global.config;
 
 // 프로젝트에서 공통적으로 사용하는 상수들
 public class Constant {
