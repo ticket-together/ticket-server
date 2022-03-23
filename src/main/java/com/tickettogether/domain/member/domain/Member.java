@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
     private Long id;
 
@@ -38,6 +38,7 @@ public class Member extends BaseEntity {
 
     private String name;
 
+    @Lob
     private String imgUrl;
 
     @Builder
