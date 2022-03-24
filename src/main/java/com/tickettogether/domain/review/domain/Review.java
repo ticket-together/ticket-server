@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Review extends BaseEntity {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="review_id")
     private Long id;
 

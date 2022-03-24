@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Calender extends BaseEntity {
-    @Id@GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="calender_id")
     private Long id;
 
@@ -24,6 +24,7 @@ public class Calender extends BaseEntity {
 
     private LocalDateTime date;
 
+    @Lob
     private String img_url;
 
     @Builder

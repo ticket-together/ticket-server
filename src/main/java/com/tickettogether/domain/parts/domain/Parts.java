@@ -21,7 +21,7 @@ public class Parts extends BaseEntity {
         ACTIVE, CLOSED
     }
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="parts_id")
     private Long id;
 
