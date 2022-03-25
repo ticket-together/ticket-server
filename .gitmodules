@@ -1,0 +1,3 @@
+[submodule "secret-config"]
+	path = secret-config
+	url = https://github.com/ticket-together/ticket-secret.git
