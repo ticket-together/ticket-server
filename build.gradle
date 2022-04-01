@@ -29,6 +29,13 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+processResources.dependsOn('copySecret')
+
+task copySecret(type: Copy) {
+	from 'secret-config/application-oauth.yml' // auth 서브모듈에 있는 oauth 설정파일을 복사
+	into 'src/main/resources'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

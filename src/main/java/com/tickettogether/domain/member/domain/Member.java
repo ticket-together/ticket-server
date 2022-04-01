@@ -33,7 +33,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     private String name;
@@ -41,13 +40,19 @@ public class Member extends BaseEntity {
     @Lob
     private String imgUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Builder
-    public Member(String email, String password, String name, String imgUrl){
+    public Member(String email, String password, String name, String imgUrl, Role role){
         this.email = email;
         this.password = password;
         this.name = name;
         this.imgUrl = imgUrl;
+        this.role = role;
     }
+
 
     public void updateMemberProfile(String name, String imgUrl){  //DTO 대체
         this.name = name;
