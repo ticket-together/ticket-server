@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +18,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
+
+    public enum Status {
+        ACTIVE, INACTIVE
+    }
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
     private Long id;
@@ -43,6 +49,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 
     @Builder
     public Member(String email, String password, String name, String imgUrl, Role role){
@@ -71,5 +80,11 @@ public class Member extends BaseEntity {
             MemberParts data = MemberParts.builder().member(this).parts(part).build();
             this.memberPartsList.add(data);
         }
+    }
+
+    public void changeStatus(Status status){
+        if(status.equals(Status.ACTIVE)){
+            this.status = Status.INACTIVE;
+        }else this.status = Status.ACTIVE;
     }
 }

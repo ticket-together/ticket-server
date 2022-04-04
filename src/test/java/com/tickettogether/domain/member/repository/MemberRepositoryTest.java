@@ -31,5 +31,4 @@ class MemberRepositoryTest {
         //then
         Assertions.assertThat(all.size()).isEqualTo(1);
     }
-
 }

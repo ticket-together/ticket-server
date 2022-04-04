@@ -6,8 +6,6 @@ import com.tickettogether.global.config.security.oauth.dto.SessionMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -48,19 +46,23 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
 
     protected final void saveSessionAndRedirect(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         SavedRequest savedRequest = this.requestCache.getRequest(request, response);
-        if (savedRequest == null){   //최초 로그인
-            Map<String, Object> properties = (HashMap<String, Object>) ((DefaultOAuth2User)authentication.getPrincipal()).getAttributes().get("kakao_account");
-
-            if (!properties.isEmpty()){
-                String email = (String) properties.get("email");
-                Member member = memberRepository.findByEmail(email);
-
-                HttpSession httpSession = request.getSession();
-                httpSession.setAttribute("user", new SessionMember(member));
-            }
+        saveSession(request, authentication);
+        if (savedRequest == null){     //최초 로그인
             redirectStrategy.sendRedirect(request, response, DEFAULT_LOGIN_SUCCESS_URL);
-        }else{       //먼저 자원 접근 후 로그인으로 팅겨서 예외 발생
-           redirectStrategy.sendRedirect(request, response, savedRequest.getRedirectUrl());
+        }else{                        //허용되지 않은 자원에 접근 후 예외 발생
+            redirectStrategy.sendRedirect(request, response, savedRequest.getRedirectUrl());
+        }
+    }
+
+    private void saveSession(HttpServletRequest request, Authentication authentication){
+        Map<String, Object> properties = (HashMap<String, Object>) ((DefaultOAuth2User)authentication.getPrincipal()).getAttributes().get("kakao_account");
+
+        if (!properties.isEmpty()){
+            String email = (String) properties.get("email");
+            Member member = memberRepository.findByEmail(email);
+
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("user", new SessionMember(member));
         }
     }
 }

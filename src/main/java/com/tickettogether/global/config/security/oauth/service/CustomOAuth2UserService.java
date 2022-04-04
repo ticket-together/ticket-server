@@ -1,14 +1,11 @@
 package com.tickettogether.global.config.security.oauth.service;
 
 import com.tickettogether.domain.member.domain.Member;
-import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
 import com.tickettogether.global.config.security.oauth.dto.OAuthAttributes;
-import com.tickettogether.global.config.security.oauth.dto.SessionMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -54,6 +51,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         if (member.getName() != null & !member.getName().equals(attrs.getNickName()) ||
                 member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())){
             member.updateMemberProfile(attrs.getNickName(),attrs.getImgUrl());
+        }
+
+        if(member.getStatus().equals(Member.Status.INACTIVE)){
+            member.changeStatus(member.getStatus());
         }
         return member;
     }
