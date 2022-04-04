@@ -1,4 +1,4 @@
-package com.tickettogether.domain.calender.domain;
+package com.tickettogether.domain.calendar.domain;
 
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.global.entity.BaseEntity;
@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class Calender extends BaseEntity {
+public class Calendar extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="calender_id")
+    @Column(name="calendar_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,7 +28,7 @@ public class Calender extends BaseEntity {
     private String img_url;
 
     @Builder
-    public Calender(Member member, LocalDateTime date, String img_url){
+    public Calendar(Member member, LocalDateTime date, String img_url){
         this.member = member;
         this.date = date;
         this.img_url = img_url;
