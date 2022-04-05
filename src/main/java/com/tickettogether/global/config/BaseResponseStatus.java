@@ -31,6 +31,12 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
 
+    // [POST] / calendar
+    POST_CALENDAR_ERROR(false, 2020, "최대 캘린더 개수를 초과하였습니다."),
+
+
+
+
 
     /**
      * 3000 : Response 오류

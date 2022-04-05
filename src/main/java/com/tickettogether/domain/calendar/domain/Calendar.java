@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -22,15 +22,16 @@ public class Calendar extends BaseEntity {
     @JoinColumn(name="member_id")
     private Member member;
 
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Lob
-    private String img_url;
+    private String imgUrl;
 
     @Builder
-    public Calendar(Member member, LocalDateTime date, String img_url){
+
+    public Calendar(Member member, LocalDate date, String imgUrl){
         this.member = member;
         this.date = date;
-        this.img_url = img_url;
+        this.imgUrl = imgUrl;
     }
 }
