@@ -2,10 +2,9 @@ package com.tickettogether.domain.calendar.controller;
 
 import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.calendar.service.CalendarService;
-import com.tickettogether.global.config.BaseException;
-import com.tickettogether.global.config.BaseResponse;
+import com.tickettogether.global.exception.BaseException;
+import com.tickettogether.global.exception.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

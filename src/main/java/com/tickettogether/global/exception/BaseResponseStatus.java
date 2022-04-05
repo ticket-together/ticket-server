@@ -1,4 +1,4 @@
-package com.tickettogether.global.config;
+package com.tickettogether.global.exception;
 
 import lombok.Getter;
 
@@ -21,6 +21,9 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
+    FAIL_UPLOAD_FILE(false, 2004, "파일 업로드에 실패하셨습니다."),
+    EMPTY_FILE(false, 2005, "파일을 확인해 주세요."),
+    FILE_SIZE_EXCEED(false, 2006, "파일 사이즈를 확인해 주세요."),
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),

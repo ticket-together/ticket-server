@@ -5,14 +5,13 @@ import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.calendar.repository.CalendarRepository;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.repository.MemberRepository;
-import com.tickettogether.global.config.BaseException;
-import com.tickettogether.global.config.BaseResponseStatus;
+import com.tickettogether.global.exception.BaseException;
+import com.tickettogether.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
