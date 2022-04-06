@@ -1,4 +1,4 @@
-package com.tickettogether.global.config;
+package com.tickettogether.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.tickettogether.global.config;
+package com.tickettogether.global.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
