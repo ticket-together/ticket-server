@@ -6,6 +6,7 @@ import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
 import com.tickettogether.global.config.security.oauth.dto.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -29,33 +30,50 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         DefaultOAuth2UserService defaultService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = defaultService.loadUser(userRequest);
 
+        try{
+            return this.process(userRequest, oAuth2User);
+        }catch (AuthenticationException ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User oAuth2User){
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); //로그인 진행 중인 서비스를 구분하는 코드
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()   //로그인 진행 시 키가 되는 필드값(pk)
                 .getUserNameAttributeName();
 
-        OAuthAttributes attr = KakaoOAuthAttributes.of(userNameAttributeName, oAuth2User.getAttributes());
+        OAuthAttributes attr = KakaoOAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
         Member member = saveOrUpdateMemberToDB(attr);
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getRole().getKey())),
-                        attr.getAttributes(), userNameAttributeName);
+                attr.getAttributes(), userNameAttributeName);
     }
 
-    public Member saveOrUpdateMemberToDB(OAuthAttributes attrs){
-        //없다면 DB에 저장
+    private Member saveOrUpdateMemberToDB(OAuthAttributes attrs){
         Member member = memberRepository.findByEmail(attrs.getEmail());
         if (Optional.ofNullable(member).isEmpty()){
             return memberRepository.save(attrs.toEntity());
         }
-        //있다면 정보가 다를 경우에만 새로운 정보로 업데이트
-        if (member.getName() != null & !member.getName().equals(attrs.getNickName()) ||
-                member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())){
-            member.updateMemberProfile(attrs.getNickName(),attrs.getImgUrl());
-        }
+
+        updateMember(member, attrs);
 
         if(member.getStatus().equals(Member.Status.INACTIVE)){
             member.changeStatus(member.getStatus());
         }
         return member;
+    }
+
+    private void updateMember(Member member, OAuthAttributes attrs){
+        //하나라도 다르면 업데이트 해주기
+        boolean update = false;
+        if(member.getName() != null & !member.getName().equals(attrs.getNickName())) update = true;
+
+        if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())) update = true;
+
+        if(update){
+            member.updateMemberProfile(attrs.getNickName(),attrs.getImgUrl());
+        }
     }
 }
