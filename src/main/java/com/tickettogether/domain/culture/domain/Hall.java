@@ -15,5 +15,5 @@ public class Hall {
     @Column(name="hall_id")
     private Long id;
 
-    private String location;
+    private String location;  // 공연장 이름
 }

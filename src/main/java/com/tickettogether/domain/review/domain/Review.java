@@ -2,6 +2,7 @@ package com.tickettogether.domain.review.domain;
 
 import com.tickettogether.domain.culture.domain.Hall;
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class Review extends BaseEntity {
     private Hall hall;
 
     @Column(precision = 2, scale = 1)
-    private BigDecimal startPoint;
+    private BigDecimal starPoint;
 
     private String contents;
 
@@ -41,8 +42,20 @@ public class Review extends BaseEntity {
     private int number;
 
     @Builder
-    public Review(BigDecimal startPoint, String contents, int floor, String part, int record, int number){
-        this.startPoint = startPoint;
+    public Review(Member member, Hall hall, BigDecimal starPoint, String contents, int floor, String part, int record, int number){
+        this.member=member;
+        this.hall = hall;
+        this.starPoint = starPoint;
+        this.contents = contents;
+        this.floor = floor;
+        this.part = part;
+        this.record = record;
+        this.number = number;
+    }
+
+    public void updateReview(Hall hall, BigDecimal starPoint, String contents, int floor, String part, int record, int number){  //DTO 대체
+        this.hall = hall;
+        this.starPoint = starPoint;
         this.contents = contents;
         this.floor = floor;
         this.part = part;
@@ -53,4 +66,5 @@ public class Review extends BaseEntity {
     public void addMember(Member member){
         this.member = member;
     }
+
 }

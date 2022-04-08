@@ -1,5 +1,6 @@
 package com.tickettogether.global.entity;
 
+import com.tickettogether.domain.review.dto.ReviewDto;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,4 +22,5 @@ public abstract class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
 }
