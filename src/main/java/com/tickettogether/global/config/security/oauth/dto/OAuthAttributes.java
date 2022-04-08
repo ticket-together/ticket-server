@@ -9,6 +9,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuthAttributes {
+    private String registerId;
     private Map<String, Object> attributes;
     private String nameKey;   //pk
     private String nickName;
@@ -16,8 +17,9 @@ public class OAuthAttributes {
     private String imgUrl;
 
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes,
+    public OAuthAttributes(String registerId, Map<String, Object> attributes,
                            String nameKey, String nickName, String email, String imgUrl){
+        this.registerId = registerId;
         this.attributes = attributes;
         this.nameKey = nameKey;
         this.nickName = nickName;
