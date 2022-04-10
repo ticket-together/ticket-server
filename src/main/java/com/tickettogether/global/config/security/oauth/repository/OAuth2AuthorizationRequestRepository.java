@@ -9,12 +9,6 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//원래 이 레파지토리 역할이..여기서 oauthRequest 객체(안에 그 정보들 다 있음) 세션에 저장해놓음
-//아 여기서 request redirect 정보를 따로 저장하는구나..!!
-//세션으로 하기가 그런게 애초에 쿠키
-//아 refresh token 때문에 쿠키를 삭제해주는구나..?
-//클라이언트 입장에서는 refresh token 을 쿠키에 저장하고 있으니까...
-//그면 포스트맨에서 요청할때 걍 파라미터만 넘겨주면 됌
 public class OAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository {
     public final static String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public final static String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
