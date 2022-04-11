@@ -18,17 +18,4 @@ class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Test
-    @Transactional
-    public void db_테스트_롤백() throws Exception{
-        //given
-        Member member = new Member("test@test.com","1234","minnie","url", Role.USER);
-
-        //when
-        memberRepository.save(member);
-        List<Member> all = memberRepository.findAll();
-
-        //then
-        Assertions.assertThat(all.size()).isEqualTo(1);
-    }
 }
