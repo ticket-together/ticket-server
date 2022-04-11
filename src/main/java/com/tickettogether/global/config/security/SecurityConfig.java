@@ -1,6 +1,6 @@
 package com.tickettogether.global.config.security;
 
-import com.tickettogether.global.config.properties.JwtProperties;
+import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.jwt.filter.TokenAuthenticationFilter;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.oauth.handler.MyOauth2LogoutSuccessHandler;
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final AuthTokenProvider authTokenProvider;
-    private final JwtProperties jwtProperties;
+    private final JwtConfig jwtConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Bean
     public AuthenticationSuccessHandler myOauth2SuccessHandler(){
-        return new MyOauth2SuccessHandler(authTokenProvider, jwtProperties);
+        return new MyOauth2SuccessHandler(authTokenProvider, jwtConfig);
     }
 
     @Bean
