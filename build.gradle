@@ -39,7 +39,7 @@ dependencies {
 processResources.dependsOn('copySecret')
 
 task copySecret(type: Copy) {
-	from '../secret-config'
+	from './secret-config'
 	include "*.yml"
 	into './src/main/resources'
 }
