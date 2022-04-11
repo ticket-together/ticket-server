@@ -3,10 +3,10 @@ name: dockerCICD
 on:
   push:
     branches:
-      - feature/CICD
+      - develop
   pull_request:
     branches:
-      - feature/CICD
+      - develop
   workflow_dispatch:
 
 env:
