@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class testController {
     @RequestMapping("/test")
     public String sample(){
-        return "ticket-together, deploy check";
+        return "ticket together deploy 확인입니당.";
     }
 }
