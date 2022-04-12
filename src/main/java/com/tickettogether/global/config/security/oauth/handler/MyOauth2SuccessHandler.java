@@ -2,8 +2,8 @@ package com.tickettogether.global.config.security.oauth.handler;
 
 import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.member.repository.MemberRepository;
-import com.tickettogether.global.config.properties.JwtProperties;
 import com.tickettogether.global.config.security.CookieUtils;
+import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
@@ -41,7 +41,7 @@ import static com.tickettogether.global.config.security.oauth.repository.OAuth2A
 @Slf4j
 public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
     private final AuthTokenProvider authTokenProvider;
-    private final JwtProperties jwtProperties;
+    private final JwtConfig jwtConfig;
     private RequestCache requestCache = new HttpSessionRequestCache();
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -108,21 +108,17 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
-        log.info("clientRedirectUri = {}", uri);
-        List<String> authorizedRedirectUris = jwtProperties.getJwt().getAuthorizedRedirectUris();
-        log.info("jwtRedirectUri = {}", authorizedRedirectUris);
-        return false;
 
-//        return jwtProperties.getJwt().getAuthorizedRedirectUris()
-//                .stream()
-//                .anyMatch(authorizedRedirectUri -> {
-//                    // Only validate host and port. Let the clients use different paths if they want to
-//                    URI authorizedURI = URI.create(authorizedRedirectUri);
-//                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-//                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-//                        return true;
-//                    }
-//                    return false;
-//                });
+        return jwtConfig.getAuthorizedRedirectUris()
+                .stream()
+                .anyMatch(authorizedRedirectUri -> {
+                    // Only validate host and port. Let the clients use different paths if they want to
+                    URI authorizedURI = URI.create(authorizedRedirectUri);
+                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+                        return true;
+                    }
+                    return false;
+                });
     }
 }

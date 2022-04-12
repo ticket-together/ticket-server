@@ -26,9 +26,6 @@ public class LoginController {
     private final String DEFAULT_REDIRECT_URL = "/main";
     private final boolean invalidateMember = true;
 
-    //이걸로 처음에 id, password 를 보냄(근데 이거는 백엔드 테스트잖아..)
-    //만약 토큰이 만료되면, 카카오하고 연결은 되어있는 상태니까..여기서 토큰+리프레시 토큰 재발급 해줘야함
-    //아래 /login 이 토큰과 리프레시 토큰 재발급 하는 부분
     @PostMapping("/login")
     public String login(){
         //토큰이 만료된 경우 재발급
