@@ -36,6 +36,7 @@ public enum BaseResponseStatus {
 
     // [POST] / calendar
     POST_CALENDAR_ERROR(false, 2020, "최대 캘린더 개수를 초과하였습니다."),
+    EMPTY_CALENDAR_ID(false, 2021, "존재하지 않는 캘린더입니다."),
 
 
 
