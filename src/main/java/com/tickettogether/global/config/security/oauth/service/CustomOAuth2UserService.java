@@ -2,6 +2,7 @@ package com.tickettogether.global.config.security.oauth.service;
 
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.repository.MemberRepository;
+import com.tickettogether.global.config.security.UserPrincipal;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
 import com.tickettogether.global.config.security.oauth.dto.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +47,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes attr = KakaoOAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
         Member member = saveOrUpdateMemberToDB(attr);
 
-        return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(member.getRole().getKey())),
-                attr.getAttributes(), userNameAttributeName);
+        return UserPrincipal.create(member, attr.getNameKey(), attr.getAttributes());
     }
 
     private Member saveOrUpdateMemberToDB(OAuthAttributes attrs){
