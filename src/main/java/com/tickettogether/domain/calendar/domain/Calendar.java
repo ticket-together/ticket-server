@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -28,10 +29,14 @@ public class Calendar extends BaseEntity {
     private String imgUrl;
 
     @Builder
-
     public Calendar(Member member, LocalDate date, String imgUrl){
         this.member = member;
         this.date = date;
         this.imgUrl = imgUrl;
+    }
+
+    public void updateCalendar(String imgUrl, LocalDate date){
+        this.imgUrl = imgUrl;
+        this.date = date;
     }
 }
