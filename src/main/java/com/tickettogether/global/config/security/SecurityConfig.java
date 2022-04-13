@@ -3,7 +3,9 @@ package com.tickettogether.global.config.security;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.jwt.filter.TokenAuthenticationFilter;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
+import com.tickettogether.global.config.security.oauth.RestAuthenticationEntryPoint;
 import com.tickettogether.global.config.security.oauth.handler.MyOauth2LogoutSuccessHandler;
+import com.tickettogether.global.config.security.oauth.handler.TokenAccessDeniedHandler;
 import com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository;
 import com.tickettogether.global.config.security.oauth.service.CustomOAuth2UserService;
 import com.tickettogether.global.config.security.oauth.handler.MyOauth2SuccessHandler;
@@ -25,6 +27,7 @@ import org.springframework.security.web.firewall.HttpFirewall;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final AuthTokenProvider authTokenProvider;
     private final JwtConfig jwtConfig;
 
@@ -35,6 +38,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .accessDeniedHandler(tokenAccessDeniedHandler)
+                .and()
                 .headers().frameOptions().disable()     //h2 DB
                 .and()
                 .authorizeRequests()

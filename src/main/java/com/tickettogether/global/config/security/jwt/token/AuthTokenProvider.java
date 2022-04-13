@@ -1,4 +1,5 @@
 package com.tickettogether.global.config.security.jwt.token;
+import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,7 @@ public class AuthTokenProvider {
             User principal = new User(claims.getSubject(), "", authorities);
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
         }else{
-            return null;
+            throw new TokenValidFailedException();
         }
     }
 }
