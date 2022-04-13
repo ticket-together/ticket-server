@@ -1,6 +1,6 @@
 package com.tickettogether.global.config.security.oauth.repository;
 
-import com.tickettogether.global.config.security.CookieUtils;
+import com.tickettogether.global.config.security.utils.CookieUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.util.Assert;
