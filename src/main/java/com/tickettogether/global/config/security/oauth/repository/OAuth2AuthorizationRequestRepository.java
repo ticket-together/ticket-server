@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public class OAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository {
     public final static String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public final static String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+    public final static String REFRESH_TOKEN_COOKIE_NAME = "refresh";
     private final static int cookieExpireSeconds = 180;
     private OAuth2AuthorizationRequest authorizationRequest;
 
