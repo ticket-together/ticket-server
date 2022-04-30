@@ -1,18 +1,18 @@
 package com.tickettogether.global.config.security.oauth.handler;
 
 import com.tickettogether.domain.member.domain.Role;
+import com.tickettogether.global.config.redis.service.RedisService;
 import com.tickettogether.global.config.security.UserPrincipal;
-import com.tickettogether.global.config.security.utils.CookieUtils;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
-import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
+import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
 import com.tickettogether.global.config.security.oauth.dto.OAuthAttributes;
+import com.tickettogether.global.config.security.utils.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
@@ -29,14 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import static com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository.REFRESH_TOKEN_COOKIE_NAME;
 
 @RequiredArgsConstructor
 @Slf4j
 public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
+    private final RedisService<String, String> redisService;
     private final AuthTokenProvider authTokenProvider;
     private final JwtConfig jwtConfig;
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -83,13 +84,26 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
         if (!hasAuthority(authorities, Role.USER.getKey())){
             throw new IllegalArgumentException("grant authority does not exist");
         }
-
         AuthToken authToken = authTokenProvider.createAuthToken(userInfo.getEmail(), Role.USER.getKey());
 
-        //3. redirect 경로로 토큰 값 전송
+        //3. 리프레시 토큰 생성 후 쿠키와 redis 에 저장
+        long refreshExpiry = Long.parseLong(jwtConfig.getRefreshExpiry());
+        AuthToken refreshToken = authTokenProvider.createRefreshToken(userInfo.getEmail(), authToken.getToken(), refreshExpiry);
+        setRefreshValue(refreshToken.getToken(), userInfo.getEmail(), authToken.getToken());
+
+        int cookieMaxAge = (int) refreshExpiry / 60;
+        CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
+        CookieUtils.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken.getToken(), cookieMaxAge);
+
+        //4. redirect 경로로 토큰 값 전송
         return UriComponentsBuilder.fromUriString(redirectUri.get())
                 .queryParam("token", authToken.getToken())
                 .build().toUriString();
+    }
+
+    private void setRefreshValue(String key, String... values){
+        List<String> refreshValueList = new ArrayList<>(Arrays.asList(values));
+        redisService.setValue(key, refreshValueList);
     }
 
     private boolean hasAuthority(Collection<? extends GrantedAuthority> authorities, String authority) {

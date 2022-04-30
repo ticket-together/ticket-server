@@ -19,6 +19,9 @@ public class JwtConfig {
     @Value("${jwt.token-expiry}")
     private String tokenExpiry;
 
+    @Value("${jwt.refresh-token-expiry}")
+    private String refreshExpiry;
+
     @Value("${jwt.authorized-redirect-uris}")
     private List<String> authorizedRedirectUris = new ArrayList<>();
 
@@ -30,4 +33,6 @@ public class JwtConfig {
     public List<String> getAuthorizedRedirectUris() {
         return authorizedRedirectUris;
     }
+
+    public String getRefreshExpiry() { return refreshExpiry;}
 }
