@@ -1,7 +1,7 @@
 package com.tickettogether.global.config.security.oauth.handler;
 
 import com.tickettogether.domain.member.domain.Role;
-import com.tickettogether.global.config.redis.service.RedisService;
+import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.config.security.UserPrincipal;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
@@ -37,7 +37,7 @@ import static com.tickettogether.global.config.security.oauth.repository.OAuth2A
 @RequiredArgsConstructor
 @Slf4j
 public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
-    private final RedisService<String, String> redisService;
+    private final RedisUtil<String, String> redisUtil;
     private final AuthTokenProvider authTokenProvider;
     private final JwtConfig jwtConfig;
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -103,7 +103,7 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private void setRefreshValue(String key, String... values){
         List<String> refreshValueList = new ArrayList<>(Arrays.asList(values));
-        redisService.setValue(key, refreshValueList);
+        redisUtil.setValue(key, refreshValueList);
     }
 
     private boolean hasAuthority(Collection<? extends GrantedAuthority> authorities, String authority) {

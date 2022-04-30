@@ -2,11 +2,9 @@ package com.tickettogether.domain.member.controller;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.dto.TokenResponseDto;
 import com.tickettogether.domain.member.repository.MemberRepository;
-import com.tickettogether.global.config.redis.service.RedisService;
-import com.tickettogether.global.config.security.exception.TokenRefreshException;
+import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.config.security.exception.TokenValidFailedException;
-import com.tickettogether.global.config.security.jwt.JwtConfig;
-import com.tickettogether.global.config.security.jwt.service.RefreshService;
+import com.tickettogether.global.config.security.jwt.service.AuthService;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.oauth.dto.SessionMember;
@@ -20,10 +18,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,17 +35,10 @@ import static com.tickettogether.global.config.security.oauth.repository.OAuth2A
 public class LoginController {
     private final MemberRepository memberRepository;
     private final AuthTokenProvider authTokenProvider;
-    private final RedisService<String, String> redisService;
-
-    private final RefreshService refreshService;
-    private final JwtConfig jwtConfig;
+    private final RedisUtil<String, String> redisUtil;
+    private final AuthService authService;
     private final String DEFAULT_REDIRECT_URL = "/main";
     private final boolean invalidateMember = true;
-
-    @PostMapping("/login")
-    public String login(){
-        return null;
-    }
 
     //액세스 + 리프레시 토큰 갱신
     @ResponseBody
@@ -59,23 +47,28 @@ public class LoginController {
         //access token
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = authTokenProvider.convertToAuthToken(accessToken);
-        refreshService.validateAccessToken(authToken);
+        authService.validateAccessToken(authToken);
 
         //refresh token
-        String refreshToken = CookieUtils.getCookie(request, REFRESH_TOKEN_COOKIE_NAME)
-                .map(Cookie::getValue)
-                .orElse(null);
-
+        String refreshToken = getRefreshTokenFromCookie(request);
         AuthToken refreshAuthToken = authTokenProvider.convertToAuthToken(refreshToken);
-        refreshService.validateRefreshToken(refreshAuthToken, refreshToken, authToken.getToken());
-        refreshService.renewAccessTokenAndRefreshToken(refreshAuthToken, refreshToken, authToken.getToken());
+        authService.validateRefreshToken(refreshAuthToken, refreshToken, authToken.getToken());
+        authService.renewAccessTokenAndRefreshToken(refreshAuthToken, refreshToken, authToken.getToken());
 
-        if(refreshService.getNewRefreshToken() != null){
-            int cookieMaxAge = (int) refreshService.getRefreshExpiry()/ 60;
+        if(authService.getNewRefreshToken() != null){
+            int cookieMaxAge = (int) authService.getRefreshExpiry()/ 60;
             CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
-            CookieUtils.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshService.getNewRefreshToken().getToken(), cookieMaxAge);
+            CookieUtils.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, authService.getNewRefreshToken().getToken(), cookieMaxAge);
         }
-        return new BaseResponse<>(new TokenResponseDto(refreshService.getNewAccessToken().getToken()));
+        return new BaseResponse<>(new TokenResponseDto(authService.getNewAccessToken().getToken()));
+    }
+    @ResponseBody
+    @PostMapping("/logout")
+    public BaseResponse<String> logout(HttpServletRequest request){
+        String accessToken = HeaderUtil.getAccessToken(request);
+        String refreshToken = getRefreshTokenFromCookie(request);
+        authService.logoutAndDeleteToken(accessToken,refreshToken);
+        return new BaseResponse<>("logout success");
     }
 
     @GetMapping("/quit")
@@ -102,4 +95,9 @@ public class LoginController {
         log.info("header = {}", request.getQueryString());
     }
 
+    private String getRefreshTokenFromCookie(HttpServletRequest request){
+        return CookieUtils.getCookie(request, REFRESH_TOKEN_COOKIE_NAME)
+                .map(Cookie::getValue)
+                .orElse(null);
+    }
 }

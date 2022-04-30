@@ -1,4 +1,4 @@
-package com.tickettogether.global.config.redis.service;
+package com.tickettogether.global.config.redis.util;
 
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class RedisService<K, V> {
+public class RedisUtil<K, V> {
     private final RedisTemplate<K, V> redisTemplate;
+    private final RedisTemplate<K, V> redisBlackListTemplate;
     private final JwtConfig jwtConfig;
 
     public void setValue(K key, V value){
@@ -26,6 +27,10 @@ public class RedisService<K, V> {
         redisTemplate.opsForList().rightPush(key, value.get(0));
         redisTemplate.opsForList().rightPush(key, value.get(1));
         redisTemplate.expire(key, Long.parseLong(jwtConfig.getRefreshExpiry()), TimeUnit.MILLISECONDS);
+    }
+
+    public void setValueBlackList(K key, V value, Long milliSeconds){
+        redisBlackListTemplate.opsForValue().set(key, value, milliSeconds, TimeUnit.MILLISECONDS);
     }
 
     public V getValue(K key){
@@ -40,5 +45,9 @@ public class RedisService<K, V> {
 
     public void deleteValue(K key){
         redisTemplate.delete(key);
+    }
+
+    public boolean hasKeyBlackList(K key){
+        return Boolean.TRUE.equals(redisBlackListTemplate.hasKey(key));
     }
 }

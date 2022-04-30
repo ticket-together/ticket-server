@@ -1,14 +1,10 @@
 package com.tickettogether.global.config.security.jwt.token;
 
-import com.tickettogether.global.config.security.CustomUserDetailsService;
-import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.security.Key;
 import java.util.Date;
@@ -110,8 +106,14 @@ public class AuthToken {
         return null;
     }
 
-    public long getRemainMilliSeconds(String accessToken) {
-        Date expiration = getRefreshTokenClaims(accessToken).getExpiration();
+    public long getRemainMilliSeconds() {
+        Date expiration = getTokenClaims().getExpiration();
+        Date now = new Date();
+        return expiration.getTime() - now.getTime();
+    }
+
+    public long getRemainMilliSeconds(String refreshToken) {
+        Date expiration = getRefreshTokenClaims(refreshToken).getExpiration();
         Date now = new Date();
         return expiration.getTime() - now.getTime();
     }

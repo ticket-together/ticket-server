@@ -1,7 +1,7 @@
 package com.tickettogether.global.config.security.jwt.service;
 
 import com.tickettogether.domain.member.domain.Role;
-import com.tickettogether.global.config.redis.service.RedisService;
+import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.config.security.exception.TokenRefreshException;
 import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
@@ -22,8 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-public class RefreshService {
-    private final RedisService<String, String> redisService;
+public class AuthService {
+    private final RedisUtil<String, String> redisUtil;
     private final JwtConfig jwtConfig;
     private final AuthTokenProvider authTokenProvider;
     private final static long THREE_DAYS_MSEC = 259200000;
@@ -34,34 +34,35 @@ public class RefreshService {
     private long refreshExpiry;
 
     public void validateAccessToken(AuthToken authToken){
-        if(authToken.validate()){        //expired
+        if(authToken.validate()){        //valid
             throw new TokenValidFailedException();
         }
 
         Claims claims = authToken.getExpiredTokenClaims();
-        if(claims == null){              //access token 만료가 안되거나 유효하지 않은 토큰인 경우
+        if(claims == null){              //expired
             throw new TokenValidFailedException("Access Token must be expired");
         }
         this.userEmail = claims.getId();
         this.userRole =  Role.of(claims.get("role", String.class));
     }
 
-    public void validateRefreshToken(AuthToken refreshAuthToken, String refreshToken, String accessToken){
+    public boolean validateRefreshToken(AuthToken refreshAuthToken, String refreshToken, String accessToken){
         if(refreshAuthToken.getRefreshTokenClaims(accessToken) == null){
             throw new TokenRefreshException();    //expired
         }
 
-        List<String> values = redisService.getValues(refreshToken);
+        List<String> values = redisUtil.getValues(refreshToken);
         if(values != null) {
             if(values.get(0) == null || !StringUtils.equals(values.get(1),accessToken) ){
                 throw new TokenRefreshException("Not equal to user email and access token");
             }
         }else throw new TokenRefreshException("No Data in Redis Server");
+        return true;
     }
 
     public void renewAccessTokenAndRefreshToken(AuthToken authToken, String refreshToken, String accessToken){
         this.newAccessToken = authTokenProvider.createAuthToken(userEmail, userRole.getKey());   //액세스 토큰 재발급
-        redisService.deleteValue(refreshToken);
+        redisUtil.deleteValue(refreshToken);
 
         if (authToken.getRemainMilliSeconds(accessToken) < THREE_DAYS_MSEC){   //3일 이하로 남으면 리프레시 재발급
             this.refreshExpiry = Long.parseLong(jwtConfig.getRefreshExpiry());
@@ -74,8 +75,22 @@ public class RefreshService {
         setRefreshValue(refreshToken, userEmail, this.newAccessToken.getToken());
     }
 
+    public void logoutAndDeleteToken(String accessToken, String refreshToken){
+        AuthToken authToken = authTokenProvider.convertToAuthToken(accessToken);
+        if(!authToken.validate()){
+            throw new TokenValidFailedException();
+        }
+
+        AuthToken refreshAuthToken = authTokenProvider.convertToAuthToken(refreshToken);
+        if(!validateRefreshToken(refreshAuthToken, refreshToken, accessToken)){
+            throw new TokenRefreshException();
+        }
+        redisUtil.deleteValue(refreshToken);
+        redisUtil.setValueBlackList(accessToken, "access_token", authToken.getRemainMilliSeconds());
+    }
+
     private void setRefreshValue(String key, String... values){
         List<String> refreshValueList = new ArrayList<>(Arrays.asList(values));
-        redisService.setValue(key, refreshValueList);
+        redisUtil.setValue(key, refreshValueList);
     }
 }
