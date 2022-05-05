@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface HallRepository {
-    Optional<Hall> findById (Long id);
+    Optional <Hall> findById (Long id);
 }

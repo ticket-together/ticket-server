@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
-//"http://localhost:8080/oauth2/authorization/kakao";
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -53,7 +52,7 @@ public class LoginController {
 
     @GetMapping("/oauth/redirect")
     public void getTokenTest(HttpServletRequest request){
-        log.info("token = {}", request.getQueryString());
+        log.info("header = {}", request.getQueryString());
     }
 
 }

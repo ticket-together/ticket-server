@@ -1,4 +1,4 @@
-package com.tickettogether.global.config.security.jwt;
+package com.tickettogether.global.config.security.utils;
 
 import org.springframework.util.StringUtils;
 

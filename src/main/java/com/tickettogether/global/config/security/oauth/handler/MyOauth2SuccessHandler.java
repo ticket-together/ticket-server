@@ -1,17 +1,15 @@
 package com.tickettogether.global.config.security.oauth.handler;
 
 import com.tickettogether.domain.member.domain.Role;
-import com.tickettogether.domain.member.repository.MemberRepository;
-import com.tickettogether.global.config.security.CookieUtils;
+import com.tickettogether.global.config.security.UserPrincipal;
+import com.tickettogether.global.config.security.utils.CookieUtils;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
 import com.tickettogether.global.config.security.oauth.dto.OAuthAttributes;
-import com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -32,7 +30,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -78,8 +75,8 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
         }
 
         //2. authentication 가공해서 토큰 생성
-        DefaultOAuth2User principal = ((DefaultOAuth2User) authentication.getPrincipal());
-        OAuthAttributes userInfo = KakaoOAuthAttributes.of(principal.getName(), principal.getAttributes());
+        UserPrincipal principal = ((UserPrincipal) authentication.getPrincipal());
+        OAuthAttributes userInfo = KakaoOAuthAttributes.of(principal.getUserNameAttribute(), principal.getAttributes());
         Assert.notNull(userInfo, "userInfo cannot be null");
 
         Collection<? extends GrantedAuthority> authorities = principal.getAuthorities();
@@ -87,7 +84,7 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
             throw new IllegalArgumentException("grant authority does not exist");
         }
 
-        AuthToken authToken = authTokenProvider.createAuthToken(userInfo.getNameKey(), Role.USER.getKey());
+        AuthToken authToken = authTokenProvider.createAuthToken(userInfo.getEmail(), Role.USER.getKey());
 
         //3. redirect 경로로 토큰 값 전송
         return UriComponentsBuilder.fromUriString(redirectUri.get())

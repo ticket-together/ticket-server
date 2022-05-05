@@ -33,16 +33,16 @@ public class Review extends BaseEntity {
 
     private String contents;
 
-    private int floor;
+    private String floor;
 
     private String part;
 
-    private int record;    //row
+    private String record;    //row
 
-    private int number;
+    private String number;
 
     @Builder
-    public Review(Member member, Hall hall, BigDecimal starPoint, String contents, int floor, String part, int record, int number){
+    public Review(Member member, Hall hall, BigDecimal starPoint, String contents, String floor, String part, String record, String number){
         this.member=member;
         this.hall = hall;
         this.starPoint = starPoint;
@@ -53,8 +53,8 @@ public class Review extends BaseEntity {
         this.number = number;
     }
 
-    public void updateReview(Hall hall, BigDecimal starPoint, String contents, int floor, String part, int record, int number){  //DTO 대체
-        this.hall = hall;
+
+    public void updateReview(BigDecimal starPoint, String contents, String floor, String part, String record, String number){
         this.starPoint = starPoint;
         this.contents = contents;
         this.floor = floor;
@@ -66,5 +66,6 @@ public class Review extends BaseEntity {
     public void addMember(Member member){
         this.member = member;
     }
+
 
 }

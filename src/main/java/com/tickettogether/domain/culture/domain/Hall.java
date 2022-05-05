@@ -1,6 +1,8 @@
 package com.tickettogether.domain.culture.domain;
 
+import com.tickettogether.domain.member.domain.Role;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,4 +18,8 @@ public class Hall {
     private Long id;
 
     private String location;  // 공연장 이름
+
+    public Hall(String location){
+        this.location = location;
+    }
 }

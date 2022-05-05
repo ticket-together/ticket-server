@@ -1,4 +1,5 @@
 package com.tickettogether.global.config.security.jwt.token;
+import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -6,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -21,10 +23,6 @@ public class AuthTokenProvider {
     public AuthTokenProvider(String secret, String expiry){
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiry = new Date(System.currentTimeMillis() + Long.parseLong(expiry));
-    }
-
-    public AuthToken createAuthToken(String id){
-        return new AuthToken(id, key, expiry);
     }
 
     public AuthToken createAuthToken(String id, String role){
@@ -46,7 +44,7 @@ public class AuthTokenProvider {
             User principal = new User(claims.getSubject(), "", authorities);
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
         }else{
-            return null;
+            throw new TokenValidFailedException();
         }
     }
 }

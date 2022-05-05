@@ -3,6 +3,7 @@ package com.tickettogether.domain.calendar.dto;
 import com.tickettogether.domain.calendar.domain.Calendar;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -12,13 +13,14 @@ import java.time.LocalDate;
 public class CalendarDto {
 
     @Getter
+    @NoArgsConstructor
     public static class PostRequest{
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private String date;
-        private String imgUrl;
     }
 
     @Getter
+    @NoArgsConstructor
     public static class PostResponse{
         private Long id;
         private LocalDate date;

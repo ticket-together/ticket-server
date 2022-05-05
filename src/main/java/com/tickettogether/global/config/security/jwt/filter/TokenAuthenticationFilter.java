@@ -1,9 +1,10 @@
 package com.tickettogether.global.config.security.jwt.filter;
 
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
-import com.tickettogether.global.config.security.jwt.HeaderUtil;
+import com.tickettogether.global.config.security.utils.HeaderUtil;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final AuthTokenProvider authTokenProvider;
@@ -31,7 +33,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if(authToken.validate()) {
                 Authentication authentication = authTokenProvider.getAuthentication(authToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                return;
             }
         }
         filterChain.doFilter(request, response);

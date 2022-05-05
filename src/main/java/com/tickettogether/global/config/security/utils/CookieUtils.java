@@ -1,4 +1,4 @@
-package com.tickettogether.global.config.security;
+package com.tickettogether.global.config.security.utils;
 
 import org.springframework.util.SerializationUtils;
 

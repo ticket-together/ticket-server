@@ -36,8 +36,7 @@ public enum BaseResponseStatus {
 
     // [POST] / calendar
     POST_CALENDAR_ERROR(false, 2020, "최대 캘린더 개수를 초과하였습니다."),
-
-
+    EMPTY_CALENDAR_ID(false, 2021, "존재하지 않는 캘린더입니다."),
 
 
 
@@ -53,7 +52,7 @@ public enum BaseResponseStatus {
 
     // review
     FAILED_TO_FIND_HALL(false,3030, "해당하는 공연장이 없습니다."),
-    FAILED_TO_FIND_REVIEW(false,3031, "해당하는 리뷰가 없습니다."),
+    FAILED_TO_FIND_REVIEW(false,3031, "리뷰가 존재하지 않습니다."),
 
     /**
      * 4000 : Database, Server 오류
