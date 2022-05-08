@@ -1,12 +1,15 @@
 package com.tickettogether.global.config.security.exception;
 
-public class TokenValidFailedException extends RuntimeException{
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(HttpStatus.FORBIDDEN)
+public class TokenValidFailedException extends RuntimeException{
     public TokenValidFailedException() {
-        super("Failed to generate Token.");
+        super("Failed to validate token.");
     }
 
-    private TokenValidFailedException(String message) {
+    public TokenValidFailedException(String message) {
         super(message);
     }
 }

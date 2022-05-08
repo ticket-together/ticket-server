@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -30,6 +31,12 @@ public class BaseResponse<T> {//BaseResponse 객체를 사용할때 성공, 실�
         this.isSuccess = status.isSuccess();
         this.message = status.getMessage();
         this.code = status.getCode();
+    }
+
+    public BaseResponse(RuntimeException e, int code){
+        this.isSuccess = false;
+        this.message = e.getMessage();
+        this.code = code;
     }
 }
 
