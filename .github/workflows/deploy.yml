@@ -3,7 +3,7 @@ name: dockerCICD
 on:
   push:
     branches:
-      - develop
+      - feature/Redis
   workflow_dispatch:
 
 env:
