@@ -52,7 +52,9 @@ public enum BaseResponseStatus {
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 
-
+    // review
+    FAILED_TO_FIND_HALL(false,3030, "해당하는 공연장이 없습니다."),
+    FAILED_TO_FIND_REVIEW(false,3031, "리뷰가 존재하지 않습니다."),
 
     /**
      * 4000 : Database, Server 오류

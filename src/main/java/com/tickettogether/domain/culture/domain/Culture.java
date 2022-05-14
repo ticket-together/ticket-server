@@ -2,7 +2,6 @@ package com.tickettogether.domain.culture.domain;
 
 import com.tickettogether.domain.parts.domain.Parts;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
