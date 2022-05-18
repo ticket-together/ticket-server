@@ -1,5 +1,6 @@
 package com.tickettogether.domain.review.dto;
 
+import com.sun.istack.NotNull;
 import com.tickettogether.domain.culture.domain.Hall;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.review.domain.Review;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 @Setter
 public class ReviewDto {
 
-    // 리뷰 저장 or 수정시 request
+    // 리뷰 저장시 request
     @Setter
     @Getter
     public static class addRequest {
@@ -53,6 +54,7 @@ public class ReviewDto {
         private String part;
         private String record;
         private String number;
+        private String writeDate;
 
         // entity -> dto
         public addResponse(Review review) {
@@ -64,6 +66,7 @@ public class ReviewDto {
             this.part = review.getPart();
             this.record = review.getRecord();
             this.number = review.getNumber();
+            this.writeDate = review.getCreatedAt().toString();
 
         }
 

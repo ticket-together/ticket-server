@@ -3,7 +3,6 @@ package com.tickettogether.domain.review.controller;
 import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
-import com.tickettogether.domain.review.repository.ReviewRepositoryCustom;
 import com.tickettogether.domain.review.service.ReviewService;
 import com.tickettogether.global.exception.BaseException;
 import com.tickettogether.global.exception.BaseResponse;
@@ -19,9 +18,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    private Long memberId = 1L;
-    private ReviewRepositoryCustom reviewRepository;
-
+    private Long memberId = 1L;  // 테스트 용
 
     // 리뷰 작성,저장
     @PostMapping("/{hallId}/add")
@@ -51,7 +48,7 @@ public class ReviewController {
     }
 
     // 리뷰 수정
-    @PostMapping("/{hallId}/{reviewId}/update")
+    @PutMapping("/{hallId}/{reviewId}/update")
     public BaseResponse<ReviewDto.addResponse> updateReview(@PathVariable("hallId") Long hallId,
                                                             @PathVariable("reviewId") Long reviewId,
                                                             @RequestBody ReviewDto.updateRequest reviewDto){

@@ -28,9 +28,6 @@ public class ReviewServiceImpl implements ReviewService{
     private final MemberRepository memberRepository;
     private final HallRepository hallRepository;
 
-    // private final ReviewRepositoryCustom reviewRepositoryCustom;
-
-
     private Long memberId = 1L;
 
     // 리뷰 작성,저장
