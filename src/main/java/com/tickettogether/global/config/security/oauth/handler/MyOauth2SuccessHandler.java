@@ -21,17 +21,15 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 
-import static com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 import static com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository.REFRESH_TOKEN_COOKIE_NAME;
 
 @RequiredArgsConstructor
@@ -67,12 +65,10 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
-        //1. 쿠키에서 redirect uri 정보 가져오기
-        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue);
-
-        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI");
+        //1. 설정 정보에서 redirect uri 정보 가져오기
+        String redirectUri = jwtConfig.getAuthorizedRedirectUri();
+        if (!StringUtils.hasText(redirectUri)){
+            throw new IllegalArgumentException("redirect uri must not be empty");
         }
 
         //2. authentication 가공해서 토큰 생성
@@ -96,7 +92,7 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
         CookieUtils.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken.getToken(), cookieMaxAge);
 
         //4. redirect 경로로 토큰 값 전송
-        return UriComponentsBuilder.fromUriString(redirectUri.get())
+        return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("token", authToken.getToken())
                 .build().toUriString();
     }
@@ -115,21 +111,5 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
             }
         }
         return false;
-    }
-
-    private boolean isAuthorizedRedirectUri(String uri) {
-        URI clientRedirectUri = URI.create(uri);
-
-        return jwtConfig.getAuthorizedRedirectUris()
-                .stream()
-                .anyMatch(authorizedRedirectUri -> {
-                    // Only validate host and port. Let the clients use different paths if they want to
-                    URI authorizedURI = URI.create(authorizedRedirectUri);
-                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-                        return true;
-                    }
-                    return false;
-                });
     }
 }
