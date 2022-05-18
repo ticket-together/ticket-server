@@ -17,6 +17,7 @@ public class ReviewDto {
     @Setter
     @Getter
     public static class addRequest {
+
         private Member member;
         private Hall hall;
         private BigDecimal starPoint;

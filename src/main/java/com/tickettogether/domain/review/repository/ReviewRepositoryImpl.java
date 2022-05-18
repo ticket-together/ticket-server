@@ -16,23 +16,16 @@ import java.util.List;
 
 import static com.tickettogether.domain.review.domain.QReview.review;
 
-public class ReviewSearchRepositoryImpl implements ReviewSearchRepositoryCustom {
+public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    /*
-    public ReviewSearchRepositoryImpl(JPAQueryFactory queryFactory){
-        this.queryFactory = queryFactory;
-    }
-
-*/
-
-    public ReviewSearchRepositoryImpl(EntityManager em){
+    public ReviewRepositoryImpl(EntityManager em){
         this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override
-    public List<ReviewInfoDto> findBySeat(ReviewSearchCondition condition) {
+    public List<ReviewInfoDto> findReviewBySeat(ReviewSearchCondition condition) {
         return queryFactory
                 .select(new QReviewInfoDto(
                         member.id.as("member_Id"),
@@ -57,6 +50,8 @@ public class ReviewSearchRepositoryImpl implements ReviewSearchRepositoryCustom 
                 .orderBy(review.floor.asc(), review.part.asc(), review.record.asc(), review.number.asc())
                 .fetch();
     }
+
+
     private BooleanExpression HallEq(Long hallId) {
         return isEmpty(hallId) ? null : review.hall.id.eq(hallId);
     }

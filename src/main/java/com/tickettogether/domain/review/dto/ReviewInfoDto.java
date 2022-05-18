@@ -1,6 +1,9 @@
 package com.tickettogether.domain.review.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.review.domain.Review;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -35,4 +38,19 @@ public class ReviewInfoDto {
         this.number = number;
 
     }
+    /*
+    @QueryProjection
+    public ReviewInfoDto(Review review){
+        this.member = review.getMember();
+        this.hallId = hallId;
+        this.reviewId = reviewId;
+        this.starPoint = starPoint;
+        this.contents = contents;
+        this.floor = floor;
+        this.part = part;
+        this.record = record;
+        this.number = number;
+
+    }
+     */
 }

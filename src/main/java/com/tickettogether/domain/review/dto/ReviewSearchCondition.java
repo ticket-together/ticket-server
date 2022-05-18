@@ -1,8 +1,10 @@
 package com.tickettogether.domain.review.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ReviewSearchCondition {
 
     private Long hallId;
@@ -10,5 +12,7 @@ public class ReviewSearchCondition {
     private String part;
     private String record;
     private String number;
+
+
 }
 

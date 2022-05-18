@@ -9,7 +9,7 @@ import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
 import com.tickettogether.domain.review.repository.ReviewRepository;
-import com.tickettogether.domain.review.repository.ReviewSearchRepositoryCustom;
+import com.tickettogether.domain.review.repository.ReviewRepositoryCustom;
 import com.tickettogether.global.exception.BaseException;
 import com.tickettogether.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ReviewServiceImpl implements ReviewService{
     private final MemberRepository memberRepository;
     private final HallRepository hallRepository;
 
-    private final ReviewSearchRepositoryCustom reviewSearchRepository;
+    // private final ReviewRepositoryCustom reviewRepositoryCustom;
 
 
     private Long memberId = 1L;
@@ -79,8 +79,7 @@ public class ReviewServiceImpl implements ReviewService{
     public List<ReviewInfoDto> searchReviewBySeat(Long hallId, ReviewSearchCondition condition) throws BaseException {
 
         condition.setHallId(hallId);
-        return reviewSearchRepository.findBySeat(condition);
-
+        return reviewRepository.findReviewBySeat(condition);
     }
 
     // 리뷰 수정

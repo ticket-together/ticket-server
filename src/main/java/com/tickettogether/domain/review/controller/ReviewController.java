@@ -3,8 +3,7 @@ package com.tickettogether.domain.review.controller;
 import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
-import com.tickettogether.domain.review.repository.ReviewRepository;
-import com.tickettogether.domain.review.repository.ReviewSearchRepositoryCustom;
+import com.tickettogether.domain.review.repository.ReviewRepositoryCustom;
 import com.tickettogether.domain.review.service.ReviewService;
 import com.tickettogether.global.exception.BaseException;
 import com.tickettogether.global.exception.BaseResponse;
@@ -21,6 +20,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     private Long memberId = 1L;
+    private ReviewRepositoryCustom reviewRepository;
 
 
     // 리뷰 작성,저장
@@ -36,30 +36,18 @@ public class ReviewController {
     }
 
 
-    // 리뷰 조회 페이지 (해당 공연장)
-    @GetMapping("/{hallId}/search")
-    public BaseResponse<List<ReviewDto.searchResponse>> searchAllReviews(@PathVariable("hallId") Long hallId) {
-
-        try {
-            reviewService.searchAllReviews(hallId);
-            return new BaseResponse<>(reviewService.searchAllReviews(hallId));
-        }
-        catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
-        }
-    }
-
     // 리뷰 조회 페이지 (해당 공연장, 좌석)
     @GetMapping("/{hallId}/search")
     public BaseResponse<List<ReviewInfoDto>> searchReviews(@PathVariable("hallId") Long hallId, ReviewSearchCondition condition) {
         try {
             reviewService.searchReviewBySeat(hallId, condition);
             return new BaseResponse<>(reviewService.searchReviewBySeat(hallId, condition));
-
         }
+
         catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
+
     }
 
     // 리뷰 수정
