@@ -9,7 +9,6 @@ import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
 import com.tickettogether.domain.review.repository.ReviewRepository;
-import com.tickettogether.domain.review.repository.ReviewRepositoryCustom;
 import com.tickettogether.global.exception.BaseException;
 import com.tickettogether.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,41 +40,31 @@ public class ReviewServiceImpl implements ReviewService{
             requestDto.setHall(hall);
 
             Review review = requestDto.toEntity();
-            reviewRepository.save(review);
 
             return new ReviewDto.addResponse(reviewRepository.save(review));
 
         } catch (BaseException e){
             throw new BaseException(e.getStatus());
         }
-
-
     }
 
-
-    // 리뷰 조회 페이지 (해당 공연장)
-    @Override
-    public List<ReviewDto.searchResponse> searchAllReviews(Long hallId) throws BaseException {
-
-        try {
-            Hall hall = getHall(hallId);
-
-            return reviewRepository.findByHall(hall)
-                    .stream()
-                    .map(ReviewDto.searchResponse :: new)
-                    .collect(Collectors.toList());
-
-        } catch (BaseException e){
-            throw new BaseException(BaseResponseStatus.FAILED_TO_FIND_REVIEW);
-        }
-    }
 
     // 리뷰 조회 페이지 (해당 공연장, 좌석)
     @Override
     public List<ReviewInfoDto> searchReviewBySeat(Long hallId, ReviewSearchCondition condition) throws BaseException {
+        try{
+            getHall(hallId);
+            condition.setHallId(hallId);
 
-        condition.setHallId(hallId);
-        return reviewRepository.findReviewBySeat(condition);
+            if (reviewRepository.findReviewBySeat(condition).isEmpty())
+                throw new BaseException(BaseResponseStatus.FAILED_TO_FIND_REVIEW);
+            else
+                return reviewRepository.findReviewBySeat(condition);
+        }
+        catch (BaseException e){
+            throw new BaseException(e.getStatus());
+        }
+
     }
 
     // 리뷰 수정
@@ -88,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService{
             review.updateReview(requestDto.getStarPoint(), requestDto.getContents(),
                     requestDto.getFloor(), requestDto.getPart(), requestDto.getRecord(), requestDto.getNumber());
 
-            return new ReviewDto.addResponse(reviewRepository.save(review));
+            return new ReviewDto.addResponse(review);
 
         } catch (BaseException e){
             throw new BaseException(e.getStatus());

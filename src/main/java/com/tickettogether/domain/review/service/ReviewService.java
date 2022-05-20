@@ -13,8 +13,6 @@ public interface ReviewService {
 
     ReviewDto.addResponse addReview(Long memberId, Long hallId, ReviewDto.addRequest requestDto) throws BaseException;
 
-    List<ReviewDto.searchResponse> searchAllReviews(Long hallId) throws BaseException;
-
     List<ReviewInfoDto> searchReviewBySeat(Long hallId, ReviewSearchCondition condition) throws BaseException;
 
     ReviewDto.addResponse updateReview(Long hallId, Long reviewId, ReviewDto.updateRequest requestDto) throws BaseException;

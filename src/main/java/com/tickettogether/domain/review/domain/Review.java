@@ -1,6 +1,5 @@
 package com.tickettogether.domain.review.domain;
 
-import com.sun.istack.NotNull;
 import com.tickettogether.domain.culture.domain.Hall;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.global.entity.BaseEntity;

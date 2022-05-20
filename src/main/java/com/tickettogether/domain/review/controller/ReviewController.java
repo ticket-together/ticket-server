@@ -6,6 +6,7 @@ import com.tickettogether.domain.review.dto.ReviewInfoDto;
 import com.tickettogether.domain.review.service.ReviewService;
 import com.tickettogether.global.exception.BaseException;
 import com.tickettogether.global.exception.BaseResponse;
+import com.tickettogether.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,6 @@ public class ReviewController {
     @PostMapping("/{hallId}/add")
     public BaseResponse<ReviewDto.addResponse> addReview(@PathVariable("hallId") Long hallId, @RequestBody ReviewDto.addRequest reviewDto){
         try {
-            reviewService.addReview(memberId, hallId, reviewDto);
             return new BaseResponse<>(reviewService.addReview(memberId, hallId, reviewDto));
         }
         catch (BaseException e){
@@ -37,10 +37,8 @@ public class ReviewController {
     @GetMapping("/{hallId}/search")
     public BaseResponse<List<ReviewInfoDto>> searchReviews(@PathVariable("hallId") Long hallId, ReviewSearchCondition condition) {
         try {
-            reviewService.searchReviewBySeat(hallId, condition);
             return new BaseResponse<>(reviewService.searchReviewBySeat(hallId, condition));
         }
-
         catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
@@ -49,12 +47,12 @@ public class ReviewController {
 
     // 리뷰 수정
     @PutMapping("/{hallId}/{reviewId}/update")
-    public BaseResponse<ReviewDto.addResponse> updateReview(@PathVariable("hallId") Long hallId,
-                                                            @PathVariable("reviewId") Long reviewId,
-                                                            @RequestBody ReviewDto.updateRequest reviewDto){
+    public BaseResponse<String> updateReview(@PathVariable("hallId") Long hallId,
+                                             @PathVariable("reviewId") Long reviewId,
+                                             @RequestBody ReviewDto.updateRequest reviewDto){
         try {
             reviewService.updateReview(hallId, reviewId, reviewDto);
-            return new BaseResponse<>(reviewService.updateReview(hallId, reviewId, reviewDto));
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         }
         catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
@@ -62,9 +60,15 @@ public class ReviewController {
     }
 
     // 리뷰 삭제
-    @PostMapping("/{hallId}/{reviewId}/delete")
-    public void deleteReview(@PathVariable("hallId") Long hallId, @PathVariable("reviewId") Long reviewId) throws BaseException {
-        reviewService.deleteReview(reviewId);
+    @DeleteMapping("/{hallId}/{reviewId}/delete")
+    public BaseResponse<String> deleteReview(@PathVariable("hallId") Long hallId, @PathVariable("reviewId") Long reviewId) throws BaseException {
+        try {
+            reviewService.deleteReview(reviewId);
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        }
+        catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
     }
 
 }
