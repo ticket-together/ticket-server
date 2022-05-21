@@ -2,9 +2,9 @@ package com.tickettogether.domain.calendar.controller;
 
 import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.calendar.service.CalendarService;
-import com.tickettogether.global.exception.BaseException;
-import com.tickettogether.global.exception.BaseResponse;
-import com.tickettogether.global.exception.BaseResponseStatus;
+import com.tickettogether.global.error.exception.BaseException;
+import com.tickettogether.global.error.dto.BaseResponse;
+import com.tickettogether.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +45,7 @@ public class CalendarController {
     public BaseResponse<String> deleteCalendar(@PathVariable("calendarId") Long calendarId) {
         try {
             calendarService.deleteCalendar(calendarId, memberId);
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+            return new BaseResponse<>(ErrorCode.SUCCESS);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
@@ -57,7 +57,7 @@ public class CalendarController {
                                                @RequestPart("calendar") CalendarDto.PostRequest newCalendar) {
         try {
             calendarService.updateCalendar(calendarId, memberId, multipartFile, newCalendar);
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+            return new BaseResponse<>(ErrorCode.SUCCESS);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
         }

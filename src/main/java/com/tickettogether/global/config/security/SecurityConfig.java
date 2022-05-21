@@ -8,7 +8,7 @@ import com.tickettogether.global.config.security.oauth.handler.MyOauth2LogoutSuc
 import com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository;
 import com.tickettogether.global.config.security.oauth.service.CustomOAuth2UserService;
 import com.tickettogether.global.config.security.oauth.handler.MyOauth2SuccessHandler;
-import com.tickettogether.global.exception.BaseExceptionHandlerFilter;
+import com.tickettogether.global.error.BaseExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

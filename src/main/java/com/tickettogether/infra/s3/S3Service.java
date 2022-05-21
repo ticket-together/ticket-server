@@ -5,8 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.tickettogether.global.common.CommonUtils;
-import com.tickettogether.global.exception.BaseException;
-import com.tickettogether.global.exception.BaseResponseStatus;
+import com.tickettogether.global.error.exception.BaseException;
+import com.tickettogether.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class S3Service {
             amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new BaseException(BaseResponseStatus.FAIL_UPLOAD_FILE);
+            throw new BaseException(ErrorCode.FAIL_UPLOAD_FILE);
         }
 
         return amazonS3Client.getUrl(bucketName, fileName).toString();
@@ -43,7 +43,7 @@ public class S3Service {
 
     private void validateFileExists(MultipartFile multipartFile) throws BaseException {
         if (multipartFile.isEmpty()) {
-            throw new BaseException(BaseResponseStatus.EMPTY_FILE);
+            throw new BaseException(ErrorCode.EMPTY_FILE);
         }
     }
 
