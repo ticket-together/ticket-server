@@ -1,8 +1,9 @@
-package com.tickettogether.global.exception;
+package com.tickettogether.global.error;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tickettogether.global.config.security.exception.TokenValidFailedException;
+import com.tickettogether.global.error.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * controller 가 아닌 filter 에서 발생하는 예외 처리
+ */
 @Slf4j
 @Component
 public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
@@ -24,7 +28,7 @@ public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
         }catch(TokenValidFailedException e){
             log.error(e.getMessage());
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.getWriter().write(convertObjectToJson(new BaseResponse<>(e, HttpStatus.INTERNAL_SERVER_ERROR.value())));
+            response.getWriter().write(convertObjectToJson(ErrorResponse.create(ErrorCode.INTERNAL_SERVER_ERROR)));
         }catch(RuntimeException e){
             log.error(e.getMessage());
         }

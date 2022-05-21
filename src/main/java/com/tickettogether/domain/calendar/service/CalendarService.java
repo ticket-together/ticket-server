@@ -6,8 +6,8 @@ import com.tickettogether.domain.calendar.repository.CalendarRepository;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.global.common.Constant;
-import com.tickettogether.global.exception.BaseException;
-import com.tickettogether.global.exception.BaseResponseStatus;
+import com.tickettogether.global.error.exception.BaseException;
+import com.tickettogether.global.error.ErrorCode;
 import com.tickettogether.infra.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class CalendarService {
         Member member = getMember(memberId);
 
         if(calendarRepository.countByMemberAndDate(member, LocalDate.parse(newCalendar.getDate())) >= CALENDAR_LIMIT_COUNT){
-            throw new BaseException(BaseResponseStatus.POST_CALENDAR_ERROR);
+            throw new BaseException(ErrorCode.POST_CALENDAR_ERROR);
         }
 
         String uploadImageUrl = s3Service.uploadFileV1(Constant.CATEGORY_CALENDAR, multipartFile);
@@ -72,11 +72,11 @@ public class CalendarService {
 
     private Calendar getCalendar(Long calendarId) throws BaseException {
         return calendarRepository.findById(calendarId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.EMPTY_CALENDAR_ID));
+                .orElseThrow(() -> new BaseException(ErrorCode.EMPTY_CALENDAR_ID));
     }
 
     private Member getMember(Long memberId) throws BaseException {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.USERS_EMPTY_USER_ID));
+                .orElseThrow(() -> new BaseException(ErrorCode.USERS_EMPTY_USER_ID));
     }
 }

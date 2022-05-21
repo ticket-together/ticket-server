@@ -1,7 +1,7 @@
 package com.tickettogether.infra.s3;
 
-import com.tickettogether.global.exception.BaseException;
-import com.tickettogether.global.exception.BaseResponse;
+import com.tickettogether.global.error.exception.BaseException;
+import com.tickettogether.global.error.dto.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
