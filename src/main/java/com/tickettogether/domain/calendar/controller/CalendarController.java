@@ -2,14 +2,15 @@ package com.tickettogether.domain.calendar.controller;
 
 import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.calendar.service.CalendarService;
-import com.tickettogether.global.error.exception.BaseException;
 import com.tickettogether.global.error.dto.BaseResponse;
-import com.tickettogether.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.tickettogether.domain.calendar.dto.CalendarResponseMessage.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,47 +21,29 @@ public class CalendarController {
     private Long memberId = 1L; //테스트 용
 
     @GetMapping
-    public BaseResponse<List<CalendarDto.PostResponse>> getCalendars(){
-        try {
-            return new BaseResponse<>(calendarService.getCalendars(memberId));
-        }
-        catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
-        }
+    public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendars(){
+        return ResponseEntity.ok(BaseResponse.create(GET_CALENDARS_SUCCESS.getMessage(),calendarService.getCalendars(memberId)));
     }
 
     @PostMapping
-    public BaseResponse<CalendarDto.PostResponse> createCalendar(
+    public ResponseEntity<BaseResponse<CalendarDto.PostResponse>> createCalendar(
             @RequestPart("files") MultipartFile multipartFile,
             @RequestPart("calendar") CalendarDto.PostRequest newCalendar){
-        try {
-            return new BaseResponse<>(calendarService.createCalendar(newCalendar, memberId, multipartFile));
-        }
-        catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
-        }
+        return ResponseEntity.ok(BaseResponse.create(POST_CALENDAR_SUCCESS.getMessage(),calendarService.createCalendar(newCalendar, memberId, multipartFile)));
     }
 
     @DeleteMapping("/{calendarId}")
-    public BaseResponse<String> deleteCalendar(@PathVariable("calendarId") Long calendarId) {
-        try {
-            calendarService.deleteCalendar(calendarId, memberId);
-            return new BaseResponse<>(ErrorCode.SUCCESS);
-        } catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
-        }
+    public ResponseEntity<BaseResponse<String>> deleteCalendar(@PathVariable("calendarId") Long calendarId) {
+        calendarService.deleteCalendar(calendarId, memberId);
+        return ResponseEntity.ok(BaseResponse.create(DELETE_CALENDAR_SUCCESS.getMessage()));
     }
 
     @PutMapping("/{calendarId}")
-    public BaseResponse<String> updateCalendar(@PathVariable("calendarId") Long calendarId,
-                                               @RequestPart("files") MultipartFile multipartFile,
-                                               @RequestPart("calendar") CalendarDto.PostRequest newCalendar) {
-        try {
-            calendarService.updateCalendar(calendarId, memberId, multipartFile, newCalendar);
-            return new BaseResponse<>(ErrorCode.SUCCESS);
-        } catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
-        }
+    public ResponseEntity<BaseResponse<String>> updateCalendar(@PathVariable("calendarId") Long calendarId,
+                                                               @RequestPart("files") MultipartFile multipartFile,
+                                                               @RequestPart("calendar") CalendarDto.PostRequest newCalendar) {
+        calendarService.updateCalendar(calendarId, memberId, multipartFile, newCalendar);
+        return ResponseEntity.ok(BaseResponse.create(UPDATE_CALENDAR_SUCCESS.getMessage()));
     }
 
 }

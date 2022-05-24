@@ -24,7 +24,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional
     public MemberDto.SaveResponse saveMemberProfile(MemberDto.SaveRequest saveRequest, Long userId){
-        Member member = findMemberByEmail(userId);
+        Member member = findMemberById(userId);
         member.saveMemberProfile(saveRequest.getPhoneNumber());
 
         for(Long id : saveRequest.getKeywordIds()){
@@ -39,13 +39,13 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional
     public MemberDto.UpdateResponse updateMemberProfile(MemberDto.UpdateRequest updateRequest, Long userId) {
-        Member member = findMemberByEmail(userId);
+        Member member = findMemberById(userId);
         member.updateMemberProfile(updateRequest.getUsername(), updateRequest.getPhoneNumber());
         return new MemberDto.UpdateResponse(member.getId());
     }
 
     public MemberDto.SearchResponse getMemberProfile(Long userId) {
-        Member member = findMemberByEmail(userId);
+        Member member = findMemberById(userId);
         return createSearchResponse(member);
     }
 
@@ -54,9 +54,10 @@ public class MemberServiceImpl implements MemberService{
         return createSearchResponse(member);
     }
 
-    private Member findMemberByEmail(Long userId){
+    public Member findMemberById(Long userId){
         return memberRepository.findById(userId).orElseThrow(UserEmptyException::new);
     }
+
     private MemberDto.SearchResponse createSearchResponse(Member member){
         return MemberDto.SearchResponse.builder()
                 .userId(member.getId())
