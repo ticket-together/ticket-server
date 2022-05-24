@@ -1,6 +1,7 @@
 package com.tickettogether.domain.member.controller;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.dto.TokenResponseDto;
+import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.config.security.jwt.service.AuthService;
@@ -59,7 +60,7 @@ public class LoginController {
             CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
             CookieUtils.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, authService.getNewRefreshToken().getToken(), cookieMaxAge);
         }
-        return new BaseResponse<>(new TokenResponseDto(authService.getNewAccessToken().getToken()));
+        return BaseResponse.create("refresh success", new TokenResponseDto(authService.getNewAccessToken().getToken()));
     }
     @ResponseBody
     @PostMapping("/logout")
@@ -67,7 +68,7 @@ public class LoginController {
         String accessToken = HeaderUtil.getAccessToken(request);
         String refreshToken = getRefreshTokenFromCookie(request);
         authService.logoutAndDeleteToken(accessToken,refreshToken);
-        return new BaseResponse<>("logout success");
+        return BaseResponse.create("logout success");
     }
 
     @GetMapping("/quit")
@@ -77,7 +78,7 @@ public class LoginController {
 
         if (invalidateMember & session != null) {
             SessionMember loginMember = (SessionMember) session.getAttribute("user");
-            Member member = memberRepository.findByEmail(loginMember.getEmail());
+            Member member = memberRepository.findByEmail(loginMember.getEmail()).orElseThrow(UserEmptyException::new);
             member.changeStatus(member.getStatus());
 
             session.invalidate();

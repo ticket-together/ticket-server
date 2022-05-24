@@ -1,6 +1,7 @@
 package com.tickettogether.global.config.security.oauth.service;
 
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.global.config.security.UserPrincipal;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
@@ -51,7 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Member saveOrUpdateMemberToDB(OAuthAttributes attrs){
-        Member member = memberRepository.findByEmail(attrs.getEmail());
+        Member member = memberRepository.findByEmail(attrs.getEmail()).orElseThrow(UserEmptyException::new);
         if (Optional.ofNullable(member).isEmpty()){
             return memberRepository.save(attrs.toEntity());
         }
@@ -72,7 +73,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())) update = true;
 
         if(update){
-            member.updateMemberProfile(attrs.getNickName(),attrs.getImgUrl());
+            member.updateOAuthProfile(attrs.getNickName(),attrs.getImgUrl());
         }
     }
 }

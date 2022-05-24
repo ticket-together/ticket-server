@@ -1,6 +1,7 @@
 package com.tickettogether.global.config.security;
 
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService{
     private final MemberRepository memberRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username);
+        Member member = memberRepository.findByEmail(username).orElseThrow(UserEmptyException::new);
         if(member == null){
             throw new UsernameNotFoundException("Cannot find user name.");
         }
