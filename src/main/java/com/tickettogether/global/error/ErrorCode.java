@@ -47,7 +47,10 @@ public enum ErrorCode {
     MODIFY_FAIL_USERNAME(4014,"유저 이름 수정에 실패하였습니다."),
 
     PASSWORD_ENCRYPTION_ERROR(4011, "비밀번호 암호화에 실패하였습니다."),
-    PASSWORD_DECRYPTION_ERROR( 4012, "비밀번호 복호화에 실패하였습니다.");
+    PASSWORD_DECRYPTION_ERROR( 4012, "비밀번호 복호화에 실패하였습니다."),
+
+    EMPTY_USER_ID(2011, "존재하지 않는 회원입니다."),
+    EMPTY_KEYWORD_ID(2018, "존재하지 않는 키워드입니다.");
 
 
     /**
