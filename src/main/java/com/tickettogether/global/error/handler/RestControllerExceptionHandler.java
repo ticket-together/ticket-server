@@ -71,6 +71,11 @@ public class RestControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.create(ex.getErrorCode()));
     }
 
+//    @ExceptionHandler({BusinessException.class, InvalidValueException.class, EntityNotFoundException.class})
+//    protected ErrorResponse handleBusinessException(BusinessException ex) {
+//        return ErrorResponse.create(ex.getErrorCode());
+//    }
+
     /**
      * 파일 관련 예외
      */
