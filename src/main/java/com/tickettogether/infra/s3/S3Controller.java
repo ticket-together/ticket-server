@@ -16,12 +16,8 @@ public class S3Controller {
     private final S3Service s3Service;
 
     @PostMapping
-    public BaseResponse fileUpload(@RequestParam("category") String category, @RequestPart("files") MultipartFile multipartFile) throws IOException, BaseException {
-        try {
-            return new BaseResponse<>(s3Service.uploadFileV1(category, multipartFile));
-        } catch (BaseException e){
-                return new BaseResponse<>(e.getStatus());
-        }
+    public BaseResponse fileUpload(@RequestParam("category") String category, @RequestPart("files") MultipartFile multipartFile){
+        return BaseResponse.create(s3Service.uploadFileV1(category, multipartFile));
     }
 
 }
