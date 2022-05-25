@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.tickettogether.domain.member.dto.MemberResponseMessage.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
 public class MemberController {
