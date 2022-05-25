@@ -56,17 +56,16 @@ public class RestControllerExceptionHandler {
      * 비즈니스 예외
      */
     @ExceptionHandler({BusinessException.class, InvalidValueException.class, EntityNotFoundException.class})
-    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+    protected ResponseEntity<ErrorResponse> handleBusinessException(BaseException ex) {
         log.error("handleBusinessException", ex);
-        final ErrorCode errorCode = ex.getErrorCode();
-        return ResponseEntity.status(errorCode.getStatus()).body(ErrorResponse.create(errorCode));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.create(ex.getErrorCode()));
     }
 
     /**
        유저와 인증 관련한 모든 예외
      */
     @ExceptionHandler({AuthorityException.class, UserStatusException.class})
-    protected ResponseEntity<ErrorResponse> handleAuthorityException(AuthorityException ex) {
+    protected ResponseEntity<ErrorResponse> handleAuthorityException(BaseException ex) {
         log.error("handleAuthorityException", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.create(ex.getErrorCode()));
     }
@@ -77,7 +76,7 @@ public class RestControllerExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException (MaxUploadSizeExceededException ex) {
         log.error("handleMaxUploadSizeExceededException", ex);
-        return ResponseEntity.status(ErrorCode.FILE_SIZE_EXCEED.getStatus()).body(ErrorResponse.create(ErrorCode.FILE_SIZE_EXCEED));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.create(ErrorCode.FILE_SIZE_EXCEED));
     }
 
     /**
