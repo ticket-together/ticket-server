@@ -1,19 +1,16 @@
 package com.tickettogether.global.config.security.exception;
 
+import com.tickettogether.global.error.ErrorCode;
+import com.tickettogether.global.error.exception.AuthorityException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
-public class TokenRefreshException extends RuntimeException{
+public class TokenRefreshException extends AuthorityException {
     public TokenRefreshException(){
-        super("Refresh token was expired. Please make a new login request");
+        super(ErrorCode.INVALID_REFRESH_JWT);
     }
 
     public TokenRefreshException(String message){
-        super(message);
-    }
-
-    public TokenRefreshException(String token, String message) {
-        super(String.format("Failed for [%s]: %s", token, message));
+        super(message, ErrorCode.INVALID_REFRESH_JWT);
     }
 }

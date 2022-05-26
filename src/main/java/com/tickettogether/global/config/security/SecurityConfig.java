@@ -8,7 +8,7 @@ import com.tickettogether.global.config.security.oauth.handler.MyOauth2LogoutSuc
 import com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository;
 import com.tickettogether.global.config.security.oauth.service.CustomOAuth2UserService;
 import com.tickettogether.global.config.security.oauth.handler.MyOauth2SuccessHandler;
-import com.tickettogether.global.exception.BaseExceptionHandlerFilter;
+import com.tickettogether.global.error.BaseExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,7 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/oauth2/**").permitAll()
-                .antMatchers("/api/v1/login", "/api/v1/logout", "/main", "/api/v1/oauth/redirect", "/test", "/api/v1/refresh", "/api/v1/reviews", "/api/v1/reviews/*", "/api/v1/reviews/**").permitAll()
+
+                .antMatchers("/api/v1/login", "/api/v1/logout", "/main", "/api/v1/oauth/redirect", "/test", "/api/v1/refresh", "/api/v1/member/**", "/api/v1/reviews", "/api/v1/reviews/*", "/api/v1/reviews/**").permitAll()
+
                 .anyRequest().authenticated()
 //                .and()
 //                .logout().logoutUrl("/api/v1/logout")

@@ -1,15 +1,16 @@
 package com.tickettogether.global.config.security.exception;
 
+import com.tickettogether.global.error.ErrorCode;
+import com.tickettogether.global.error.exception.AuthorityException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
-public class TokenValidFailedException extends RuntimeException{
+public class TokenValidFailedException extends AuthorityException {
     public TokenValidFailedException() {
-        super("Failed to validate token.");
+        super(ErrorCode.INVALID_JWT);
     }
 
     public TokenValidFailedException(String message) {
-        super(message);
+        super(message, ErrorCode.INVALID_JWT);
     }
 }

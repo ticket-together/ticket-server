@@ -1,32 +1,63 @@
 package com.tickettogether.domain.member.controller;
 
-import com.tickettogether.global.config.security.UserPrincipal;
-import com.tickettogether.global.config.security.oauth.dto.SessionMember;
+import com.tickettogether.domain.member.dto.MemberDto;
+import com.tickettogether.domain.member.service.MemberServiceImpl;
+import com.tickettogether.global.error.dto.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import static com.tickettogether.domain.member.dto.MemberResponseMessage.*;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
-@Slf4j
 public class MemberController {
-    private final HttpSession httpSession;
+    private final MemberServiceImpl memberService;
+    private Long tempMemberId = 1L;
 
+    /**
+     * 회원 정보 저장
+     */
+    @PostMapping
+    @ResponseBody
+    public ResponseEntity<BaseResponse<MemberDto.SaveResponse>> saveMemberInfo(@RequestBody MemberDto.SaveRequest saveRequest){
+        return ResponseEntity.ok(BaseResponse.create(SAVE_MEMBER_SUCCESS.getMessage(),
+                memberService.saveMemberProfile(saveRequest, tempMemberId)));
+    }
+    /**
+     회원 정보 조회
+     */
     @GetMapping
     @ResponseBody
-    public String test(){
-        //현재 로그인한 사용자 정보 테스트
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user != null) log.info("login user security = {}", user.getUsername());
-        return "login success!";
+    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchMemberInfo(){
+        return ResponseEntity.ok(BaseResponse.create(GET_PROFILE_SUCCESS.getMessage(),
+                memberService.getMemberProfile(tempMemberId)));
+    }
+
+    /**
+     다른 회원 정보 조회
+     */
+    @GetMapping("/{memberId}")
+    @ResponseBody
+    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchMemberInfo(@PathVariable("memberId") Long memberId){
+        return ResponseEntity.ok(BaseResponse.create(GET_PROFILE_SUCCESS.getMessage(),
+                memberService.getOtherMemberProfile(memberId)));
+    }
+
+    /**
+     회원 정보 수정
+     */
+    @PatchMapping
+    public ResponseEntity<BaseResponse<MemberDto.UpdateResponse>> updateMemberInfo(@RequestBody MemberDto.UpdateRequest updateRequest){
+        return ResponseEntity.ok(BaseResponse.create(UPDATE_PROFILE_SUCCESS.getMessage(),
+                memberService.updateMemberProfile(updateRequest, tempMemberId)));
+    }
+
+    private User getLoginUser(){
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

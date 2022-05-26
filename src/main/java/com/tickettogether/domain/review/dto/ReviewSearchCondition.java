@@ -12,7 +12,5 @@ public class ReviewSearchCondition {
     private String part;
     private String record;
     private String number;
-
-
 }
 

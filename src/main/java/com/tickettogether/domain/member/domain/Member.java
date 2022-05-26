@@ -1,5 +1,6 @@
 package com.tickettogether.domain.member.domain;
 
+import com.fasterxml.jackson.databind.introspect.MemberKey;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.review.domain.Review;
@@ -15,25 +16,23 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+    @NoArgsConstructor(access= AccessLevel.PROTECTED)
+    public class Member extends BaseEntity {
 
-    public enum Status {
-        ACTIVE, INACTIVE
-    }
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_id")
-    private Long id;
-
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name="member_id")
+        private Long id;
+        @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<MemberParts> memberPartsList = new ArrayList<>();
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberParts> memberPartsList = new ArrayList<>();
+    private List<MemberKeyword> keywords = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SiteInfo> siteInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String email;
@@ -41,6 +40,10 @@ public class Member extends BaseEntity {
     private String password;
 
     private String name;
+
+    public void saveMemberProfile(String phoneNumber){
+        this.phoneNumber = phoneNumber;
+    }
 
     @Lob
     private String imgUrl;
@@ -61,11 +64,19 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-
-    public void updateMemberProfile(String name, String imgUrl){  //DTO 대체
+    public void updateOAuthProfile(String name, String imgUrl){  //DTO 대체
         this.name = name;
         this.imgUrl = imgUrl;
     }
+
+    public void updateMemberProfile(String name, String phoneNumber){  //DTO 대체
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
+
+        public enum Status {
+            ACTIVE, INACTIVE
+        }
 
     public void setReviews(Review review){
         this.reviews.add(review);

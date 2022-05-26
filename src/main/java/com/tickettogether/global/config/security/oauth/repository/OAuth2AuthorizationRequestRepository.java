@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class OAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository {
     public final static String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
-    public final static String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
     public final static String REFRESH_TOKEN_COOKIE_NAME = "refresh";
     private final static int cookieExpireSeconds = 180;
     private OAuth2AuthorizationRequest authorizationRequest;
@@ -34,10 +33,6 @@ public class OAuth2AuthorizationRequestRepository implements AuthorizationReques
         }
         this.authorizationRequest = authorizationRequest;
         CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtils.serialize(authorizationRequest), cookieExpireSeconds);
-        String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
-        if (StringUtils.hasText(redirectUriAfterLogin)){
-            CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
-        }
     }
 
     @Override
@@ -52,6 +47,5 @@ public class OAuth2AuthorizationRequestRepository implements AuthorizationReques
 
     public void removeAuthorizationRequestCookie(HttpServletRequest request, HttpServletResponse response){
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
-        CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
     }
 }

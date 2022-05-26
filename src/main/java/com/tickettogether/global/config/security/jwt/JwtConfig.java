@@ -5,10 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,15 +19,15 @@ public class JwtConfig {
     private String refreshExpiry;
 
     @Value("${jwt.authorized-redirect-uris}")
-    private List<String> authorizedRedirectUris = new ArrayList<>();
+    private String authorizedRedirectUri;
 
     @Bean
     public AuthTokenProvider jwtProvider() {
         return new AuthTokenProvider(this.secret, this.tokenExpiry);
     }
 
-    public List<String> getAuthorizedRedirectUris() {
-        return authorizedRedirectUris;
+    public String getAuthorizedRedirectUri() {
+        return authorizedRedirectUri;
     }
 
     public String getRefreshExpiry() { return refreshExpiry;}
