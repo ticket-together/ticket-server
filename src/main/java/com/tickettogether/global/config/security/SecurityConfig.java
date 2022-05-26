@@ -48,9 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/oauth2/**").permitAll()
-
-                .antMatchers("/api/v1/login", "/api/v1/logout", "/main", "/api/v1/oauth/redirect", "/test", "/api/v1/refresh", "/api/v1/member/**", "/api/v1/reviews", "/api/v1/reviews/*", "/api/v1/reviews/**").permitAll()
-
+                .antMatchers("/api/v1/login", "/api/v1/logout", "/main", "/api/v1/oauth/redirect",
+                        "/test", "/api/v1/refresh", "/api/v1/member/**", "/api/v1/**").permitAll()
                 .anyRequest().authenticated()
 //                .and()
 //                .logout().logoutUrl("/api/v1/logout")
@@ -98,5 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new DefaultHttpFirewall();
     }
 }
+
+
 
 
