@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,28 +16,24 @@ import java.util.List;
 
 @Entity
 @Getter
-    @NoArgsConstructor(access= AccessLevel.PROTECTED)
-    public class Member extends BaseEntity {
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
+public class Member extends BaseEntity {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="member_id")
+    private Long id;
 
-        public enum Status {
-            ACTIVE, INACTIVE
-        }
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberParts> memberPartsList = new ArrayList<>();
 
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name="member_id")
-        private Long id;
-
-        @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<MemberParts> memberPartsList = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberKeyword> keywords = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SiteInfo> siteInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberKeyword> keywords = new ArrayList<>();
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String email;
@@ -47,7 +42,9 @@ import java.util.List;
 
     private String name;
 
-    private String phoneNumber;
+    public void saveMemberProfile(String phoneNumber){
+        this.phoneNumber = phoneNumber;
+    }
 
     @Lob
     private String imgUrl;
@@ -68,10 +65,6 @@ import java.util.List;
         this.role = role;
     }
 
-    public void saveMemberProfile(String phoneNumber){
-        this.phoneNumber = phoneNumber;
-    }
-
     public void updateOAuthProfile(String name, String imgUrl){  //DTO 대체
         this.name = name;
         this.imgUrl = imgUrl;
@@ -81,6 +74,10 @@ import java.util.List;
         this.name = name;
         this.phoneNumber = phoneNumber;
     }
+
+        public enum Status {
+            ACTIVE, INACTIVE
+        }
 
     public void setReviews(Review review){
         this.reviews.add(review);

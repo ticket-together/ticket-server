@@ -16,4 +16,8 @@ public class Hall {
     private Long id;
 
     private String location;
+
+    public Hall(String location) {
+        this.location = location;
+    }
 }
