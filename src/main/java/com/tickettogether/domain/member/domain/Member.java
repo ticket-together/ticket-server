@@ -16,14 +16,15 @@ import java.util.List;
 
 @Entity
 @Getter
-    @NoArgsConstructor(access= AccessLevel.PROTECTED)
-    public class Member extends BaseEntity {
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
+public class Member extends BaseEntity {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="member_id")
+    private Long id;
 
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name="member_id")
-        private Long id;
-        @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<MemberParts> memberPartsList = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberParts> memberPartsList = new ArrayList<>();
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberKeyword> keywords = new ArrayList<>();
 
