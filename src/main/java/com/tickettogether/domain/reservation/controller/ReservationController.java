@@ -1,7 +1,9 @@
 package com.tickettogether.domain.reservation.controller;
 
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.exception.SiteEmptyException;
 import com.tickettogether.domain.member.service.MemberService;
+import com.tickettogether.domain.reservation.domain.TicketSite;
 import com.tickettogether.domain.reservation.dto.ReservationDto;
 import com.tickettogether.domain.reservation.service.ReservationService;
 import com.tickettogether.global.error.dto.BaseResponse;
@@ -29,9 +31,15 @@ public class ReservationController {
     }
 
     @PostMapping("/site")
-    public ResponseEntity<BaseResponse<String>> postSiteInfo(@RequestBody ReservationDto.SiteInfoPostRequest siteInfoPostRequest){
-        reservationService.postSiteInfo(siteInfoPostRequest, tempMemberId);
-        return ResponseEntity.ok(BaseResponse.create(POST_TICKET_SITE_SUCCESS.getMessage()));
+    public ResponseEntity<BaseResponse<ReservationDto.SiteInfoGetResponse>> postSiteInfo(@RequestBody ReservationDto.SiteInfoPostRequest siteInfoPostRequest){
+        return ResponseEntity.ok(BaseResponse.create(POST_TICKET_SITE_SUCCESS.getMessage(),reservationService.postSiteInfo(siteInfoPostRequest, tempMemberId)));
     }
+
+    @GetMapping("/site/{name}")
+    public ResponseEntity<BaseResponse<ReservationDto.SiteInfoGetResponse>> getSiteInfo(@PathVariable("name") String siteName){
+        TicketSite ticketSite = TicketSite.of(siteName).orElseThrow(SiteEmptyException::new);
+        return ResponseEntity.ok(BaseResponse.create(GET_TICKET_SITE_SUCCESS.getMessage(), reservationService.getSiteInfo(tempMemberId, ticketSite)));
+    }
+
 
 }

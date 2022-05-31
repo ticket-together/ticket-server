@@ -6,6 +6,7 @@ import com.tickettogether.domain.member.exception.SiteBusinessException;
 import com.tickettogether.domain.member.exception.SiteEmptyException;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
+import com.tickettogether.domain.reservation.domain.TicketSiteInfo;
 import com.tickettogether.domain.reservation.repository.SiteInfoRepository;
 import com.tickettogether.domain.reservation.dto.ReservationDto;
 import com.tickettogether.domain.reservation.repository.ReservationRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.tickettogether.global.error.ErrorCode.PASSWORD_ENCRYPTION_ERROR;
@@ -31,6 +33,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final SiteInfoRepository siteInfoRepository;
     private final static int MIN_COUNT = 1;
     private final JwtConfig jwtConfig;
+    private final long tempMemberId = 1L;
 
     @Override
     public List<ReservationDto.GetResponse> getReservations(Member member) {
@@ -40,7 +43,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Transactional
-    public void postSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long memberId){
+    public ReservationDto.SiteInfoGetResponse postSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long memberId){
         Member member = memberRepository.findById(memberId).orElseThrow(UserEmptyException::new);
         if (siteInfoRepository.countTicketSiteInfoByMemberAndTicketSite(member, TicketSite.of(siteInfo.getTicketSite())
                 .orElseThrow(SiteEmptyException::new)) >= MIN_COUNT) {
@@ -51,7 +54,15 @@ public class ReservationServiceImpl implements ReservationService {
         } catch (Exception ignored) {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
-        siteInfoRepository.save(siteInfo.toEntity(member));
+
+        return new ReservationDto.SiteInfoGetResponse(siteInfoRepository.save(siteInfo.toEntity(member)));
+    }
+
+    @Transactional
+    public ReservationDto.SiteInfoGetResponse getSiteInfo(Long tempMemberId, TicketSite siteName){
+        Member member = memberRepository.findById(tempMemberId).orElseThrow(UserEmptyException::new);
+        Optional<TicketSiteInfo> ticketSiteInfo = siteInfoRepository.findByMemberAndTicketSite(member, siteName);
+        return ticketSiteInfo.map(ReservationDto.SiteInfoGetResponse::new).orElse(null);
     }
 
 }

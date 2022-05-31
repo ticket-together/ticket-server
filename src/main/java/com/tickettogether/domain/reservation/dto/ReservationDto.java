@@ -71,4 +71,19 @@ public class ReservationDto {
             this.password = password;
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class SiteInfoGetResponse {
+        private Long id;
+        private String siteId;
+        private String ticketSite;
+
+        public SiteInfoGetResponse (TicketSiteInfo ticketSiteInfo){
+            this.id = ticketSiteInfo.getId();
+            this.siteId = ticketSiteInfo.getTicketId();
+            this.ticketSite = ticketSiteInfo.getTicketSite().getTicketSiteName();
+        }
+    }
+
 }
