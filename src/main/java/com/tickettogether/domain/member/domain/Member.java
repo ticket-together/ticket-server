@@ -3,6 +3,7 @@ package com.tickettogether.domain.member.domain;
 import com.fasterxml.jackson.databind.introspect.MemberKey;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
+import com.tickettogether.domain.reservation.domain.Reservation;
 import com.tickettogether.domain.review.domain.Review;
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -17,19 +18,19 @@ import java.util.List;
 
 @Entity
 @Getter
-    @NoArgsConstructor(access= AccessLevel.PROTECTED)
-    public class Member extends BaseEntity {
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
+public class Member extends BaseEntity {
 
-        public enum Status {
-            ACTIVE, INACTIVE
-        }
+    public enum Status {
+        ACTIVE, INACTIVE
+    }
 
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name="member_id")
-        private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="member_id")
+    private Long id;
 
-        @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<MemberParts> memberPartsList = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberParts> memberPartsList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SiteInfo> siteInfos = new ArrayList<>();
@@ -39,6 +40,9 @@ import java.util.List;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberKeyword> keywords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Column(nullable = false)
     private String email;
@@ -80,6 +84,13 @@ import java.util.List;
     public void updateMemberProfile(String name, String phoneNumber){  //DTO 대체
         this.name = name;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setReservations(Reservation reservation){
+        this.reservations.add(reservation);
+        if (reservation.getMember() != this){
+            reservation.addMember(this);
+        }
     }
 
     public void setReviews(Review review){
