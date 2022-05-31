@@ -23,6 +23,7 @@ public enum ErrorCode {
     FILE_SIZE_EXCEED(2006, "파일 사이즈를 확인해 주세요."),
     INTERNAL_SERVER_ERROR(5000, "서버 오류입니다. "),
     METHOD_NOT_ALLOWED(4000, "요청 방식이 잘못되었습니다."),
+    INVALID_SECRET_KEY(2007, "유효하지 않은 시크릿 키입니다."),
 
     /**
      * calender
@@ -33,7 +34,7 @@ public enum ErrorCode {
     /**
      * culture
      */
-
+    EMPTY_SITE(2022, "존재하지 않는 사이트 입니다."),
 
     /**
      * member
