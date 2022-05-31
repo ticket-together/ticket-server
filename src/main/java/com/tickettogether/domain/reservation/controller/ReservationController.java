@@ -1,7 +1,7 @@
 package com.tickettogether.domain.reservation.controller;
 
 import com.tickettogether.domain.member.domain.Member;
-import com.tickettogether.domain.member.exception.SiteEmptyException;
+import com.tickettogether.domain.reservation.exception.SiteEmptyException;
 import com.tickettogether.domain.member.service.MemberService;
 import com.tickettogether.domain.reservation.domain.TicketSite;
 import com.tickettogether.domain.reservation.dto.ReservationDto;
@@ -41,5 +41,10 @@ public class ReservationController {
         return ResponseEntity.ok(BaseResponse.create(GET_TICKET_SITE_SUCCESS.getMessage(), reservationService.getSiteInfo(tempMemberId, ticketSite)));
     }
 
-
+    @PatchMapping("/site/{id}")
+    public ResponseEntity<BaseResponse<ReservationDto.SiteInfoGetResponse>> updateSiteInfo(
+            @RequestBody ReservationDto.SiteInfoPostRequest siteInfoPostRequest,
+            @PathVariable("id") Long id){
+        return ResponseEntity.ok(BaseResponse.create(GET_TICKET_SITE_SUCCESS.getMessage(), reservationService.updateSiteInfo(siteInfoPostRequest, id)));
+    }
 }

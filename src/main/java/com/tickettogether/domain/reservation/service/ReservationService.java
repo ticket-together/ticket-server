@@ -10,4 +10,5 @@ public interface ReservationService {
     List<ReservationDto.GetResponse> getReservations(Member member);
     ReservationDto.SiteInfoGetResponse postSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long memberId);
     ReservationDto.SiteInfoGetResponse getSiteInfo(Long memberId, TicketSite ticketSite);
+    ReservationDto.SiteInfoGetResponse updateSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long id);
 }

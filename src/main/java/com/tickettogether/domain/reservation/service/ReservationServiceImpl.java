@@ -2,11 +2,12 @@ package com.tickettogether.domain.reservation.service;
 
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.reservation.domain.TicketSite;
-import com.tickettogether.domain.member.exception.SiteBusinessException;
-import com.tickettogether.domain.member.exception.SiteEmptyException;
+import com.tickettogether.domain.reservation.exception.SiteBusinessException;
+import com.tickettogether.domain.reservation.exception.SiteEmptyException;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.reservation.domain.TicketSiteInfo;
+import com.tickettogether.domain.reservation.exception.SiteUpdateException;
 import com.tickettogether.domain.reservation.repository.SiteInfoRepository;
 import com.tickettogether.domain.reservation.dto.ReservationDto;
 import com.tickettogether.domain.reservation.repository.ReservationRepository;
@@ -58,11 +59,25 @@ public class ReservationServiceImpl implements ReservationService {
         return new ReservationDto.SiteInfoGetResponse(siteInfoRepository.save(siteInfo.toEntity(member)));
     }
 
-    @Transactional
     public ReservationDto.SiteInfoGetResponse getSiteInfo(Long tempMemberId, TicketSite siteName){
         Member member = memberRepository.findById(tempMemberId).orElseThrow(UserEmptyException::new);
         Optional<TicketSiteInfo> ticketSiteInfo = siteInfoRepository.findByMemberAndTicketSite(member, siteName);
         return ticketSiteInfo.map(ReservationDto.SiteInfoGetResponse::new).orElse(null);
     }
 
+    @Transactional
+    public ReservationDto.SiteInfoGetResponse updateSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long id){
+        TicketSiteInfo ticketSiteInfo = siteInfoRepository.findById(id).orElseThrow(SiteEmptyException::new);
+
+        if (!ticketSiteInfo.getTicketSite().getTicketSiteName().equals(siteInfo.getTicketSite())){
+            throw new SiteUpdateException();
+        }
+
+        try {
+            siteInfo.setPassword(new AES128(jwtConfig.getPasswordKey()).encrypt(siteInfo.getPassword()));
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
+        }
+        return new ReservationDto.SiteInfoGetResponse(ticketSiteInfo.updateTicketSiteInfo(siteInfo));
+    }
 }

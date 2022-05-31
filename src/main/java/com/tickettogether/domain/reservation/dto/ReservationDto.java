@@ -3,7 +3,7 @@ package com.tickettogether.domain.reservation.dto;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.reservation.domain.TicketSite;
 import com.tickettogether.domain.reservation.domain.TicketSiteInfo;
-import com.tickettogether.domain.member.exception.SiteEmptyException;
+import com.tickettogether.domain.reservation.exception.SiteEmptyException;
 import com.tickettogether.domain.reservation.domain.Reservation;
 import lombok.*;
 
