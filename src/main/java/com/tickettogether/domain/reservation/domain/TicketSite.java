@@ -1,4 +1,4 @@
-package com.tickettogether.domain.member.domain;
+package com.tickettogether.domain.reservation.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

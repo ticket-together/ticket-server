@@ -1,5 +1,6 @@
-package com.tickettogether.domain.member.domain;
+package com.tickettogether.domain.reservation.domain;
 
+import com.tickettogether.domain.member.domain.Member;
 import lombok.*;
 
 import javax.persistence.*;

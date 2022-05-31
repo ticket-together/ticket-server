@@ -1,8 +1,11 @@
 package com.tickettogether.domain.reservation.dto;
 
+import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.reservation.domain.TicketSite;
+import com.tickettogether.domain.reservation.domain.TicketSiteInfo;
+import com.tickettogether.domain.member.exception.SiteEmptyException;
 import com.tickettogether.domain.reservation.domain.Reservation;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -23,6 +26,49 @@ public class ReservationDto {
             this.imgUrl = reservation.getImgUrl();
             this.hallName = reservation.getHallName();
             this.date = reservation.getDate();
+        }
+    }
+
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Builder
+    public static class SiteInfoPostRequest {
+        private String id;
+        private String password;
+        private String ticketSite;
+
+        public TicketSiteInfo toEntity(Member member){
+            return TicketSiteInfo.builder()
+                    .ticketSite(TicketSite.of(ticketSite).orElseThrow(SiteEmptyException::new))
+                    .ticketId(this.id)
+                    .ticketPassword(this.password)
+                    .member(member).build();
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Builder
+    public static class SiteInfoPostResponse {
+        private String id;
+        private String password;
+        private TicketSite ticketSite;
+
+        public SiteInfoPostResponse (TicketSiteInfo ticketSiteInfo){
+            this.id = ticketSiteInfo.getTicketId();
+            this.password = ticketSiteInfo.getTicketPassword();
+            this.ticketSite = ticketSiteInfo.getTicketSite();
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 }
