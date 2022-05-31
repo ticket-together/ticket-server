@@ -3,7 +3,6 @@ package com.tickettogether.domain.member.domain;
 import com.fasterxml.jackson.databind.introspect.MemberKey;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
-import com.tickettogether.domain.reservation.domain.Reservation;
 import com.tickettogether.domain.review.domain.Review;
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -33,16 +32,10 @@ public class Member extends BaseEntity {
     private List<MemberParts> memberPartsList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SiteInfo> siteInfos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberKeyword> keywords = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Reservation> reservations = new ArrayList<>();
 
     @Column(nullable = false)
     private String email;
@@ -84,13 +77,6 @@ public class Member extends BaseEntity {
     public void updateMemberProfile(String name, String phoneNumber){  //DTO 대체
         this.name = name;
         this.phoneNumber = phoneNumber;
-    }
-
-    public void setReservations(Reservation reservation){
-        this.reservations.add(reservation);
-        if (reservation.getMember() != this){
-            reservation.addMember(this);
-        }
     }
 
     public void setReviews(Review review){

@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CalendarServiceImpl implements CalendarService{
+    private final static int CALENDAR_LIMIT_COUNT = 1;
     private final CalendarRepository calendarRepository;
     private final MemberService memberService;
     private final S3Service s3Service;
-    private final static int CALENDAR_LIMIT_COUNT = 1;
 
     @Transactional
     public CalendarDto.PostResponse createCalendar(CalendarDto.PostRequest newCalendar, Long memberId, MultipartFile multipartFile){

@@ -28,21 +28,32 @@ public class Review extends BaseEntity {
     private Hall hall;
 
     @Column(precision = 2, scale = 1)
-    private BigDecimal startPoint;
+    private BigDecimal starPoint;
 
     private String contents;
 
-    private int floor;
+    private String floor;
 
     private String part;
 
-    private int record;    //row
+    private String record;    //row
 
-    private int number;
+    private String number;
 
     @Builder
-    public Review(BigDecimal startPoint, String contents, int floor, String part, int record, int number){
-        this.startPoint = startPoint;
+    public Review(Member member, Hall hall, BigDecimal starPoint, String contents, String floor, String part, String record, String number){
+        this.member=member;
+        this.hall = hall;
+        this.starPoint = starPoint;
+        this.contents = contents;
+        this.floor = floor;
+        this.part = part;
+        this.record = record;
+        this.number = number;
+    }
+
+    public void updateReview(BigDecimal starPoint, String contents, String floor, String part, String  record, String number){  //DTO 대체
+        this.starPoint = starPoint;
         this.contents = contents;
         this.floor = floor;
         this.part = part;

@@ -51,7 +51,7 @@ public enum ErrorCode {
     PASSWORD_DECRYPTION_ERROR( 4012, "비밀번호 복호화에 실패하였습니다."),
 
     EMPTY_USER_ID(2011, "존재하지 않는 회원입니다."),
-    EMPTY_KEYWORD_ID(2018, "존재하지 않는 키워드입니다.");
+    EMPTY_KEYWORD_ID(2018, "존재하지 않는 키워드입니다."),
 
 
     /**
@@ -62,6 +62,9 @@ public enum ErrorCode {
     /**
      * reviews
      */
+    EMPTY_HALL(3030, "해당하는 공연장이 없습니다."),
+    EMPTY_REVIEW(3031, "리뷰가 존재하지 않습니다.");
+
 
     private final String message;
     private int status;
