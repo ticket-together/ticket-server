@@ -24,12 +24,12 @@ public class CalendarDto {
     public static class PostResponse{
         private Long id;
         private LocalDate date;
-        private String imgUrl;
+        private String url;
 
         public PostResponse(Calendar calendar){
             this.id = calendar.getId();
             this.date = calendar.getDate();
-            this.imgUrl = calendar.getImgUrl();
+            this.url = calendar.getImgUrl();
         }
     }
 

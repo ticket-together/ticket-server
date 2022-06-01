@@ -1,6 +1,5 @@
 package com.tickettogether.domain.member.domain;
 
-import com.fasterxml.jackson.databind.introspect.MemberKey;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.review.domain.Review;
@@ -29,7 +28,7 @@ public class Member extends BaseEntity {
     private List<MemberKeyword> keywords = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SiteInfo> siteInfos = new ArrayList<>();
+    private List<TicketSiteInfo> siteInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
@@ -75,9 +74,9 @@ public class Member extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-        public enum Status {
-            ACTIVE, INACTIVE
-        }
+    public enum Status {
+        ACTIVE, INACTIVE
+    }
 
     public void setReviews(Review review){
         this.reviews.add(review);
