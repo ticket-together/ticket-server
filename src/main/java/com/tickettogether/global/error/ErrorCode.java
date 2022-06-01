@@ -34,6 +34,7 @@ public enum ErrorCode {
     /**
      * culture
      */
+
     EMPTY_SITE(2022, "존재하지 않는 사이트 정보입니다."),
     POST_SIZE_ERROR(2020, "최대 사이트 아이디 개수를 초과하였습니다."),
     EMPTY_SITE_INFO(2023, "존재하지 않는 정보입니다."),

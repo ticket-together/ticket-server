@@ -6,6 +6,8 @@ import com.tickettogether.domain.reservation.domain.TicketSiteInfo;
 import com.tickettogether.domain.reservation.exception.SiteEmptyException;
 import com.tickettogether.domain.reservation.domain.Reservation;
 import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -28,7 +30,6 @@ public class ReservationDto {
             this.date = reservation.getDate();
         }
     }
-
 
     @Getter
     @AllArgsConstructor

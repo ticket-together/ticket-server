@@ -34,7 +34,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final SiteInfoRepository siteInfoRepository;
     private final static int MIN_COUNT = 1;
     private final JwtConfig jwtConfig;
-    private final long tempMemberId = 1L;
 
     @Override
     public List<ReservationDto.GetResponse> getReservations(Member member) {
