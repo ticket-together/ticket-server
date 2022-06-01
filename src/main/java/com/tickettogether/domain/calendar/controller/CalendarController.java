@@ -3,15 +3,12 @@ package com.tickettogether.domain.calendar.controller;
 import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.calendar.service.CalendarService;
 import com.tickettogether.global.error.dto.BaseResponse;
-
 import io.swagger.annotations.ApiOperation;
-
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 import static com.tickettogether.domain.calendar.dto.CalendarResponseMessage.*;
