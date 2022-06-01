@@ -2,6 +2,7 @@ package com.tickettogether.domain.member.domain;
 
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
+import com.tickettogether.domain.reservation.domain.TicketSiteInfo;
 import com.tickettogether.domain.review.domain.Review;
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.AccessLevel;

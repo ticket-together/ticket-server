@@ -1,13 +1,15 @@
 package com.tickettogether.domain.reservation.controller;
 
-import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.reservation.exception.SiteEmptyException;
 import com.tickettogether.domain.member.service.MemberService;
+import com.tickettogether.domain.reservation.domain.TicketSite;
 import com.tickettogether.domain.reservation.dto.ReservationDto;
 import com.tickettogether.domain.reservation.service.ReservationService;
 import com.tickettogether.global.error.dto.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,15 +20,34 @@ import static com.tickettogether.domain.reservation.dto.ReservationResponseMessa
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/tickets/reservation")
+@RequestMapping(value = "/api/v1/tickets")
 public class ReservationController {
 
     private final ReservationService reservationService;
     private final MemberService memberService;
+    private Long tempMemberId = 1L;
 
-    @GetMapping
+    @GetMapping("/reservation")
     public ResponseEntity<BaseResponse<List<ReservationDto.GetResponse>>> getCalendars(){
-        Member member = memberService.findMemberById(1L);
+        Member member = memberService.findMemberById(tempMemberId);
         return ResponseEntity.ok(BaseResponse.create(GET_RESERVATIONS_SUCCESS.getMessage(),reservationService.getReservations(member)));
+    }
+
+    @PostMapping("/site")
+    public ResponseEntity<BaseResponse<ReservationDto.SiteInfoGetResponse>> postSiteInfo(@RequestBody ReservationDto.SiteInfoPostRequest siteInfoPostRequest){
+        return ResponseEntity.ok(BaseResponse.create(POST_TICKET_SITE_SUCCESS.getMessage(),reservationService.postSiteInfo(siteInfoPostRequest, tempMemberId)));
+    }
+
+    @GetMapping("/site/{name}")
+    public ResponseEntity<BaseResponse<ReservationDto.SiteInfoGetResponse>> getSiteInfo(@PathVariable("name") String siteName){
+        TicketSite ticketSite = TicketSite.of(siteName).orElseThrow(SiteEmptyException::new);
+        return ResponseEntity.ok(BaseResponse.create(GET_TICKET_SITE_SUCCESS.getMessage(), reservationService.getSiteInfo(tempMemberId, ticketSite)));
+    }
+
+    @PatchMapping("/site/{id}")
+    public ResponseEntity<BaseResponse<ReservationDto.SiteInfoGetResponse>> updateSiteInfo(
+            @RequestBody ReservationDto.SiteInfoPostRequest siteInfoPostRequest,
+            @PathVariable("id") Long id){
+        return ResponseEntity.ok(BaseResponse.create(GET_TICKET_SITE_SUCCESS.getMessage(), reservationService.updateSiteInfo(siteInfoPostRequest, id)));
     }
 }
