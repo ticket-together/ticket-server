@@ -21,6 +21,9 @@ public class JwtConfig {
     @Value("${jwt.authorized-redirect-uris}")
     private String authorizedRedirectUri;
 
+    @Value("${secret.ticket-site-password-key}")
+    private String passwordKey;
+
     @Bean
     public AuthTokenProvider jwtProvider() {
         return new AuthTokenProvider(this.secret, this.tokenExpiry);
@@ -31,4 +34,8 @@ public class JwtConfig {
     }
 
     public String getRefreshExpiry() { return refreshExpiry;}
+
+    public String getPasswordKey() {
+        return passwordKey;
+    }
 }

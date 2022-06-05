@@ -49,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/oauth2/**").permitAll()
                 .antMatchers("/api/v1/login", "/api/v1/logout", "/main", "/api/v1/oauth/redirect",
-                        "/test", "/api/v1/refresh", "/api/v1/member/**", "/api/v1/**").permitAll()
+                        "/test", "/api/v1/refresh", "/api/v1/member/**", "/api/v1/**",
+                        "/v3/api-docs", "/swagger*/**").permitAll()
                 .anyRequest().authenticated()
 //                .and()
 //                .logout().logoutUrl("/api/v1/logout")
