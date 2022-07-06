@@ -5,6 +5,7 @@ import com.tickettogether.domain.culture.dto.CultureDto;
 import com.tickettogether.domain.culture.exception.CultureEmptyException;
 import com.tickettogether.domain.culture.repository.CultureRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,5 +19,9 @@ public class CultureServiceImpl implements CultureService{
     public CultureDto.CultureResponse getCulture(Long id){
         Culture culture = cultureRepository.findById(id).orElseThrow(CultureEmptyException::new);
         return new CultureDto.CultureResponse(culture);
+    }
+
+    public CultureDto.CultureSearchResponse searchCulture(String search, Pageable pageable) {
+        return new CultureDto.CultureSearchResponse(cultureRepository.searchCultureByName(pageable, search));
     }
 }
