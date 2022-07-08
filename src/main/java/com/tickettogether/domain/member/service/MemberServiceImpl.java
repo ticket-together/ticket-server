@@ -6,12 +6,16 @@ import com.tickettogether.domain.member.domain.MemberKeyword;
 import com.tickettogether.domain.member.dto.MemberDto;
 import com.tickettogether.domain.member.exception.KeywordEmptyException;
 import com.tickettogether.domain.member.exception.UserEmptyException;
-import com.tickettogether.domain.member.repository.KeywordRepository;
 import com.tickettogether.domain.member.repository.MemberKeywordRepository;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.yaml.snakeyaml.util.EnumUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,20 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+
     private final MemberKeywordRepository memberKeywordRepository;
-    private final KeywordRepository keywordRepository;
 
     @Transactional
     public MemberDto.SaveResponse saveMemberProfile(MemberDto.SaveRequest saveRequest, Long userId){
         Member member = findMemberById(userId);
         member.saveMemberProfile(saveRequest.getPhoneNumber());
 
-        for(Long id : saveRequest.getKeywordIds()){
-            Keyword keyword = keywordRepository.findById(id).orElseThrow(KeywordEmptyException::new);
-            memberKeywordRepository.save(
-                    MemberKeyword.builder()
-                    .keyword(keyword)
-                    .member(member).build());
+        for(String k : saveRequest.getKeywords()){
+            try{
+                Keyword keyword = Keyword.valueOf(k);
+                memberKeywordRepository.save(
+                        MemberKeyword.builder()
+                                .member(member)
+                                .keyword(keyword).build());
+            }catch (Exception ex){
+                throw new KeywordEmptyException();
+            }
         }
         return new MemberDto.SaveResponse(member.getId());
     }
@@ -65,6 +73,14 @@ public class MemberServiceImpl implements MemberService{
                 .email(member.getEmail())
                 .imgUrl(member.getImgUrl())
                 .phoneNumber(member.getPhoneNumber())
+                .keywords(getKeywordList(member))
                 .build();
+    }
+
+    private List<String> getKeywordList(Member member){
+        List<MemberKeyword> allByMember = memberKeywordRepository.findAllByMember(member);
+        return allByMember.stream()
+                .map(h -> h.getKeyword().toString())
+                .collect(Collectors.toList());
     }
 }

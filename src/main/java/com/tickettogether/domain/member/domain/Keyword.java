@@ -1,26 +1,6 @@
 package com.tickettogether.domain.member.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
-
-@Entity
-@Getter
-@NoArgsConstructor
-public class Keyword {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="keyword_id")
-    private Long id;
-
-    private String name;
-
-    @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberKeyword> memberKeyword;
-
-    public Keyword(String name){
-        this.name = name;
-    }
+public enum Keyword {
+    CONCERT, CLASSIC
+    //TODO 영현언니 담당 크롤링 목록 추가
 }
