@@ -13,7 +13,7 @@ public class MemberDto {
     @AllArgsConstructor
     public static class SaveRequest{
         private String phoneNumber;
-        private List<Long> keywordIds;
+        private List<String> keywords;
     }
 
     @Getter
@@ -48,5 +48,6 @@ public class MemberDto {
         private String email;
         private String imgUrl;
         private String phoneNumber;
+        private List<String> keywords;
     }
 }

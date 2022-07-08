@@ -26,13 +26,14 @@ public class Member extends BaseEntity {
     private List<MemberParts> memberPartsList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberKeyword> keywords = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TicketSiteInfo> siteInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberKeyword> memberKeywords = new ArrayList<>();
+
     private String phoneNumber;
 
     @Column(nullable = false)
