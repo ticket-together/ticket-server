@@ -12,6 +12,8 @@ import com.tickettogether.global.config.security.utils.CookieUtils;
 import com.tickettogether.global.config.security.utils.HeaderUtil;
 import com.tickettogether.global.error.exception.BaseException;
 import com.tickettogether.global.error.dto.BaseResponse;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContext;
@@ -41,6 +43,8 @@ public class LoginController {
     private final boolean invalidateMember = true;
 
     //액세스 + 리프레시 토큰 갱신
+    @ApiOperation(value = "리프레시 토큰 발급 및 갱신", notes = "리프레시 토큰을 발급 및 갱신한다.")
+    @ApiResponse(code = 2003, message = "유효하지 않은 리프레시 토큰입니다.")
     @ResponseBody
     @PostMapping("/refresh")
     public BaseResponse<TokenResponseDto> renewAccessToken(HttpServletRequest request, HttpServletResponse response) throws BaseException {
@@ -62,6 +66,9 @@ public class LoginController {
         }
         return BaseResponse.create("refresh success", new TokenResponseDto(authService.getNewAccessToken().getToken()));
     }
+
+    @ApiOperation(value = "로그아웃", notes = "액세스 토큰을 블랙리스트에 추가하고 리프레시 토큰을 삭제한다.")
+    @ApiResponse(code = 2002, message = "유효하지 않은 JWT 입니다.")
     @ResponseBody
     @PostMapping("/logout")
     public BaseResponse<String> logout(HttpServletRequest request){
@@ -71,6 +78,7 @@ public class LoginController {
         return BaseResponse.create("logout success");
     }
 
+    @ApiOperation(value = "회원 탈퇴", notes = "서비스에서 탈퇴한다.")
     @GetMapping("/quit")
     public String quitService(HttpServletRequest request){
         Assert.notNull(request, "HttpServletRequest required");
