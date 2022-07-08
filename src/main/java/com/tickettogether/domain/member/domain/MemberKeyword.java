@@ -1,5 +1,7 @@
 package com.tickettogether.domain.member.domain;
 
+import com.tickettogether.domain.culture.domain.Culture;
+import com.tickettogether.domain.culture.domain.CultureKeyword;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,5 +22,5 @@ public class MemberKeyword {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    private Keyword keyword;
+    private CultureKeyword keyword;
 }

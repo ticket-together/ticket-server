@@ -1,6 +1,6 @@
 package com.tickettogether.domain.member.service;
 
-import com.tickettogether.domain.member.domain.Keyword;
+import com.tickettogether.domain.culture.domain.CultureKeyword;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.domain.MemberKeyword;
 import com.tickettogether.domain.member.dto.MemberDto;
@@ -11,9 +11,7 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.yaml.snakeyaml.util.EnumUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +31,7 @@ public class MemberServiceImpl implements MemberService{
 
         for(String k : saveRequest.getKeywords()){
             try{
-                Keyword keyword = Keyword.valueOf(k);
+                CultureKeyword keyword = CultureKeyword.valueOf(k);
                 memberKeywordRepository.save(
                         MemberKeyword.builder()
                                 .member(member)
