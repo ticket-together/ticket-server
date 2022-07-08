@@ -4,7 +4,6 @@ import com.tickettogether.domain.culture.domain.Culture;
 import com.tickettogether.domain.culture.domain.CultureKeyword;
 import lombok.*;
 import org.springframework.data.domain.Slice;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

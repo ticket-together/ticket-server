@@ -1,5 +1,5 @@
 package com.tickettogether.domain.culture.controller;
-;
+
 import com.tickettogether.domain.culture.dto.CultureDto;
 import com.tickettogether.domain.culture.dto.CultureResponseMessage;
 import com.tickettogether.domain.culture.service.CultureService;
@@ -10,6 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,6 +24,7 @@ public class CultureController {
 
     @ApiOperation(value = "공연 상세 조회")
     @GetMapping("/{id}")
+
     public ResponseEntity<BaseResponse<CultureDto.CultureResponse>> getCulture(@PathVariable("id") Long id) {
         return ResponseEntity.ok(BaseResponse.create(CultureResponseMessage.GET_CULTURE_SUCCESS.getMessage(), cultureService.getCulture(id)));
     }
