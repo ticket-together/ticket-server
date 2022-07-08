@@ -45,4 +45,20 @@ public class CultureDto {
             this.hasNext = cultures.hasNext();
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    public static class MainCultureResponse{
+        private Long cultureId;
+        private CultureKeyword keyword;
+        private String imgUrl;
+        private String name;
+
+        public MainCultureResponse(Culture culture){
+            this.cultureId = culture.getId();
+            this.keyword = culture.getKeyword();
+            this.imgUrl = culture.getImgUrl();
+            this.name = culture.getName();
+        }
+    }
 }

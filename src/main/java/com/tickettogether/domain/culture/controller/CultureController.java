@@ -11,12 +11,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1/culture")
 public class CultureController {
 
     private final CultureService cultureService;
+    private Long memberId = 1L; //테스트 용
 
     @ApiOperation(value = "공연 상세 조회")
     @GetMapping("/{id}")
@@ -29,5 +32,11 @@ public class CultureController {
     public ResponseEntity<BaseResponse<CultureDto.CultureSearchResponse>> searchCulture(@RequestParam(value = "query", defaultValue = "") String query,
                                                                                      @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(BaseResponse.create(CultureResponseMessage.GET_CULTURE_SUCCESS.getMessage(), cultureService.searchCulture(query, pageable)));
+    }
+
+    @ApiOperation(value = "메인 페이지 공연 목록")
+    @GetMapping
+    public ResponseEntity<BaseResponse<List<CultureDto.MainCultureResponse>>> getMainCulture() {
+        return  ResponseEntity.ok(BaseResponse.create(CultureResponseMessage.GET_CULTURE_SUCCESS.getMessage(), cultureService.getMainCulture(memberId)));
     }
 }
