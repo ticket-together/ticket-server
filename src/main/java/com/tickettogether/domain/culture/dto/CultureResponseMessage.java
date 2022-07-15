@@ -1,0 +1,11 @@
+package com.tickettogether.domain.culture.dto;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum CultureResponseMessage {
+    GET_CULTURE_SUCCESS("공연 조회를 완료했습니다.");
+    private final String message;
+}

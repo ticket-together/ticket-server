@@ -15,7 +15,7 @@ public enum ErrorCode {
     // Common
     REQUEST_ERROR(2000, "입력값을 확인해주세요."),
     EMPTY_JWT(2001, "JWT를 입력해주세요."),
-    INVALID_JWT(2002, "유효하지 않은 JWT입니다."),
+    INVALID_JWT(2002, "유효하지 않은 JWT 입니다."),
     INVALID_REFRESH_JWT(2003, "유효하지 않은 리프레시 토큰입니다."),
     INVALID_USER_JWT(2003,"권한이 없는 유저의 접근입니다."),
     FAIL_UPLOAD_FILE( 2004, "파일 업로드에 실패하셨습니다."),
@@ -55,7 +55,7 @@ public enum ErrorCode {
     PASSWORD_DECRYPTION_ERROR( 4012, "비밀번호 복호화에 실패하였습니다."),
 
     EMPTY_USER_ID(2011, "존재하지 않는 회원입니다."),
-    EMPTY_KEYWORD_ID(2018, "존재하지 않는 키워드입니다."),
+    EMPTY_KEYWORD_ID(2012, "존재하지 않는 키워드입니다."),
 
 
     /**

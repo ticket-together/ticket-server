@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +19,19 @@ public class Culture {
     @Column(name="culture_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="category_id")
-    private Category category;
+    private LocalDateTime startDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="hall_id")
-    private Hall hall;
+    private LocalDateTime endDate;
+
+    private String hallName;
+
+    private String name;
+
+    private String imgUrl;
+
+    @Enumerated(EnumType.STRING)
+    private CultureKeyword keyword;
 
     @OneToMany(mappedBy = "culture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parts> partsList = new ArrayList<>();
-
-    private LocalDateTime cultureDate;
 }
