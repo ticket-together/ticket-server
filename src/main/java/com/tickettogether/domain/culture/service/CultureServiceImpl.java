@@ -40,14 +40,14 @@ public class CultureServiceImpl implements CultureService{
         Member member = memberRepository.findById(id)
                 .orElseThrow(UserEmptyException::new);
 
-        List<Culture> mainCulture= new ArrayList();
+        List<Culture> cultures= new ArrayList();
         Set<CultureKeyword> memberKeywords = getMemberKeywords(member);
 
         for (CultureKeyword keyword : memberKeywords) {
-            mainCulture.addAll(cultureRepository.findTop4CultureByKeyword(keyword));
+            cultures.addAll(cultureRepository.findTop4CultureByKeyword(keyword));
         }
 
-        return mainCulture
+        return cultures
                 .stream()
                 .map(CultureDto.MainCultureResponse::new)
                 .collect(Collectors.toList());
