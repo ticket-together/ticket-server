@@ -23,7 +23,7 @@ public class CalendarController {
 
     @ApiOperation(value = "캘린더 전체 목록 조회")
     @GetMapping
-    public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendars(){
+    public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendars() {
         return ResponseEntity.ok(BaseResponse.create(GET_CALENDARS_SUCCESS.getMessage(),calendarService.getCalendars(memberId)));
     }
 
@@ -31,9 +31,8 @@ public class CalendarController {
     @ApiResponse(code = 2020,message = "최대 캘린더 개수를 초과하였습니다.")
     @PostMapping
     public ResponseEntity<BaseResponse<CalendarDto.PostResponse>> createCalendar(
-            @RequestPart("files") MultipartFile multipartFile,
-            @RequestPart("calendar") CalendarDto.PostRequest newCalendar){
-        return ResponseEntity.ok(BaseResponse.create(POST_CALENDAR_SUCCESS.getMessage(),calendarService.createCalendar(newCalendar, memberId, multipartFile)));
+            @RequestBody CalendarDto.PostRequest newCalendar) {
+        return ResponseEntity.ok(BaseResponse.create(POST_CALENDAR_SUCCESS.getMessage(),calendarService.createCalendar(newCalendar, memberId)));
     }
 
     @ApiOperation(value = "캘린더 삭제")
