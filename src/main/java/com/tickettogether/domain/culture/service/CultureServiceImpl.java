@@ -10,14 +10,12 @@ import com.tickettogether.domain.member.domain.MemberKeyword;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
