@@ -5,12 +5,15 @@ import com.tickettogether.domain.culture.domain.CultureKeyword;
 import com.tickettogether.domain.culture.dto.CultureDto;
 import com.tickettogether.domain.culture.exception.CultureEmptyException;
 import com.tickettogether.domain.culture.repository.CultureRepository;
+import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.domain.MemberKeyword;
+import com.tickettogether.domain.member.exception.UserEmptyException;
+import com.tickettogether.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 public class CultureServiceImpl implements CultureService{
 
     private final CultureRepository cultureRepository;
+    private final MemberRepository memberRepository;
+    private static final int MAX_KEYWORD_COUNT = 2;
 
     public CultureDto.CultureResponse getCulture(Long id){
         Culture culture = cultureRepository.findById(id).orElseThrow(CultureEmptyException::new);
@@ -30,9 +35,35 @@ public class CultureServiceImpl implements CultureService{
     }
 
     public List<CultureDto.MainCultureResponse> getMainCulture(Long id) {
-        List<Culture> mainCulture= new ArrayList();
-        mainCulture.addAll(cultureRepository.findTop4CultureByKeyword(CultureKeyword.CLASSIC));
-        mainCulture.addAll(cultureRepository.findTop4CultureByKeyword(CultureKeyword.CONCERT));
-        return mainCulture.stream().map(CultureDto.MainCultureResponse::new).collect(Collectors.toList());
+        Member member = memberRepository.findById(id)
+                .orElseThrow(UserEmptyException::new);
+
+        List<Culture> cultures= new ArrayList();
+        Set<CultureKeyword> memberKeywords = getMemberKeywords(member);
+
+        for (CultureKeyword keyword : memberKeywords) {
+            cultures.addAll(cultureRepository.findTop4CultureByKeyword(keyword));
+        }
+
+        return cultures
+                .stream()
+                .map(CultureDto.MainCultureResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    private Set<CultureKeyword> getMemberKeywords(Member member) {
+        List<CultureKeyword> memberKeywords = member
+                .getMemberKeywords()
+                .stream()
+                .map(MemberKeyword::getKeyword)
+                .collect(Collectors.toList());
+
+        Set<CultureKeyword> cultureKeywords = new HashSet<>(memberKeywords);
+        int i = 0;
+        while (cultureKeywords.size() < MAX_KEYWORD_COUNT) {
+            cultureKeywords.add(CultureKeyword.values()[i]);
+            i += 1;
+        }
+        return cultureKeywords;
     }
 }
