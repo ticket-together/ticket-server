@@ -1,16 +1,21 @@
 package com.tickettogether.domain.chat.domain;
 
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ChatMessage {
+
+    private String roomId;
     private MessageType type;
     private String sender;
-    private String receiver;
+
     private Object data;
+
+    private LocalDateTime createdAt;
 
     public enum MessageType{
         CHAT,
@@ -18,15 +23,7 @@ public class ChatMessage {
         LEAVE
     }
 
-    public void setSender(String sender){
-        this.sender = sender;
-    }
-
-    public void newConnect(){
-        this.type = MessageType.JOIN;
-    }
-
-    public void closeConnect(){
-        this.type = MessageType.LEAVE;
+    public void setMessageData(Object data){
+        this.data = data;
     }
 }
