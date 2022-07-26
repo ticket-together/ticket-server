@@ -17,7 +17,7 @@ public class ChatRoomController {
 
     @PostMapping()
     public ResponseEntity<BaseResponse<ChatDto.ChatEnterResponse>> enterChatRoom(@RequestBody ChatDto.ChatEnterRequest request){
-        return ResponseEntity.ok(BaseResponse.create(ChatResponseMessage.ENTER_CHATROOM_SUCCESS.getMessage(), chatRoomService.enterOrCreateChatRoom(request)));
+        return ResponseEntity.ok(BaseResponse.create(ChatResponseMessage.ENTER_CHATROOM_SUCCESS.getMessage(), chatRoomService.createChatRoom(request)));
     }
 
     @GetMapping("/{roomId}")

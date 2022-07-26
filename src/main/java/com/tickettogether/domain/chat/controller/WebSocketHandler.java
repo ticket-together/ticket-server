@@ -20,38 +20,38 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class WebSocketHandler extends TextWebSocketHandler {
-    private final JSONParser parser = new JSONParser();
-
-    private final ChatRoomService chatRoomService;
-
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("connection success : {}", session.getId());
-    }
-
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("Accepted connection from: {}:{}", Objects.requireNonNull(session.getRemoteAddress()).getHostString(), session.getRemoteAddress().getPort());
-        JSONObject payload = (JSONObject) parser.parse(message.getPayload());
-
-        ChatMessage chatMessage = ChatMessage.builder()
-                        .roomId(payload.get("roomId").toString())
-                        .data(payload.get("data"))
-                        .type(ChatMessage.MessageType.valueOf(payload.get("type").toString()))
-                        .sender(payload.get("sender").toString())
-                        .createdAt(LocalDateTime.now()).build();
-
-        ChatRoom chatRoom = chatRoomService.getChatRoomById(chatMessage.getRoomId());
-        chatRoom.handleActions(session, chatMessage, chatRoomService);
-    }
-
-    @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        super.handleTransportError(session, exception);
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info("connection closed by {} : {}", Objects.requireNonNull(session.getRemoteAddress()).getHostString(), session.getRemoteAddress().getPort());
-    }
+//    private final JSONParser parser = new JSONParser();
+//
+//    private final ChatRoomService chatRoomService;
+//
+//    @Override
+//    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+//        log.info("connection success : {}", session.getId());
+//    }
+//
+//    @Override
+//    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+//        log.info("Accepted connection from: {}:{}", Objects.requireNonNull(session.getRemoteAddress()).getHostString(), session.getRemoteAddress().getPort());
+//        JSONObject payload = (JSONObject) parser.parse(message.getPayload());
+//
+//        ChatMessage chatMessage = ChatMessage.builder()
+//                        .roomId(payload.get("roomId").toString())
+//                        .data(payload.get("data"))
+//                        .type(ChatMessage.MessageType.valueOf(payload.get("type").toString()))
+//                        .sender(payload.get("sender").toString())
+//                        .createdAt(LocalDateTime.now()).build();
+//
+//        ChatRoom chatRoom = chatRoomService.getChatRoomById(chatMessage.getRoomId());
+//        chatRoom.handleActions(session, chatMessage, chatRoomService);
+//    }
+//
+//    @Override
+//    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+//        super.handleTransportError(session, exception);
+//    }
+//
+//    @Override
+//    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+//        log.info("connection closed by {} : {}", Objects.requireNonNull(session.getRemoteAddress()).getHostString(), session.getRemoteAddress().getPort());
+//    }
 }
