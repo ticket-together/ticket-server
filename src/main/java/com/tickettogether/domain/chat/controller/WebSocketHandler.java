@@ -34,15 +34,15 @@ public class WebSocketHandler extends TextWebSocketHandler {
         log.info("Accepted connection from: {}:{}", Objects.requireNonNull(session.getRemoteAddress()).getHostString(), session.getRemoteAddress().getPort());
         JSONObject payload = (JSONObject) parser.parse(message.getPayload());
 
-        ChatMessage textMessage = ChatMessage.builder()
+        ChatMessage chatMessage = ChatMessage.builder()
                         .roomId(payload.get("roomId").toString())
                         .data(payload.get("data"))
                         .type(ChatMessage.MessageType.valueOf(payload.get("type").toString()))
                         .sender(payload.get("sender").toString())
                         .createdAt(LocalDateTime.now()).build();
 
-        ChatRoom chatRoom = chatRoomService.getChatRoomById(textMessage.getRoomId());
-        chatRoom.handleActions(session, textMessage, chatRoomService);
+        ChatRoom chatRoom = chatRoomService.getChatRoomById(chatMessage.getRoomId());
+        chatRoom.handleActions(session, chatMessage, chatRoomService);
     }
 
     @Override
