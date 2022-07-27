@@ -1,5 +1,6 @@
 package com.tickettogether.domain.chat.domain;
 
+import com.tickettogether.global.entity.BaseEntity;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ChatMessage {
+public class ChatMessage extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
@@ -25,11 +26,7 @@ public class ChatMessage {
 
     private String sender;
 
-    private Object data;
-
-    @CreatedDate
-    @Column(columnDefinition = "false")
-    private LocalDateTime createdAt;
+    private String data;
 
     public enum MessageType{
         CHAT,
@@ -38,7 +35,7 @@ public class ChatMessage {
     }
 
     @Builder
-    public ChatMessage(ChatRoom chatRoom, MessageType type, String sender, Object data){
+    public ChatMessage(ChatRoom chatRoom, MessageType type, String sender, String data){
         this.chatRoom = chatRoom;
         this.type = type;
         this.sender = sender;

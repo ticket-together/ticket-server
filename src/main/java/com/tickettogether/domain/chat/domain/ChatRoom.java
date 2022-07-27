@@ -1,16 +1,10 @@
 package com.tickettogether.domain.chat.domain;
 
-import com.tickettogether.domain.chat.service.ChatRoomService;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
 @Builder
