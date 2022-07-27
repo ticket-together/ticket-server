@@ -2,6 +2,7 @@ package com.tickettogether.domain.chat.dto;
 
 import com.tickettogether.domain.chat.domain.ChatMessage;
 import com.tickettogether.domain.chat.domain.ChatRoom;
+import com.tickettogether.global.error.dto.PageDto;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class ChatDto {
     public static class ChatSearchResponse{
         private Long roomId;
         private String roomName;
-        private List<ChatMessageResponse> messageList = new ArrayList<>();
+        private PageDto<ChatMessageResponse> messageList;
     }
 
     @Getter

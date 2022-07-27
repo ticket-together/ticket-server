@@ -2,10 +2,8 @@ package com.tickettogether.domain.chat.domain;
 
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

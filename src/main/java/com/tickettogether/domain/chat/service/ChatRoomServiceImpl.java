@@ -7,10 +7,16 @@ import com.tickettogether.domain.chat.dto.ChatDto;
 import com.tickettogether.domain.chat.exception.ChatRoomEmptyException;
 import com.tickettogether.domain.chat.repository.ChatMessageRepository;
 import com.tickettogether.domain.chat.repository.ChatRoomRepository;
+import com.tickettogether.global.error.dto.PageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,6 +45,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatMessage chatMessage = chatMessageRepository.save(request.toEntity(
                         chatRoomRepository.findById(request.getRoomId()).orElseThrow(ChatRoomEmptyException::new)));
         return chatMessageDtoBuilder(chatMessage.getData(), chatMessage.getSender(), chatMessage.getCreatedAt().format(formatter));
+    }
+
+    public ChatDto.ChatSearchResponse getChatListByRoomId(Long roomId, Pageable pageable) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(ChatRoomEmptyException::new);
+        Page<ChatDto.ChatMessageResponse> messageDtoList = chatMessageRepository.findAllByChatRoomOrderByCreatedAtDesc(pageable, chatRoom)
+                .map(x -> chatMessageDtoBuilder(x.getData(), x.getSender(), x.getCreatedAt().format(formatter)));
+
+        return ChatDto.ChatSearchResponse.builder()
+                .roomId(roomId)
+                .roomName(chatRoom.getName())
+                .messageList(PageDto.create(messageDtoList, messageDtoList.getContent())).build();
     }
 
     private ChatDto.ChatMessageResponse chatMessageDtoBuilder(String data, String sender, String createdAt){
