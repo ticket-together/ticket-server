@@ -32,6 +32,9 @@ dependencies {
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+	//thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly('com.h2database:h2')
 	runtimeOnly 'mysql:mysql-connector-java'
@@ -48,13 +51,13 @@ dependencies {
 }
 
 
-processResources.dependsOn('copySecret')
-
-task copySecret(type: Copy) {
-	from './secret-config'
-	include "*.yml"
-	into './src/main/resources'
-}
+//processResources.dependsOn('copySecret')
+//
+//task copySecret(type: Copy) {
+//	from './secret-config'
+//	include "*.yml"
+//	into './src/main/resources'
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()

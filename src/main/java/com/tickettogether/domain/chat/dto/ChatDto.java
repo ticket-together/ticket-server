@@ -1,9 +1,10 @@
 package com.tickettogether.domain.chat.dto;
 
+import com.tickettogether.domain.chat.domain.ChatMessage;
+import com.tickettogether.domain.chat.domain.ChatRoom;
+import com.tickettogether.global.dto.PageDto;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 public class ChatDto {
@@ -12,7 +13,7 @@ public class ChatDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class ChatEnterRequest{
-        private String roomId;
+        private Long roomId;
         private String roomName;
         private Long potId;
     }
@@ -23,17 +24,21 @@ public class ChatDto {
     @AllArgsConstructor
     @Builder
     public static class ChatEnterResponse{
-        private String roomId;
+        private Long roomId;
     }
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Builder
-    public static class ChatMessageResponse<T>{
+    public static class ChatMessageResponse{
         private String sender;
-        private T data;
+        private String data;
         private String createdAt;
+
+        public void setData(String data){
+            this.data = data;
+        }
     }
 
     @Getter
@@ -41,8 +46,27 @@ public class ChatDto {
     @AllArgsConstructor
     @Builder
     public static class ChatSearchResponse{
-        private String roomId;
+        private Long roomId;
         private String roomName;
-        private Set<String> sessionList = new HashSet<>();
+        private PageDto<ChatMessageResponse> messageList;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class ChatStompRequest {
+        private Long roomId;
+        private String sender;
+        private String data;
+        private String type;
+
+        public ChatMessage toEntity(ChatRoom chatRoom){
+            return ChatMessage.builder()
+                    .sender(sender)
+                    .type(ChatMessage.MessageType.valueOf(type))
+                    .data(data)
+                    .chatRoom(chatRoom)
+                    .build();
+        }
     }
 }

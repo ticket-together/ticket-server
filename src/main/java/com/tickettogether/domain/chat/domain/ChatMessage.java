@@ -1,21 +1,30 @@
 package com.tickettogether.domain.chat.domain;
 
+import com.tickettogether.global.entity.BaseEntity;
 import lombok.*;
-import java.time.LocalDateTime;
 
+import javax.persistence.*;
+
+@Entity
 @Getter
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ChatMessage {
+public class ChatMessage extends BaseEntity {
 
-    private String roomId;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "message_id")
+    private Long id;
+
+    @JoinColumn(name = "room_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ChatRoom chatRoom;
+
+    @Enumerated(value = EnumType.STRING)
     private MessageType type;
+
     private String sender;
 
-    private Object data;
-
-    private LocalDateTime createdAt;
+    private String data;
 
     public enum MessageType{
         CHAT,
@@ -23,7 +32,11 @@ public class ChatMessage {
         LEAVE
     }
 
-    public void setMessageData(Object data){
+    @Builder
+    public ChatMessage(ChatRoom chatRoom, MessageType type, String sender, String data){
+        this.chatRoom = chatRoom;
+        this.type = type;
+        this.sender = sender;
         this.data = data;
     }
 }
