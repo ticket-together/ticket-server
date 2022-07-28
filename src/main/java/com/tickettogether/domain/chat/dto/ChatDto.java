@@ -2,11 +2,8 @@ package com.tickettogether.domain.chat.dto;
 
 import com.tickettogether.domain.chat.domain.ChatMessage;
 import com.tickettogether.domain.chat.domain.ChatRoom;
-import com.tickettogether.global.error.dto.PageDto;
+import com.tickettogether.global.dto.PageDto;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Getter

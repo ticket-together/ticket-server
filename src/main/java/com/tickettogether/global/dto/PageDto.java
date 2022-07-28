@@ -1,4 +1,4 @@
-package com.tickettogether.global.error.dto;
+package com.tickettogether.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

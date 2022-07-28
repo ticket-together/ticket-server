@@ -2,7 +2,6 @@ package com.tickettogether.domain.chat.service;
 
 import com.tickettogether.domain.chat.dto.ChatDto;
 import com.tickettogether.domain.chat.dto.ChatDto.ChatEnterResponse;
-import com.tickettogether.global.error.dto.PageDto;
 import org.springframework.data.domain.Pageable;
 
 public interface ChatRoomService {

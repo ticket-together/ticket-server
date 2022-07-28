@@ -1,18 +1,15 @@
 package com.tickettogether.domain.chat.controller;
 
-import com.tickettogether.domain.chat.domain.ChatRoom;
 import com.tickettogether.domain.chat.dto.ChatDto;
 import com.tickettogether.domain.chat.dto.ChatResponseMessage;
 import com.tickettogether.domain.chat.repository.ChatRoomRepository;
 import com.tickettogether.domain.chat.service.ChatRoomServiceImpl;
 import com.tickettogether.global.error.dto.BaseResponse;
-import com.tickettogether.global.error.dto.PageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
