@@ -51,13 +51,13 @@ dependencies {
 }
 
 
-//processResources.dependsOn('copySecret')
-//
-//task copySecret(type: Copy) {
-//	from './secret-config'
-//	include "*.yml"
-//	into './src/main/resources'
-//}
+processResources.dependsOn('copySecret')
+
+task copySecret(type: Copy) {
+	from './secret-config'
+	include "*.yml"
+	into './src/main/resources'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
