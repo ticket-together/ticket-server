@@ -17,6 +17,7 @@ public class CalendarDto {
     public static class PostRequest{
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private String date;
+        private String imgUrl;
     }
 
     @Getter

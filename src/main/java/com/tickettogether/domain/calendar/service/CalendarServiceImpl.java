@@ -10,6 +10,7 @@ import com.tickettogether.domain.member.service.MemberService;
 import com.tickettogether.global.common.Constant;
 import com.tickettogether.infra.s3.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,19 +30,17 @@ public class CalendarServiceImpl implements CalendarService{
     private final S3Service s3Service;
 
     @Transactional
-    public CalendarDto.PostResponse createCalendar(CalendarDto.PostRequest newCalendar, Long memberId, MultipartFile multipartFile){
+    public CalendarDto.PostResponse createCalendar(CalendarDto.PostRequest newCalendar, Long memberId){
         Member member = memberService.findMemberById(memberId);
 
         if(calendarRepository.countByMemberAndDate(member, LocalDate.parse(newCalendar.getDate())) >= CALENDAR_LIMIT_COUNT){
             throw new CalendarBusinessException();
         }
 
-        String uploadImageUrl = s3Service.uploadFileV1(Constant.CATEGORY_CALENDAR, multipartFile);
-
         Calendar createCalendar = Calendar.builder()
                 .member(member)
                 .date(LocalDate.parse(newCalendar.getDate()))
-                .imgUrl(uploadImageUrl)
+                .imgUrl(newCalendar.getImgUrl())
                 .build();
 
         return new CalendarDto.PostResponse(calendarRepository.save(createCalendar));

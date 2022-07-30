@@ -67,7 +67,13 @@ public enum ErrorCode {
      * reviews
      */
     EMPTY_HALL(3030, "해당하는 공연장이 없습니다."),
-    EMPTY_REVIEW(3031, "리뷰가 존재하지 않습니다.");
+    EMPTY_REVIEW(3031, "리뷰가 존재하지 않습니다."),
+
+
+    /**
+     * chats
+     */
+    EMPTY_ROOM_ID(3040, "존재하지 않는 채팅방입니다.");
 
 
     private final String message;
