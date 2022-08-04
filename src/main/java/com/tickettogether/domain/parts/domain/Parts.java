@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,17 +41,16 @@ public class Parts extends BaseEntity {
 
     private Integer partTotal;
 
-    private LocalDateTime partDate;
-
-    private LocalDateTime partDeadLine;
+    private LocalDate partDate;
 
     @Builder
-    public Parts(String partName, String partContent, Integer partTotal, LocalDateTime partDate, LocalDateTime partDeadLine){
+    public Parts(Culture culture, String partName, String partContent, Integer partTotal, LocalDate partDate, Status status){
+        this.culture = culture;
         this.partName = partName;
         this.partContent = partContent;
         this.partTotal = partTotal;
         this.partDate = partDate;
-        this.partDeadLine = partDeadLine;
+        this.status = status;
     }
 
     public Parts changePartStatus(){    //팟 마감

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CultureRepository extends JpaRepository<Culture, Long> {
@@ -16,4 +17,6 @@ public interface CultureRepository extends JpaRepository<Culture, Long> {
     Slice<Culture> searchCultureByName(Pageable pageable, @Param("query") String query);
 
     List<Culture> findTop4CultureByKeyword(CultureKeyword keyword);
+
+    Optional<Culture> findByName(String cultureName);
 }

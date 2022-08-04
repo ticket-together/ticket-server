@@ -61,7 +61,7 @@ public enum ErrorCode {
     /**
      * parts
      */
-
+    EMPTY_PARTS(3032, "해당하는 팟이 없습니다."),
 
     /**
      * reviews
