@@ -39,9 +39,6 @@ public enum BaseResponseStatus {
     EMPTY_CALENDAR_ID(false, 2021, "존재하지 않는 캘린더입니다."),
 
 
-
-
-
     /**
      * 3000 : Response 오류
      */

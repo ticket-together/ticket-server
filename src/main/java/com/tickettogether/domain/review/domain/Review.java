@@ -23,9 +23,11 @@ public class Review extends BaseEntity {
     @JoinColumn(name="member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="hall_id")
-    private Hall hall;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="hall_id")
+//    private Hall hall;
+
+    private String hallName;
 
     @Column(precision = 2, scale = 1)
     private BigDecimal starPoint;
@@ -41,9 +43,9 @@ public class Review extends BaseEntity {
     private String number;
 
     @Builder
-    public Review(Member member, Hall hall, BigDecimal starPoint, String contents, String floor, String part, String record, String number){
-        this.member=member;
-        this.hall = hall;
+    public Review(Member member, String hallName, BigDecimal starPoint, String contents, String floor, String part, String record, String number){
+        this.member = member;
+        this.hallName = hallName;
         this.starPoint = starPoint;
         this.contents = contents;
         this.floor = floor;
@@ -64,4 +66,5 @@ public class Review extends BaseEntity {
     public void addMember(Member member){
         this.member = member;
     }
+
 }

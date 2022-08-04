@@ -18,7 +18,7 @@ public class ReviewDto {
     public static class addRequest {
 
         private Member member;
-        private Hall hall;
+        private String hallName;
         private BigDecimal starPoint;
         private String contents;
         private String floor;
@@ -29,7 +29,7 @@ public class ReviewDto {
         // dto -> entity
         public Review toEntity() {
             return Review.builder()
-                    .hall(hall)
+                    .hallName(hallName)
                     .starPoint(starPoint)
                     .contents(contents)
                     .floor(floor)
@@ -45,7 +45,7 @@ public class ReviewDto {
     @Getter
     public static class addResponse {
         private Member member;
-        private Hall hall;
+        private String hallName;
         private BigDecimal starPoint;
         private String contents;
         private String floor;
@@ -56,7 +56,7 @@ public class ReviewDto {
 
         public addResponse(Review review) {
             this.member = review.getMember();
-            this.hall = review.getHall();
+            this.hallName = review.getHallName();
             this.starPoint = review.getStarPoint();
             this.contents = review.getContents();
             this.floor = review.getFloor();

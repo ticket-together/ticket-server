@@ -23,30 +23,30 @@ public class ReviewController {
     private Long memberId = 1L;  // 테스트 용
 
     // 리뷰 작성,저장
-    @PostMapping("/{hallId}/add")
-    public ResponseEntity<BaseResponse<ReviewDto.addResponse>> addReview(@PathVariable("hallId") Long hallId, @RequestBody ReviewDto.addRequest reviewDto){
-        return ResponseEntity.ok(BaseResponse.create(SAVE_REVIEW_SUCCESS.getMessage(),reviewService.addReview(memberId, hallId, reviewDto)));
+    @PostMapping("/add")
+    public ResponseEntity<BaseResponse<ReviewDto.addResponse>> addReview(@RequestParam("hall") String hallName, @RequestBody ReviewDto.addRequest reviewDto){
+        return ResponseEntity.ok(BaseResponse.create(SAVE_REVIEW_SUCCESS.getMessage(),reviewService.addReview(memberId, hallName, reviewDto)));
     }
 
 
     // 리뷰 조회 페이지 (해당 공연장, 좌석)
-    @GetMapping("/{hallId}/search")
-    public ResponseEntity<BaseResponse<List<ReviewInfoDto>>> searchReviews(@PathVariable("hallId") Long hallId, ReviewSearchCondition condition) {
-        return ResponseEntity.ok(BaseResponse.create(GET_REVIEW_SUCCESS.getMessage(),reviewService.searchReviewBySeat(hallId, condition)));
+    @GetMapping("/search")
+    public ResponseEntity<BaseResponse<List<ReviewInfoDto>>> searchReviews(@RequestParam("hall") String hallName, ReviewSearchCondition condition) {
+        return ResponseEntity.ok(BaseResponse.create(GET_REVIEW_SUCCESS.getMessage(),reviewService.searchReviewBySeat(hallName, condition)));
     }
 
     // 리뷰 수정
-    @PutMapping("/{hallId}/{reviewId}/update")
-    public ResponseEntity<BaseResponse<String>> updateReview(@PathVariable("hallId") Long hallId,
-                                                             @PathVariable("reviewId") Long reviewId,
+    @PutMapping("/update")
+    public ResponseEntity<BaseResponse<String>> updateReview(@RequestParam("hall") String hallName,
+                                                             @RequestParam("reviewId") Long reviewId,
                                                              @RequestBody ReviewDto.updateRequest reviewDto){
-        reviewService.updateReview(hallId, reviewId, reviewDto);
+        reviewService.updateReview(hallName, reviewId, reviewDto);
         return ResponseEntity.ok(BaseResponse.create(MODIFY_REVIEW_SUCCESS.getMessage()));
     }
 
     // 리뷰 삭제
-    @DeleteMapping("/{hallId}/{reviewId}/delete")
-    public ResponseEntity<BaseResponse<String>> deleteReview(@PathVariable("hallId") Long hallId, @PathVariable("reviewId") Long reviewId){
+    @DeleteMapping("/delete")
+    public ResponseEntity<BaseResponse<String>> deleteReview(@RequestParam("hall") String hallName, @RequestParam("reviewId") Long reviewId){
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok(BaseResponse.create(DELETE_REVIEW_SUCCESS.getMessage()));
     }
