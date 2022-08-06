@@ -11,7 +11,7 @@ public class ReviewInfoDto {
     private Long memberId;
     private String name;
     private String imgUrl;
-    private Long hallId;
+    private String hallName;
     private Long reviewId;
     private BigDecimal starPoint;
     private String contents;
@@ -21,11 +21,11 @@ public class ReviewInfoDto {
     private String number;
 
     @QueryProjection
-    public ReviewInfoDto(Long memberId, String name, String imgUrl, Long hallId, Long reviewId, BigDecimal starPoint, String contents, String floor, String part, String record, String number){
+    public ReviewInfoDto(Long memberId, String name, String imgUrl, Long reviewId, String hallName, BigDecimal starPoint, String contents, String floor, String part, String record, String number){
         this.memberId = memberId;
         this.name = name;
         this.imgUrl = imgUrl;
-        this.hallId = hallId;
+        this.hallName = hallName;
         this.reviewId = reviewId;
         this.starPoint = starPoint;
         this.contents = contents;

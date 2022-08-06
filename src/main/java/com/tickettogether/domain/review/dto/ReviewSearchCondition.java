@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ReviewSearchCondition {
 
-    private Long hallId;
+    private String hallName;
     private String floor;
     private String part;
     private String record;

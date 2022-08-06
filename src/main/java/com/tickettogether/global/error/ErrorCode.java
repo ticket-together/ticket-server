@@ -3,8 +3,6 @@ package com.tickettogether.global.error;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
-import javax.transaction.Transaction;
-
 /**
  * 에러 코드 관리
  */
@@ -61,7 +59,7 @@ public enum ErrorCode {
     /**
      * parts
      */
-    EMPTY_PARTS(3032, "해당하는 팟이 없습니다."),
+    EMPTY_PARTS(3040, "팟이 존재하지 않습니다."),
 
     /**
      * reviews
@@ -74,7 +72,6 @@ public enum ErrorCode {
      * chats
      */
     EMPTY_ROOM_ID(3040, "존재하지 않는 채팅방입니다.");
-
 
     private final String message;
     private int status;
