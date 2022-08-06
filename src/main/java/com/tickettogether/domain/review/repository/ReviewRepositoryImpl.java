@@ -51,7 +51,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     private BooleanExpression HallEq(String hallName) {
-        return isEmpty(hallName) ? null : review.hallName.like(hallName);
+        return isEmpty(hallName) ? null : review.hallName.eq(hallName);
     }
     private BooleanExpression FloorEq(String floor) {
         return isEmpty(floor) ? null : review.floor.eq(floor);
