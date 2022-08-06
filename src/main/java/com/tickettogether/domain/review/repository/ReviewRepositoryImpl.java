@@ -31,8 +31,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         member.id.as("member_Id"),
                         member.name,
                         member.imgUrl,
-                        hall.id.as("hall_id"),
                         review.id.as("review_id"),
+                        review.hallName,
                         review.starPoint,
                         review.contents,
                         review.floor,
@@ -41,8 +41,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.number))
                 .from(review)
                 .leftJoin(review.member, member)
-                .leftJoin(review.hall,hall)
-                .where(HallEq(condition.getHallId()),
+                .where(HallEq(condition.getHallName()),
                         FloorEq(condition.getFloor()),
                         PartEq(condition.getPart()),
                         RecordEq(condition.getRecord()),
@@ -51,9 +50,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .fetch();
     }
 
-
-    private BooleanExpression HallEq(Long hallId) {
-        return isEmpty(hallId) ? null : review.hall.id.eq(hallId);
+    private BooleanExpression HallEq(String hallName) {
+        return isEmpty(hallName) ? null : review.hallName.eq(hallName);
     }
     private BooleanExpression FloorEq(String floor) {
         return isEmpty(floor) ? null : review.floor.eq(floor);

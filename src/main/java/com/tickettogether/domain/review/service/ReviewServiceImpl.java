@@ -31,25 +31,22 @@ public class ReviewServiceImpl implements ReviewService{
 
     // 리뷰 작성,저장
     @Override
-    public ReviewDto.addResponse addReview(Long memberId, Long hallId, ReviewDto.addRequest requestDto) {
+    public ReviewDto.addResponse addReview(Long memberId, String hallName, ReviewDto.addRequest requestDto) {
         Member member = getMember(memberId);
-        Hall hall = getHall(hallId);
 
         requestDto.setMember(member);
-        requestDto.setHall(hall);
+        requestDto.setHallName(hallName);
 
         Review review = requestDto.toEntity();
 
         return new ReviewDto.addResponse(reviewRepository.save(review));
     }
 
-
     // 리뷰 조회 페이지 (해당 공연장, 좌석)
     @Override
-    public List<ReviewInfoDto> searchReviewBySeat(Long hallId, ReviewSearchCondition condition) {
+    public List<ReviewInfoDto> searchReviewBySeat(String hallName, ReviewSearchCondition condition) {
 
-        getHall(hallId);
-        condition.setHallId(hallId);
+        condition.setHallName(hallName);
 
         if (reviewRepository.findReviewBySeat(condition).isEmpty()) throw new ReviewEmptyException();
         return reviewRepository.findReviewBySeat(condition);
@@ -57,7 +54,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     // 리뷰 수정
     @Override
-    public ReviewDto.addResponse updateReview(Long hallId, Long reviewId, ReviewDto.updateRequest requestDto) {
+    public ReviewDto.addResponse updateReview(String hallName, Long reviewId, ReviewDto.updateRequest requestDto) {
         Review review = getReview(reviewId);
 
         review.updateReview(requestDto.getStarPoint(), requestDto.getContents(),
@@ -88,10 +85,10 @@ public class ReviewServiceImpl implements ReviewService{
 
     }
 
-    private Hall getHall(Long hallId) {
-        return hallRepository.findById(hallId)
-                .orElseThrow(HallEmptyException::new);
-    }
+//    private Hall getHall(Long hallId) {
+//        return hallRepository.findById(hallId)
+//                .orElseThrow(HallEmptyException::new);
+//    }
 
 }
 

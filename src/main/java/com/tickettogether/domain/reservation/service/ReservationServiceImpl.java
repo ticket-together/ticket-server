@@ -29,10 +29,10 @@ import static com.tickettogether.global.error.ErrorCode.PASSWORD_ENCRYPTION_ERRO
 @Transactional(readOnly = true)
 public class ReservationServiceImpl implements ReservationService {
 
+    private final static int MIN_COUNT = 1;
     private final ReservationRepository reservationRepository;
     private final MemberRepository memberRepository;
     private final SiteInfoRepository siteInfoRepository;
-    private final static int MIN_COUNT = 1;
     private final JwtConfig jwtConfig;
 
     @Override
