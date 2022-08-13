@@ -34,13 +34,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return ChatDto.ChatEnterResponse.builder().roomId(chatRoom.getId()).build();
     }
 
-    public ChatDto.ChatMessageResponse createChatMessageOrSave(ChatDto.ChatStompRequest request){
+    public ChatDto.ChatMessageResponse createChatMessageOrSave(ChatDto.ChatStompRequest request, Long roomId){
         if(MessageType.JOIN.name().equals(request.getType())){
             return chatMessageDtoBuilder(request.getSender() + "님이 채팅방에 입장하셨습니다.", request.getSender(), null);
         }
 
         ChatMessage chatMessage = chatMessageRepository.save(request.toEntity(
-                        chatRoomRepository.findById(request.getRoomId()).orElseThrow(ChatRoomEmptyException::new)));
+                        chatRoomRepository.findById(roomId).orElseThrow(ChatRoomEmptyException::new)));
         return chatMessageDtoBuilder(chatMessage.getData(), chatMessage.getSender(), chatMessage.getCreatedAt().format(formatter));
     }
 

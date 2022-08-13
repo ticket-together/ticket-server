@@ -1,5 +1,6 @@
 package com.tickettogether.domain.chat.controller;
 
+import com.tickettogether.domain.chat.domain.ChatRoom;
 import com.tickettogether.domain.chat.dto.ChatDto;
 import com.tickettogether.domain.chat.dto.ChatResponseMessage;
 import com.tickettogether.domain.chat.repository.ChatRoomRepository;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -30,10 +32,10 @@ public class ChatRoomController {
         return ResponseEntity.ok(BaseResponse.create(ChatResponseMessage.GET_CHATROOM_SUCCESS.getMessage(), chatRoomService.getChatListByRoomId(roomId, pageable)));
     }
 
-//    @GetMapping("/{roomId}")    // STOMP 테스트용
-//    public String getChatRoom(@PathVariable("roomId") Long roomId, Model model){
-//        ChatRoom chatRoom = chatRoomRepository.getById(roomId);
-//        model.addAttribute("room", chatRoom);
-//        return "Room";
-//    }
+    @GetMapping("/{roomId}/test")    // STOMP 테스트용
+    public String getChatRoom(@PathVariable("roomId") Long roomId, Model model){
+        ChatRoom chatRoom = chatRoomRepository.getById(roomId);
+        model.addAttribute("room", chatRoom);
+        return "Room";
+    }
 }

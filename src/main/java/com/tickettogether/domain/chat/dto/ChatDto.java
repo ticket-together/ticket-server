@@ -55,7 +55,6 @@ public class ChatDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class ChatStompRequest {
-        private Long roomId;
         private String sender;
         private String data;
         private String type;

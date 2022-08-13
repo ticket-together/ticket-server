@@ -8,7 +8,6 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     $(document).ready(function(){
-        console.log("come here?");
 
         var roomName = [[${room.name}]];
         var roomId = [[${room.id}]];
@@ -25,7 +24,7 @@
             console.log("STOMP Connection")
 
             //4. subscribe(path, callback)으로 메세지를 받을 수 있음
-            stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
+            stomp.subscribe("/topic/room." + roomId, function (chat) {    // binding key 설정(구독할 때)
                 var content = JSON.parse(chat.body);
                 var writer = content.sender;
                 var message = content.data;
@@ -47,14 +46,14 @@
             });
 
             //3. send(path, header, message)로 메세지를 보낼 수 있음
-            stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, type:"JOIN", sender: username}))
+            stomp.send('/pub/chat.enter.' + roomId, {}, JSON.stringify({type:"JOIN", sender: username}))
         });
 
         $("#button-send").on("click", function(e){
             var msg = document.getElementById("msg");
 
             console.log(username + ":" + msg.value);
-            stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, data: msg.value, type:"CHAT", sender: username}));
+            stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, type:"CHAT", sender: username}));
             msg.value = '';
         });
     });

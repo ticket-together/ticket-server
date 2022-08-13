@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface ChatRoomService {
 
     ChatEnterResponse createChatRoom(ChatDto.ChatEnterRequest request);
-    ChatDto.ChatMessageResponse createChatMessageOrSave(ChatDto.ChatStompRequest request);
+    ChatDto.ChatMessageResponse createChatMessageOrSave(ChatDto.ChatStompRequest request, Long roomId);
     ChatDto.ChatSearchResponse getChatListByRoomId(Long roomId, Pageable pageable);
 }
