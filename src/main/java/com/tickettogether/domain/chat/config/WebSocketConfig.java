@@ -1,5 +1,6 @@
 package com.tickettogether.domain.chat.config;
 
+import com.tickettogether.domain.chat.CustomWebSocketHandlerDecorator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.util.AntPathMatcher;
@@ -24,5 +25,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setPathMatcher(new AntPathMatcher("."));   // topic exchange
         registry.setApplicationDestinationPrefixes("/pub");
         registry.enableStompBrokerRelay("/topic");
+    }
+
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        registry.addDecoratorFactory(CustomWebSocketHandlerDecorator::new);
     }
 }
