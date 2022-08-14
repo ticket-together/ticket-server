@@ -56,6 +56,12 @@
             stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, type:"CHAT", sender: username}));
             msg.value = '';
         });
+
+        $("#button-leave").on("click", function(e){
+            stomp.disconnect(function(frame) {
+                console.log("stomp client successfully disconnected");
+            });
+        });
     });
     /*]]>*/
 </script>
@@ -74,6 +80,7 @@
                     <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
                 </div>
             </div>
+            <button class="btn btn-outline-secondary" type="button" id="button-leave">나가기</button>
         </div>
     </div>
     <div class="col-6"></div>

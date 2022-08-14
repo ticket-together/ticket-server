@@ -35,6 +35,7 @@ public class ChatDto {
         private String sender;
         private String data;
         private String createdAt;
+        private String type;
 
         public void setData(String data){
             this.data = data;

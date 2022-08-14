@@ -30,6 +30,8 @@ public class StompChatController {
     @SendTo("/topic/room.{roomId}")
     public ChatMessageResponse enter(@Payload ChatStompRequest message, @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", message.getSender());
+        Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("roomId", roomId);
+
         ChatMessageResponse sendMessage = chatRoomService.createChatMessageOrSave(message, Long.parseLong(roomId));
         rabbitTemplate.convertAndSend(CHAT_QUEUE_NAME, sendMessage);
         return sendMessage;
