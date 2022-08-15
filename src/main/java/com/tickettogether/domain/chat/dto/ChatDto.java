@@ -35,6 +35,7 @@ public class ChatDto {
         private String sender;
         private String data;
         private String createdAt;
+        private String type;
 
         public void setData(String data){
             this.data = data;
@@ -55,7 +56,6 @@ public class ChatDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class ChatStompRequest {
-        private Long roomId;
         private String sender;
         private String data;
         private String type;
