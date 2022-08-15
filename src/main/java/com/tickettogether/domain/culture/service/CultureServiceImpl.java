@@ -26,7 +26,7 @@ public class CultureServiceImpl implements CultureService{
     private static final int MAX_KEYWORD_COUNT = 2;
 
     public CultureDto.CultureResponse getCulture(Long id){
-        Culture culture = cultureRepository.findById(id).orElseThrow(CultureEmptyException::new);
+        Culture culture = cultureRepository.findByProdId(id).orElseThrow(CultureEmptyException::new);
         return new CultureDto.CultureResponse(culture);
     }
 

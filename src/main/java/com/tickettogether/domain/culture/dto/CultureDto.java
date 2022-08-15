@@ -21,7 +21,7 @@ public class CultureDto {
         private String hallName;
 
         public CultureResponse(Culture culture){
-            this.cultureId = culture.getId();
+            this.cultureId = culture.getProdId();
             this.startDate = culture.getStartDate().toString();
             this.endDate = culture.getEndDate().toString();
             this.keyword = culture.getKeyword();
@@ -35,6 +35,7 @@ public class CultureDto {
     @NoArgsConstructor
     public static class CultureSearchResponse {
         private Boolean hasNext;
+        private int page;
         private List<CultureResponse> cultures = new ArrayList<>();
 
         public CultureSearchResponse(Slice<Culture> cultures){
@@ -42,6 +43,7 @@ public class CultureDto {
                     .map(CultureDto.CultureResponse::new)
                     .collect(Collectors.toList());
             this.hasNext = cultures.hasNext();
+            this.page = cultures.getNumber();
         }
     }
 
@@ -54,7 +56,7 @@ public class CultureDto {
         private String name;
 
         public MainCultureResponse(Culture culture){
-            this.cultureId = culture.getId();
+            this.cultureId = culture.getProdId();
             this.keyword = culture.getKeyword();
             this.imgUrl = culture.getImgUrl();
             this.name = culture.getName();

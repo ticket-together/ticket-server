@@ -19,6 +19,8 @@ public class Culture {
     @Column(name="culture_id")
     private Long id;
 
+    private Long prodId;
+
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
