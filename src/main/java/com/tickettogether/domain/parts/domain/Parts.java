@@ -47,20 +47,14 @@ public class Parts extends BaseEntity {
 
     private LocalDate partDate;
 
-    @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member manager;
-
     @Builder
-    public Parts(Culture culture, Integer currentPartTotal, Status status, Member manager, PartsDto.createRequest request){
+    public Parts(Culture culture, String partName, String partContent, Integer partTotal, LocalDate partDate, Status status){
         this.culture = culture;
-        this.partName = request.getPartName();
-        this.partContent = request.getPartContent();
-        this.partTotal = request.getPartTotal();
-        this.currentPartTotal = currentPartTotal;
-        this.partDate = request.getPartDate();
+        this.partName = partName;
+        this.partContent = partContent;
+        this.partTotal = partTotal;
+        this.partDate = partDate;
         this.status = status;
-        this.manager = manager;
     }
 
     public Parts changePartStatus(){    //팟 마감

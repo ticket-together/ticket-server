@@ -10,6 +10,7 @@ import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
+import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,31 +22,36 @@ import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
 public class MemberPartsServiceImpl implements MemberPartsService {
 
     private final MemberRepository memberRepository;
+    private final PartsRepository partsRepository;
     private final MemberPartsRepository memberPartsRepository;
     private final CultureRepository cultureRepository;
 
     @Override
     @Transactional
-    public PartsDto.createResponse createParts(Long memberId, Long prodId, PartsDto.createRequest request) {
+    // 팟 생성
+    public PartsDto.createResponse createParts(Long userId, Long prodId, PartsDto.createRequest requestDto) {
 
-        Member member = findMemberById(memberId);
+        Member user = findMemberById(userId);
         Culture culture = findCultureById(prodId);
 
         MemberParts memberParts = memberPartsRepository.save(
                 MemberParts.builder()
-                        .member(member)
+                        .manager(user)
+                        .member(user)
                         .parts(Parts.builder()
                                 .culture(culture)
-                                .request(request)
-                                .currentPartTotal(1)
-                                .manager(member)
+                                .partName(requestDto.getPartName())
+                                .partContent(requestDto.getPartContent())
+                                .partTotal(requestDto.getPartTotal())
+                                .partDate(requestDto.getPartDate())
                                 .status(ACTIVE)
-                                .build())
+                                .build()
+                        )
                         .build()
         );
-        return new PartsDto.createResponse(memberParts);
-    }
 
+        return new PartsDto.createResponse(memberPartsRepository.save(memberParts));
+    }
 
     private Member findMemberById(Long userId) {
         return memberRepository.findById(userId)

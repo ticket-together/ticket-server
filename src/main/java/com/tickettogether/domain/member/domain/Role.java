@@ -11,7 +11,9 @@ public enum Role {
 
     GUEST("ROLE_GUEST", "손님"),     //최초 가입
     ADMIN("ROLE_ADMIN", "관리자"),
-    USER("ROLE_USER", "일반 사용자");
+    USER("ROLE_USER", "일반 사용자"),
+    MANAGER("ROLE_MANAGER", "팟 만든 사람"),
+    MEMBER("ROLE_MEMBER", "팟 참여자");
 
     private final String key;
     private final String title;
