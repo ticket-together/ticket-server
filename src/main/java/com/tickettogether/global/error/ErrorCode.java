@@ -59,7 +59,7 @@ public enum ErrorCode {
     /**
      * parts
      */
-    EMPTY_PARTS(3040, "팟이 존재하지 않습니다."),
+    EMPTY_PARTS_ID(3040, "팟이 존재하지 않습니다."),
 
     /**
      * reviews

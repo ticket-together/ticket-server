@@ -20,17 +20,18 @@ public class MemberParts {
     @JoinColumn(name="member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="manager_id")
+    private Member manager;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="parts_id")
     private Parts parts;
 
-    private int memberCount;
-
     @Builder
-    public MemberParts(Member member, Parts parts, int memberCount){
+    public MemberParts(Member manager, Member member, Parts parts){
+        this.manager = manager;
         this.member = member;
         this.parts = parts;
-        this.memberCount = memberCount;
     }
-
 }

@@ -6,6 +6,6 @@ import com.tickettogether.global.error.exception.EntityNotFoundException;
 public class PartsEmptyException extends EntityNotFoundException {
 
     public PartsEmptyException() {
-        super(ErrorCode.EMPTY_PARTS);
+        super(ErrorCode.EMPTY_PARTS_ID);
     }
 }
