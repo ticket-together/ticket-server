@@ -5,15 +5,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tickettogether.domain.review.dto.QReviewInfoDto;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
-
 import javax.persistence.EntityManager;
-
-import static com.tickettogether.domain.culture.domain.QHall.hall;
 import static com.tickettogether.domain.member.domain.QMember.member;
 import static org.springframework.util.StringUtils.isEmpty;
-
 import java.util.List;
-
 import static com.tickettogether.domain.review.domain.QReview.review;
 
 public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
@@ -65,6 +60,4 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     private BooleanExpression NumberEq(String number) {
         return isEmpty(number) ? null : review.number.eq(number);
     }
-
-
 }
