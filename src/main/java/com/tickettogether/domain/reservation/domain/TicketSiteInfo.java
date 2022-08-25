@@ -13,19 +13,23 @@ import javax.persistence.*;
 @Getter
 public class TicketSiteInfo {
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    public Member member;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="site_info_id")
+    @Column(name = "site_info_id")
     private Long id;
+
     private String ticketId;
+
     private String ticketPassword;
+
     @Enumerated(EnumType.STRING)
     private TicketSite ticketSite;
 
-    public TicketSiteInfo updateTicketSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo){
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    public Member member;
+
+    public TicketSiteInfo updateTicketSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo) {
         this.ticketId = siteInfo.getId();
         this.ticketPassword = siteInfo.getPassword();
         return this;
