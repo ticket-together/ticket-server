@@ -1,13 +1,11 @@
 package com.tickettogether.domain.review.domain;
 
-import com.tickettogether.domain.culture.domain.Hall;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -22,10 +20,6 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
     private Member member;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name="hall_id")
-//    private Hall hall;
 
     private String hallName;
 

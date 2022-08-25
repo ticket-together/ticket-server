@@ -87,13 +87,6 @@ public class Member extends BaseEntity {
         }
     }
 
-    public void setMemberParts(Parts... parts){
-        for(Parts part : parts){
-            MemberParts data = MemberParts.builder().member(this).parts(part).build();
-            this.memberPartsList.add(data);
-        }
-    }
-
     public void changeStatus(Status status){
         if(status.equals(Status.ACTIVE)){
             this.status = Status.INACTIVE;

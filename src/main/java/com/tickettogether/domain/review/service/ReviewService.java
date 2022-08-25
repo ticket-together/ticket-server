@@ -4,7 +4,6 @@ import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service

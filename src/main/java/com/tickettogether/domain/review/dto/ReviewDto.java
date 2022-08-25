@@ -1,11 +1,9 @@
 package com.tickettogether.domain.review.dto;
 
-import com.tickettogether.domain.culture.domain.Hall;
 import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.review.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 
 @Getter
@@ -81,5 +79,4 @@ public class ReviewDto {
         private String number;
 
     }
-
 }
