@@ -10,11 +10,16 @@ import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
+import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,10 +28,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     private final MemberRepository memberRepository;
     private final MemberPartsRepository memberPartsRepository;
     private final CultureRepository cultureRepository;
+    private final PartsRepository partsRepository;
 
     @Override
     @Transactional
-    public PartsDto.createResponse createParts(Long memberId, Long prodId, PartsDto.createRequest request) {
+    public PartsDto.CreateResponse createParts(Long memberId, Long prodId, PartsDto.CreateRequest request) {
 
         Member member = findMemberById(memberId);
         Culture culture = findCultureById(prodId);
@@ -43,7 +49,19 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                                 .build())
                         .build()
         );
-        return new PartsDto.createResponse(memberParts);
+        return new PartsDto.CreateResponse(memberParts);
+    }
+
+    @Override
+    public List<PartsDto.SearchResponse> searchParts(Long prodId) {
+        Culture culture = findCultureById(prodId);
+        log.info(culture.getId().toString());
+
+        List<Parts> partsList = partsRepository.findByCulture(culture);
+
+        return partsList.stream()
+                .map(PartsDto.SearchResponse::new)
+                .collect(Collectors.toList());
     }
 
 
