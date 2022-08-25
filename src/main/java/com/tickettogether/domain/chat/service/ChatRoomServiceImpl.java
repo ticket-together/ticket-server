@@ -22,14 +22,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     private final ChatMessageRepository chatMessageRepository;
-
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
     public ChatDto.ChatEnterResponse createChatRoom(ChatDto.ChatEnterRequest request){
         ChatRoom chatRoom = chatRoomRepository.save(
                 ChatRoom.builder()
                         .name(request.getRoomName())
-                        .potId(request.getPotId()).build()
+                        .partsId(request.getPartsId()).build()
         );
         return ChatDto.ChatEnterResponse.builder().roomId(chatRoom.getId()).build();
     }

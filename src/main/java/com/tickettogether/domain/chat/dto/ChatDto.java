@@ -15,7 +15,7 @@ public class ChatDto {
     public static class ChatEnterRequest{
         private Long roomId;
         private String roomName;
-        private Long potId;
+        private Long partsId;
     }
 
 
