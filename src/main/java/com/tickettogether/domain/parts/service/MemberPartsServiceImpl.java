@@ -80,6 +80,20 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     }
 
     @Override
+    public List<PartsDto.memberInfo> searchPartMembers(Long userId, Long partId) {
+
+        Parts parts = findPartsById(partId);
+
+        List<Long> memberIds = getPartsMemberId(parts);
+        List<PartsDto.memberInfo> memberInfoDtoList = new ArrayList<>();
+
+        for (Long i : memberIds) {
+            memberInfoDtoList.add(getMemberInfo(i));
+        }
+        return memberInfoDtoList;
+    }
+
+    @Override
     @Transactional
     public void joinParts(Long userId, Long partId) {
 
@@ -162,6 +176,13 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .collect(Collectors.toList());
     }
 
+    private PartsDto.memberInfo getMemberInfo(Long memberId) {
+        Member member = findMemberById(memberId);
+        return PartsDto.memberInfo.builder()
+                .memberName(member.getName())
+                .memberImgUrl(member.getImgUrl())
+                .build();
+    }
     public int getPartsCount(Parts parts) {
         List<MemberParts> memberPartsList = memberPartsRepository.findMemberPartsByParts(parts);
         return memberPartsList.size();

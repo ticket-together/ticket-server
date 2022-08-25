@@ -31,6 +31,11 @@ public class PartsController {
         return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(tempMemberId, prodId)));
     }
 
+    @GetMapping("/{prodId}/{partId}/member")
+    public ResponseEntity<BaseResponse<List<PartsDto.memberInfo>>> searchPartMembers(@PathVariable("partId") Long partId) {
+        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_MEMBER_SUCCESS.getMessage(),partsService.searchPartMembers(tempMemberId, partId)));
+    }
+
     @PostMapping("/{prodId}/{partId}/join")
     public ResponseEntity<BaseResponse<String>> joinParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
         partsService.joinParts(tempMemberId, partId);

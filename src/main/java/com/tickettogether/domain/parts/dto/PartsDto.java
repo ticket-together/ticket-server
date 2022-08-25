@@ -70,6 +70,15 @@ public class PartsDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    @Builder
+    public static class memberInfo{
+        private String memberName;
+        private String memberImgUrl;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class closeResponse{
         private Parts.Status status;
 
