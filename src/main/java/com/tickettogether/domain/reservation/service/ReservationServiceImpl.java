@@ -79,4 +79,15 @@ public class ReservationServiceImpl implements ReservationService {
         }
         return new ReservationDto.SiteInfoGetResponse(ticketSiteInfo.updateTicketSiteInfo(siteInfo));
     }
+
+    @Override
+    @Transactional
+    public void deleteSiteInfo(Long siteInfoId, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(UserEmptyException::new);
+
+        TicketSiteInfo ticketSiteInfo = siteInfoRepository.findByMemberAndId(member, siteInfoId)
+                .orElseThrow(SiteEmptyException::new);
+
+        siteInfoRepository.delete(ticketSiteInfo);
+    }
 }

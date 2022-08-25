@@ -28,7 +28,7 @@ public class RestControllerExceptionHandler {
     @SuppressWarnings("ConstantConditions")
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> validationExceptionHandle(MethodArgumentNotValidException ex) {
-        log.error("handleMethodArgumentNotValidException", ex);
+        log.error("handleMethodArgumentNotValidException: {}", ex.getMessage());
         return ResponseEntity.badRequest().body(ErrorResponse.create(ErrorCode.REQUEST_ERROR,
                 ex.getBindingResult().getFieldErrors().stream()
                         .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage))));
@@ -39,7 +39,7 @@ public class RestControllerExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        log.error("handleHttpRequestMethodNotSupportedException", ex);
+        log.error("handleHttpRequestMethodNotSupportedException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(ErrorResponse.create(ErrorCode.METHOD_NOT_ALLOWED));
     }
 
@@ -48,7 +48,7 @@ public class RestControllerExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
-        log.error("handleAccessDeniedException", ex);
+        log.error("handleAccessDeniedException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.valueOf(ErrorCode.INVALID_USER_JWT.getStatus())).body(ErrorResponse.create(ErrorCode.INVALID_USER_JWT));
     }
 
@@ -57,7 +57,7 @@ public class RestControllerExceptionHandler {
      */
     @ExceptionHandler({BusinessException.class, InvalidValueException.class, EntityNotFoundException.class})
     protected ResponseEntity<ErrorResponse> handleBusinessException(BaseException ex) {
-        log.error("handleBusinessException", ex);
+        log.error("handleBusinessException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.create(ex.getErrorCode()));
     }
 
@@ -66,21 +66,16 @@ public class RestControllerExceptionHandler {
      */
     @ExceptionHandler({AuthorityException.class, UserStatusException.class})
     protected ResponseEntity<ErrorResponse> handleAuthorityException(BaseException ex) {
-        log.error("handleAuthorityException", ex);
+        log.error("handleAuthorityException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.create(ex.getErrorCode()));
     }
-
-//    @ExceptionHandler({BusinessException.class, InvalidValueException.class, EntityNotFoundException.class})
-//    protected ErrorResponse handleBusinessException(BusinessException ex) {
-//        return ErrorResponse.create(ex.getErrorCode());
-//    }
 
     /**
      * 파일 관련 예외
      */
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException (MaxUploadSizeExceededException ex) {
-        log.error("handleMaxUploadSizeExceededException", ex);
+        log.error("handleMaxUploadSizeExceededException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.create(ErrorCode.FILE_SIZE_EXCEED));
     }
 
@@ -89,7 +84,7 @@ public class RestControllerExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error("handleEntityNotFoundException", ex);
+        log.error("handleEntityNotFoundException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.create(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }

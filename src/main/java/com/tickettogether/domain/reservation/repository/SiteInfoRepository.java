@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface SiteInfoRepository extends JpaRepository<TicketSiteInfo, Long> {
     int countTicketSiteInfoByMemberAndTicketSite(Member member, TicketSite ticketSite);
     Optional<TicketSiteInfo> findByMemberAndTicketSite(Member member, TicketSite ticketSite);
+    Optional<TicketSiteInfo> findByMemberAndId(Member member, Long id);
 }

@@ -59,4 +59,13 @@ public class ReservationController {
             @PathVariable("id") Long id){
         return ResponseEntity.ok(BaseResponse.create(GET_TICKET_SITE_SUCCESS.getMessage(), reservationService.updateSiteInfo(siteInfoPostRequest, id)));
     }
+
+    @ApiOperation(value = "사이트 정보 삭제", notes = "티켓 사이트 연동에서 추가했던 정보를 수정한다.")
+    @ApiResponse(code = 2022, message = "존재하지 않는 사이트 정보입니다.")
+    @DeleteMapping("/site/{id}")
+    public ResponseEntity<BaseResponse<String>> deleteSiteInfo(
+            @PathVariable("id") Long id){
+        reservationService.deleteSiteInfo(id, tempMemberId);
+        return ResponseEntity.ok(BaseResponse.create(DELETE_TICKET_SITE_SUCCESS.getMessage()));
+    }
 }
