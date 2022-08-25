@@ -1,6 +1,8 @@
 package com.tickettogether.domain.parts.domain;
 
 import com.tickettogether.domain.culture.domain.Culture;
+import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.parts.dto.PartsDto;
 import com.tickettogether.global.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,16 +43,24 @@ public class Parts extends BaseEntity {
 
     private Integer partTotal;
 
+    private Integer currentPartTotal;
+
     private LocalDate partDate;
 
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member manager;
+
     @Builder
-    public Parts(Culture culture, String partName, String partContent, Integer partTotal, LocalDate partDate, Status status){
+    public Parts(Culture culture, Integer currentPartTotal, Status status, Member manager, PartsDto.createRequest request){
         this.culture = culture;
-        this.partName = partName;
-        this.partContent = partContent;
-        this.partTotal = partTotal;
-        this.partDate = partDate;
+        this.partName = request.getPartName();
+        this.partContent = request.getPartContent();
+        this.partTotal = request.getPartTotal();
+        this.currentPartTotal = currentPartTotal;
+        this.partDate = request.getPartDate();
         this.status = status;
+        this.manager = manager;
     }
 
     public Parts changePartStatus(){    //팟 마감
