@@ -18,5 +18,5 @@ public interface CultureRepository extends JpaRepository<Culture, Long> {
 
     List<Culture> findTop4CultureByKeyword(CultureKeyword keyword);
 
-    Optional<Culture> findByName(String cultureName);
+    Optional<Culture> findByProdId(Long prodId);
 }

@@ -22,32 +22,31 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     private final ChatMessageRepository chatMessageRepository;
-
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
     public ChatDto.ChatEnterResponse createChatRoom(ChatDto.ChatEnterRequest request){
         ChatRoom chatRoom = chatRoomRepository.save(
                 ChatRoom.builder()
                         .name(request.getRoomName())
-                        .potId(request.getPotId()).build()
+                        .partsId(request.getPartsId()).build()
         );
         return ChatDto.ChatEnterResponse.builder().roomId(chatRoom.getId()).build();
     }
 
-    public ChatDto.ChatMessageResponse createChatMessageOrSave(ChatDto.ChatStompRequest request){
+    public ChatDto.ChatMessageResponse createChatMessageOrSave(ChatDto.ChatStompRequest request, Long roomId){
         if(MessageType.JOIN.name().equals(request.getType())){
-            return chatMessageDtoBuilder(request.getSender() + "님이 채팅방에 입장하셨습니다.", request.getSender(), null);
+            return chatMessageDtoBuilder(request.getSender() + "님이 채팅방에 입장하셨습니다.", request.getSender(), request.getType(),null);
         }
 
         ChatMessage chatMessage = chatMessageRepository.save(request.toEntity(
-                        chatRoomRepository.findById(request.getRoomId()).orElseThrow(ChatRoomEmptyException::new)));
-        return chatMessageDtoBuilder(chatMessage.getData(), chatMessage.getSender(), chatMessage.getCreatedAt().format(formatter));
+                        chatRoomRepository.findById(roomId).orElseThrow(ChatRoomEmptyException::new)));
+        return chatMessageDtoBuilder(chatMessage.getData(), chatMessage.getSender(), chatMessage.getType().name(), chatMessage.getCreatedAt().format(formatter));
     }
 
     public ChatDto.ChatSearchResponse getChatListByRoomId(Long roomId, Pageable pageable) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(ChatRoomEmptyException::new);
         Page<ChatDto.ChatMessageResponse> messageDtoList = chatMessageRepository.findAllByChatRoomOrderByCreatedAtDesc(pageable, chatRoom)
-                .map(x -> chatMessageDtoBuilder(x.getData(), x.getSender(), x.getCreatedAt().format(formatter)));
+                .map(x -> chatMessageDtoBuilder(x.getData(), x.getSender(), x.getType().name(), x.getCreatedAt().format(formatter)));
 
         return ChatDto.ChatSearchResponse.builder()
                 .roomId(roomId)
@@ -55,10 +54,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .messageList(PageDto.create(messageDtoList, messageDtoList.getContent())).build();
     }
 
-    private ChatDto.ChatMessageResponse chatMessageDtoBuilder(String data, String sender, String createdAt){
+    private ChatDto.ChatMessageResponse chatMessageDtoBuilder(String data, String sender, String createdAt, String messageType){
         return ChatDto.ChatMessageResponse.builder()
                 .sender(sender)
                 .data(data)
+                .type(messageType)
                 .createdAt(createdAt).build();
     }
 }

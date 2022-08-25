@@ -1,5 +1,6 @@
 package com.tickettogether.domain.chat.domain;
 
+import com.tickettogether.domain.parts.domain.Parts;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,13 +22,13 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 
+    private Long partsId;
+
     private String name;
 
-    private Long potId;
-
     @Builder
-    public ChatRoom(String name, Long potId){
+    public ChatRoom(String name, Long partsId){
         this.name = name;
-        this.potId = potId;
+        this.partsId = partsId;
     }
 }
