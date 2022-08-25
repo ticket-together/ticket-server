@@ -9,6 +9,7 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
+import com.tickettogether.domain.parts.exception.PartsCloseDeniedException;
 import com.tickettogether.domain.parts.exception.PartsEmptyException;
 import com.tickettogether.domain.parts.exception.PartsJoinDeniedException;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
@@ -99,6 +100,20 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         memberPartsRepository.save(memberParts);
     }
 
+    @Override
+    @Transactional
+    public PartsDto.closeResponse closeParts(Long userId, Long partId){
+
+        Member user = findMemberById(userId);
+        Parts parts = findPartsById(partId);
+
+        if (!isManager(user, parts.getMemberParts())) {
+            throw new PartsCloseDeniedException();
+        }
+
+        parts.changePartStatus();
+        return new PartsDto.closeResponse(parts);
+    }
 
 
     private Member findMemberById(Long userId) {
@@ -140,6 +155,15 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
         for (MemberParts memberParts : memberPartsList) {
             if (memberParts.getMember().equals(user)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isManager(Member user, List<MemberParts> memberPartsList){
+        for (MemberParts memberParts : memberPartsList) {
+            if (memberParts.getManager().equals(user)) {
                 return true;
             }
         }

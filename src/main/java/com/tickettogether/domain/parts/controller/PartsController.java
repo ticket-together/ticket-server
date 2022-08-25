@@ -36,4 +36,10 @@ public class PartsController {
         partsService.joinParts(tempMemberId, partId);
         return ResponseEntity.ok(BaseResponse.create(JOIN_PARTS_SUCCESS.getMessage()));
     }
+
+    @PatchMapping("/{prodId}/{partId}/close")
+    public ResponseEntity<BaseResponse<PartsDto.closeResponse>> closeParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        return ResponseEntity.ok(BaseResponse.create(CLOSE_PARTS_SUCCESS.getMessage(),partsService.closeParts(tempMemberId, partId)));
+    }
+
 }
