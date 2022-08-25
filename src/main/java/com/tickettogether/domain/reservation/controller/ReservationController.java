@@ -65,6 +65,7 @@ public class ReservationController {
     @DeleteMapping("/site/{id}")
     public ResponseEntity<BaseResponse<String>> deleteSiteInfo(
             @PathVariable("id") Long id){
-        return ResponseEntity.ok(BaseResponse.create(DELETE_TICKET_SITE_SUCCESS.getMessage(), reservationService.deleteSiteInfo(id, tempMemberId)));
+        reservationService.deleteSiteInfo(id, tempMemberId);
+        return ResponseEntity.ok(BaseResponse.create(DELETE_TICKET_SITE_SUCCESS.getMessage()));
     }
 }

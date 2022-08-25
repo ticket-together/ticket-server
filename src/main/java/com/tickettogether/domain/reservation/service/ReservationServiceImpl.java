@@ -82,13 +82,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public String deleteSiteInfo(Long siteInfoId, Long memberId) {
+    public void deleteSiteInfo(Long siteInfoId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(UserEmptyException::new);
 
         TicketSiteInfo ticketSiteInfo = siteInfoRepository.findByMemberAndId(member, siteInfoId)
                 .orElseThrow(SiteEmptyException::new);
 
         siteInfoRepository.delete(ticketSiteInfo);
-        return "ok";
     }
 }

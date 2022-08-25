@@ -11,5 +11,5 @@ public interface ReservationService {
     ReservationDto.SiteInfoGetResponse postSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long memberId);
     ReservationDto.SiteInfoGetResponse getSiteInfo(Long memberId, TicketSite ticketSite);
     ReservationDto.SiteInfoGetResponse updateSiteInfo(ReservationDto.SiteInfoPostRequest siteInfo, Long id);
-    String deleteSiteInfo(Long siteInfoId, Long memberId);
+    void deleteSiteInfo(Long siteInfoId, Long memberId);
 }
