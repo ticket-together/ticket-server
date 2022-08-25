@@ -10,4 +10,5 @@ public interface MemberPartsService {
 
     PartsDto.createResponse createParts(Long userId, Long prodId, PartsDto.createRequest requestDto);
     List<PartsDto.searchResponse> searchParts(Long userId, Long prodId);
+    void joinParts(Long userId, Long partId);
 }

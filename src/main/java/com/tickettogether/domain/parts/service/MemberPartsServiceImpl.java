@@ -10,6 +10,7 @@ import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
 import com.tickettogether.domain.parts.exception.PartsEmptyException;
+import com.tickettogether.domain.parts.exception.PartsJoinDeniedException;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,6 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     @Transactional
-    // 팟 생성
     public PartsDto.createResponse createParts(Long userId, Long prodId, PartsDto.createRequest requestDto) {
 
         Member user = findMemberById(userId);
@@ -61,8 +61,8 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     public List<PartsDto.searchResponse> searchParts(Long userId, Long prodId) {
-        Member user = findMemberById(userId);  // 현재 사용자
-        Culture culture = findCultureById(prodId);   // 후에 findBy
+        Member user = findMemberById(userId);
+        Culture culture = findCultureById(prodId);
 
         if (partsRepository.findPartsByCulture(culture).isEmpty()) {
             throw new PartsEmptyException();
@@ -77,6 +77,29 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partsDtoList;
     }
 
+    @Override
+    @Transactional
+    public void joinParts(Long userId, Long partId) {
+
+        Parts parts = findPartsById(partId);
+        Member user = findMemberById(userId);
+
+        if (checkParticipation(user, parts.getMemberParts())){
+            throw new PartsJoinDeniedException();
+        }
+
+        MemberParts memberParts = memberPartsRepository.save(
+                MemberParts.builder()
+                        .manager(getPartsManager(parts))
+                        .member(user)
+                        .parts(parts)
+                        .build()
+        );
+
+        memberPartsRepository.save(memberParts);
+    }
+
+
 
     private Member findMemberById(Long userId) {
         return memberRepository.findById(userId)
@@ -86,6 +109,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     private Culture findCultureById(Long prodId) {
         return cultureRepository.findByProdId(prodId)
                 .orElseThrow(CultureEmptyException::new);
+    }
+
+    private Parts findPartsById(Long partId) {
+        return partsRepository.findById(partId)
+                .orElseThrow(PartsEmptyException::new);
     }
 
     private Member getPartsManager(Parts parts) {
@@ -107,6 +135,15 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     public int getPartsCount(Parts parts) {
         List<MemberParts> memberPartsList = memberPartsRepository.findMemberPartsByParts(parts);
         return memberPartsList.size();
+    }
+
+    private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
+        for (MemberParts memberParts : memberPartsList) {
+            if (memberParts.getMember().equals(user)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private PartsDto.searchResponse partsInfo(Parts parts){

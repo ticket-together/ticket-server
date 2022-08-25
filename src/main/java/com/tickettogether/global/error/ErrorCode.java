@@ -60,6 +60,8 @@ public enum ErrorCode {
      * parts
      */
     EMPTY_PARTS_ID(3040, "팟이 존재하지 않습니다."),
+    PARTS_JOIN_DENIED(3041, "해당 팟에 이미 참여되어있습니다."),
+
 
     /**
      * reviews

@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.tickettogether.domain.parts.dto.PartsResponseMessage.GET_PARTS_SUCCESS;
-import static com.tickettogether.domain.parts.dto.PartsResponseMessage.SAVE_PARTS_SUCCESS;
+import static com.tickettogether.domain.parts.dto.PartsResponseMessage.*;
 
 
 @RestController
@@ -30,5 +29,11 @@ public class PartsController {
     @GetMapping("/{prodId}")
     public ResponseEntity<BaseResponse<List<PartsDto.searchResponse>>> searchParts(@PathVariable("prodId") Long prodId) {
         return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(tempMemberId, prodId)));
+    }
+
+    @PostMapping("/{prodId}/{partId}/join")
+    public ResponseEntity<BaseResponse<String>> joinParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        partsService.joinParts(tempMemberId, partId);
+        return ResponseEntity.ok(BaseResponse.create(JOIN_PARTS_SUCCESS.getMessage()));
     }
 }
