@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class Parts extends BaseEntity {
     private Member manager;
 
     @Builder
-    public Parts(Culture culture, Integer currentPartTotal, Status status, Member manager, PartsDto.createRequest request){
+    public Parts(Culture culture, Integer currentPartTotal, Status status, Member manager, PartsDto.CreateRequest request){
         this.culture = culture;
         this.partName = request.getPartName();
         this.partContent = request.getPartContent();
