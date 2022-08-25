@@ -42,4 +42,9 @@ public class PartsController {
         return ResponseEntity.ok(BaseResponse.create(CLOSE_PARTS_SUCCESS.getMessage(),partsService.closeParts(tempMemberId, partId)));
     }
 
+    @DeleteMapping("/{prodId}/{partId}")
+    public ResponseEntity<BaseResponse<String>> deleteParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        partsService.deleteParts(tempMemberId, partId);
+        return ResponseEntity.ok(BaseResponse.create(DELETE_PARTS_SUCCESS.getMessage()));
+    }
 }

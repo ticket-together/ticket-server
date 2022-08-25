@@ -10,6 +10,7 @@ import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
 import com.tickettogether.domain.parts.exception.PartsCloseDeniedException;
+import com.tickettogether.domain.parts.exception.PartsDeleteDeniedException;
 import com.tickettogether.domain.parts.exception.PartsEmptyException;
 import com.tickettogether.domain.parts.exception.PartsJoinDeniedException;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
@@ -113,6 +114,20 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
         parts.changePartStatus();
         return new PartsDto.closeResponse(parts);
+    }
+
+    @Override
+    @Transactional
+    public void deleteParts(Long userId, Long partId){
+
+        Member user = findMemberById(userId);
+        Parts parts = findPartsById(partId);
+
+        if (!isManager(user, parts.getMemberParts())) {
+            throw new PartsDeleteDeniedException();
+        }
+        partsRepository.deleteById(partId);
+
     }
 
 
