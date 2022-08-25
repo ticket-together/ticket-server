@@ -9,18 +9,10 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
-import com.tickettogether.domain.parts.exception.*;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
-import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
 
 @Service
@@ -34,28 +26,24 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     @Transactional
-    public PartsDto.createResponse createParts(Long userId, Long prodId, PartsDto.createRequest requestDto) {
+    public PartsDto.createResponse createParts(Long memberId, Long prodId, PartsDto.createRequest request) {
 
-        Member user = findMemberById(userId);
+        Member member = findMemberById(memberId);
         Culture culture = findCultureById(prodId);
 
         MemberParts memberParts = memberPartsRepository.save(
                 MemberParts.builder()
-                        .manager(user)
-                        .member(user)
+                        .member(member)
                         .parts(Parts.builder()
                                 .culture(culture)
-                                .partName(requestDto.getPartName())
-                                .partContent(requestDto.getPartContent())
-                                .partTotal(requestDto.getPartTotal())
-                                .partDate(requestDto.getPartDate())
+                                .request(request)
+                                .currentPartTotal(1)
+                                .manager(member)
                                 .status(ACTIVE)
-                                .build()
-                        )
+                                .build())
                         .build()
         );
-
-        return new PartsDto.createResponse(memberPartsRepository.save(memberParts));
+        return new PartsDto.createResponse(memberParts);
     }
 
 
@@ -65,10 +53,9 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     }
 
     private Culture findCultureById(Long prodId) {
-        return cultureRepository.findById(prodId)    // 이후에 findById -> findByProdId로 변경
+        return cultureRepository.findByProdId(prodId)
                 .orElseThrow(CultureEmptyException::new);
     }
-
 }
 
 
