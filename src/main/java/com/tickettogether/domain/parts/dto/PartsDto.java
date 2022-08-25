@@ -7,6 +7,7 @@ import com.tickettogether.domain.parts.domain.Parts;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class PartsDto {
 
@@ -47,6 +48,23 @@ public class PartsDto {
             this.status = memberParts.getParts().getStatus();
         }
 
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Builder
+    public static class searchResponse{
+        private Long managerId;
+        private List<Long> memberId;
+        private String cultureName;
+        private Long partId;
+        private String partName;
+        private String partContent;
+        private LocalDate partDate;
+        private int partTotal;
+        private int memberCount;
+        private Parts.Status status;
     }
 }
 
