@@ -13,6 +13,8 @@ import com.tickettogether.domain.reservation.dto.ReservationDto;
 import com.tickettogether.domain.reservation.repository.ReservationRepository;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.utils.AES128;
+import com.tickettogether.global.error.ErrorCode;
+import com.tickettogether.global.error.exception.AuthorityException;
 import com.tickettogether.global.error.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -78,5 +80,19 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         return new ReservationDto.SiteInfoGetResponse(ticketSiteInfo.updateTicketSiteInfo(siteInfo));
+    }
+
+    @Override
+    @Transactional
+    public String deleteSiteInfo(Long siteInfoId, Long memberId) {
+        TicketSiteInfo ticketSiteInfo = siteInfoRepository.findById(siteInfoId).orElseThrow(SiteEmptyException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(UserEmptyException::new);
+
+        if (!ticketSiteInfo.getMember().getId().equals(member.getId())) {
+            throw new AuthorityException(ErrorCode.INVALID_USER_JWT);
+        }
+
+        siteInfoRepository.delete(ticketSiteInfo);
+        return "ok";
     }
 }
