@@ -7,6 +7,9 @@ import com.tickettogether.domain.chat.dto.ChatDto;
 import com.tickettogether.domain.chat.exception.ChatRoomEmptyException;
 import com.tickettogether.domain.chat.repository.ChatMessageRepository;
 import com.tickettogether.domain.chat.repository.ChatRoomRepository;
+import com.tickettogether.domain.parts.domain.Parts;
+import com.tickettogether.domain.parts.exception.PartsEmptyException;
+import com.tickettogether.domain.parts.repository.PartsRepository;
 import com.tickettogether.global.dto.PageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,13 +25,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     private final ChatMessageRepository chatMessageRepository;
+
+    private final PartsRepository partsRepository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
     public ChatDto.ChatEnterResponse createChatRoom(ChatDto.ChatEnterRequest request){
+        Parts parts = partsRepository.findById(request.getPartsId()).orElseThrow(PartsEmptyException::new);
         ChatRoom chatRoom = chatRoomRepository.save(
                 ChatRoom.builder()
                         .name(request.getRoomName())
-                        .partsId(request.getPartsId()).build()
+                        .parts(parts).build()
         );
         return ChatDto.ChatEnterResponse.builder().roomId(chatRoom.getId()).build();
     }

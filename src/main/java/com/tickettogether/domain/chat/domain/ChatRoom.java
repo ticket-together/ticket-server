@@ -2,6 +2,7 @@ package com.tickettogether.domain.chat.domain;
 
 import com.tickettogether.domain.parts.domain.Parts;
 import lombok.*;
+import org.hibernate.mapping.Join;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,13 +23,15 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 
-    private Long partsId;
+    @OneToOne
+    @JoinColumn(name = "parts_id")
+    private Parts parts;
 
     private String name;
 
     @Builder
-    public ChatRoom(String name, Long partsId){
+    public ChatRoom(String name, Parts parts){
         this.name = name;
-        this.partsId = partsId;
+        this.parts = parts;
     }
 }
