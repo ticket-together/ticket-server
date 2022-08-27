@@ -1,6 +1,7 @@
 package com.tickettogether.domain.chat.controller;
 
 import com.tickettogether.domain.chat.service.ChatRoomServiceImpl;
+import com.tickettogether.global.common.Constant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,8 +25,6 @@ public class StompChatController {
     
     private final ChatRoomServiceImpl chatRoomService;
 
-    private static final String CHAT_QUEUE_NAME = "chat.queue";
-
     @MessageMapping("chat.enter.{roomId}")
     @SendTo("/topic/room.{roomId}")
     public ChatMessageResponse enter(@Payload ChatStompRequest message, @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
@@ -33,7 +32,7 @@ public class StompChatController {
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("roomId", roomId);
 
         ChatMessageResponse sendMessage = chatRoomService.createChatMessageOrSave(message, Long.parseLong(roomId));
-        rabbitTemplate.convertAndSend(CHAT_QUEUE_NAME, sendMessage);
+        rabbitTemplate.convertAndSend(Constant.CHAT_QUEUE_NAME, sendMessage);
         return sendMessage;
     }
 
@@ -41,7 +40,7 @@ public class StompChatController {
     @SendTo("/topic/room.{roomId}")
     public ChatMessageResponse message(@Payload ChatStompRequest message, @DestinationVariable String roomId){
         ChatMessageResponse sendMessage = chatRoomService.createChatMessageOrSave(message, Long.parseLong(roomId));
-        rabbitTemplate.convertAndSend(CHAT_QUEUE_NAME, sendMessage);
+        rabbitTemplate.convertAndSend(Constant.CHAT_QUEUE_NAME, sendMessage);
         return sendMessage;
     }
 }
