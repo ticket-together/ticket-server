@@ -1,6 +1,5 @@
 package com.tickettogether.domain.chat.controller;
 
-import com.tickettogether.domain.chat.service.ChatRoomServiceImpl;
 import com.tickettogether.global.common.Constant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import static com.tickettogether.domain.chat.dto.ChatDto.*;

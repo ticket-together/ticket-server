@@ -1,12 +1,10 @@
 package com.tickettogether.domain.chat.listener;
 
-import com.tickettogether.domain.chat.domain.ChatMessage;
-import com.tickettogether.domain.chat.dto.ChatDto;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

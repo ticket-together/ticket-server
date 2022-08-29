@@ -2,7 +2,6 @@ package com.tickettogether.domain.chat.dto;
 
 import com.tickettogether.domain.chat.domain.ChatMessage;
 import com.tickettogether.domain.chat.domain.ChatRoom;
-import com.tickettogether.global.common.Constant;
 import com.tickettogether.global.dto.PageDto;
 import lombok.*;
 
