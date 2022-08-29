@@ -10,4 +10,6 @@ public class Constant {
     public static final String CHAT_EXCHANGE_NAME = "chat.exchange";
 
     public static final String ROUTING_KEY = "room.*";
+
+    public static final String DATETIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 }

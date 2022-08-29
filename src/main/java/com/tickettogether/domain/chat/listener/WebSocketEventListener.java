@@ -46,7 +46,7 @@ public class WebSocketEventListener {
 
             ChatMessageResponse disconnectMessage = ChatMessageResponse.builder()
                     .type(MessageType.LEAVE.name())
-                    .data(username + "님이 채팅방에서 나가셨습니다.")
+                    .data(username + "님이 나갔습니다.")
                     .sender(username).build();
 
             rabbitTemplate.convertAndSend("amq.topic", "room." + roomId , disconnectMessage);
