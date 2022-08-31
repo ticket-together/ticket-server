@@ -55,7 +55,6 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     @Override
     public List<PartsDto.SearchResponse> searchParts(Long prodId) {
         Culture culture = findCultureById(prodId);
-        log.info(culture.getId().toString());
 
         List<Parts> partsList = partsRepository.findByCulture(culture);
 
