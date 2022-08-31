@@ -1,6 +1,6 @@
 package com.tickettogether.domain.chat.controller;
 
-import com.tickettogether.domain.chat.service.ChatRoomServiceImpl;
+import com.tickettogether.global.common.Constant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static com.tickettogether.domain.chat.dto.ChatDto.*;
@@ -21,10 +22,6 @@ import static com.tickettogether.domain.chat.dto.ChatDto.*;
 public class StompChatController {
 
     private final RabbitTemplate rabbitTemplate;
-    
-    private final ChatRoomServiceImpl chatRoomService;
-
-    private static final String CHAT_QUEUE_NAME = "chat.queue";
 
     @MessageMapping("chat.enter.{roomId}")
     @SendTo("/topic/room.{roomId}")
@@ -32,16 +29,17 @@ public class StompChatController {
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", message.getSender());
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("roomId", roomId);
 
-        ChatMessageResponse sendMessage = chatRoomService.createChatMessageOrSave(message, Long.parseLong(roomId));
-        rabbitTemplate.convertAndSend(CHAT_QUEUE_NAME, sendMessage);
-        return sendMessage;
+        ChatMessageResponse sendEnterMessage = ChatMessageResponse.create(message, Long.parseLong(roomId));
+        sendEnterMessage.setData(message.getSender() + "님이 들어왔습니다.");
+        rabbitTemplate.convertAndSend(Constant.CHAT_QUEUE_NAME, sendEnterMessage);
+        return sendEnterMessage;
     }
 
     @MessageMapping("chat.message.{roomId}")
     @SendTo("/topic/room.{roomId}")
     public ChatMessageResponse message(@Payload ChatStompRequest message, @DestinationVariable String roomId){
-        ChatMessageResponse sendMessage = chatRoomService.createChatMessageOrSave(message, Long.parseLong(roomId));
-        rabbitTemplate.convertAndSend(CHAT_QUEUE_NAME, sendMessage);
-        return sendMessage;
+        ChatMessageResponse sendChatMessage = ChatMessageResponse.create(message, Long.parseLong(roomId), LocalDateTime.now());
+        rabbitTemplate.convertAndSend(Constant.CHAT_QUEUE_NAME, sendChatMessage);
+        return sendChatMessage;
     }
 }
