@@ -56,7 +56,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     public List<PartsDto.SearchResponse> searchParts(Long prodId) {
         Culture culture = findCultureById(prodId);
 
-        List<Parts> partsList = partsRepository.findByCulture(culture);
+        List<Parts> partsList = partsRepository.findByCultureOrderByPartDate(culture);
 
         return partsList.stream()
                 .map(PartsDto.SearchResponse::new)
