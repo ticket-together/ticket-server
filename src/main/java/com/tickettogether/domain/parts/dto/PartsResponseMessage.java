@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PartsResponseMessage {
 
-    SAVE_PARTS_SUCCESS("팟 생성을 완료했습니다.");
+    SAVE_PARTS_SUCCESS("팟 생성을 완료했습니다."),
+    GET_PARTS_SUCCESS("팟 조회를 완료했습니다.");
 
     private final String message;
 
