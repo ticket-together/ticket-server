@@ -9,4 +9,6 @@ public interface MemberPartsService {
     PartsDto.CreateResponse createParts(Long userId, Long prodId, PartsDto.CreateRequest requestDto);
     List<PartsDto.SearchResponse> searchParts(Long prodId);
     void joinParts(Long userId, Long partId);
+    PartsDto.closeResponse closeParts(Long userId, Long partId);
+
 }

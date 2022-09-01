@@ -69,5 +69,17 @@ public class PartsDto {
             this.status = parts.getStatus();
         }
     }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class closeResponse{
+        private Parts.Status status;
+
+        public closeResponse(Parts parts) {
+            this.status = parts.getStatus();
+        }
+
+    }
 }
 

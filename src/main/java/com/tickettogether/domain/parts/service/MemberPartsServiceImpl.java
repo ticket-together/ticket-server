@@ -9,6 +9,7 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
+import com.tickettogether.domain.parts.exception.PartsCloseDeniedException;
 import com.tickettogether.domain.parts.exception.PartsEmptyException;
 import com.tickettogether.domain.parts.exception.PartsJoinDeniedException;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
@@ -83,6 +84,21 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                         .build()
         );
 
+    }
+
+    @Override
+    @Transactional
+    public PartsDto.closeResponse closeParts(Long userId, Long partId){
+
+        Member user = findMemberById(userId);
+        Parts parts = findPartsById(partId);
+
+        if (!parts.getManager().equals(user)) {
+            throw new PartsCloseDeniedException();
+        }
+
+        parts.changePartStatus();
+        return new PartsDto.closeResponse(parts);
     }
 
     private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
