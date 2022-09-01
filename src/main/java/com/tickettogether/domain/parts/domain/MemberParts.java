@@ -17,10 +17,6 @@ public class MemberParts {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="manager_id")
-    private Member manager;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
     private Member member;
 
@@ -29,10 +25,8 @@ public class MemberParts {
     private Parts parts;
 
     @Builder
-    public MemberParts(Member manager, Member member, Parts parts){
-        this.manager = manager;
+    public MemberParts(Member member, Parts parts){
         this.member = member;
         this.parts = parts;
     }
-
 }

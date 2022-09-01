@@ -1,6 +1,7 @@
 package com.tickettogether.global.config.rabbitmq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tickettogether.global.common.Constant;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -15,10 +16,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 public class RabbitConfig {
 
-    private static final String CHAT_QUEUE_NAME = "chat.queue";
-    private static final String CHAT_EXCHANGE_NAME = "chat.exchange";
-    private static final String ROUTING_KEY = "room.*";
-
     @Value("${spring.rabbitmq.host}")
     private String host;
 
@@ -30,24 +27,24 @@ public class RabbitConfig {
 
     @Bean
     public Queue Queue(){
-        return new Queue(CHAT_QUEUE_NAME, true);
+        return new Queue(Constant.CHAT_QUEUE_NAME, true);
     }
 
     @Bean
     public TopicExchange exchange(){
-        return new TopicExchange(CHAT_EXCHANGE_NAME);
+        return new TopicExchange(Constant.CHAT_EXCHANGE_NAME);
     }
 
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange){
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+        return BindingBuilder.bind(queue).to(exchange).with(Constant.ROUTING_KEY);
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(){
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
         rabbitTemplate.setMessageConverter(jsonMessageConverter());   // json 형식 지원
-        rabbitTemplate.setRoutingKey(ROUTING_KEY);
+        rabbitTemplate.setRoutingKey(Constant.ROUTING_KEY);
         return rabbitTemplate;
     }
 

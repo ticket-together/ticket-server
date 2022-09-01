@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PartsRepository extends JpaRepository<Parts, Long>{
-
-    List<Parts> findPartsByCulture(Culture culture);
+    List<Parts> findByCultureOrderByPartDate(Culture culture);
 }

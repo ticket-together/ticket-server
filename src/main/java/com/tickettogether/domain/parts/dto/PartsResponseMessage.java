@@ -8,12 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum PartsResponseMessage {
 
     SAVE_PARTS_SUCCESS("팟 생성을 완료했습니다."),
-    JOIN_PARTS_SUCCESS("팟 참여를 완료했습니다."),
-    CANCEL_PARTS_SUCCESS("팟 나가기를 완료했습니다."),
-    GET_PARTS_SUCCESS("팟 조회를 완료했습니다."),
-    GET_PARTS_MEMBER_SUCCESS("팟 멤버 상세정보 조회를 완료했습니다."),
-    CLOSE_PARTS_SUCCESS("팟 마감을 완료했습니다."),
-    DELETE_PARTS_SUCCESS("팟 삭제를 완료했습니다.");
+    GET_PARTS_SUCCESS("팟 조회를 완료했습니다.");
 
     private final String message;
 
