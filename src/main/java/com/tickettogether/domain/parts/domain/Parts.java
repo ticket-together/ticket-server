@@ -66,4 +66,9 @@ public class Parts extends BaseEntity {
         this.status = Status.CLOSED;
         return this;
     }
+
+    public Parts addMember() {
+        this.currentPartTotal++;
+        return this;
+    }
 }

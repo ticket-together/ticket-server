@@ -61,8 +61,6 @@ public enum ErrorCode {
      */
     EMPTY_PARTS_ID(3040, "팟이 존재하지 않습니다."),
     PARTS_JOIN_DENIED(3041, "해당 팟에 이미 참여되어있습니다."),
-    PARTS_CLOSE_DENIED(3042, "해당 팟 마감에 대한 권한이 없습니다."),
-    PARTS_DELETE_DENIED(3042, "해당 팟 삭제에 대한 권한이 없습니다."),
 
 
     /**

@@ -9,6 +9,8 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
+import com.tickettogether.domain.parts.exception.PartsEmptyException;
+import com.tickettogether.domain.parts.exception.PartsJoinDeniedException;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,34 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public void joinParts(Long userId, Long partId) {
+
+        Parts parts = findPartsById(partId);
+        Member user = findMemberById(userId);
+
+        if (checkParticipation(user, parts.getMemberParts())){
+            throw new PartsJoinDeniedException();
+        }
+
+        MemberParts memberParts = memberPartsRepository.save(
+                MemberParts.builder()
+                        .member(user)
+                        .parts(parts.addMember())
+                        .build()
+        );
+
+    }
+
+    private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
+        for (MemberParts memberParts : memberPartsList) {
+            if (memberParts.getMember().equals(user)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private Member findMemberById(Long userId) {
         return memberRepository.findById(userId)
@@ -72,6 +102,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     private Culture findCultureById(Long prodId) {
         return cultureRepository.findByProdId(prodId)
                 .orElseThrow(CultureEmptyException::new);
+    }
+
+    private Parts findPartsById(Long partId) {
+        return partsRepository.findById(partId)
+                .orElseThrow(PartsEmptyException::new);
     }
 }
 
