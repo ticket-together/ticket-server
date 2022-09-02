@@ -10,5 +10,6 @@ public interface MemberPartsService {
     List<PartsDto.SearchResponse> searchParts(Long prodId);
     void joinParts(Long userId, Long partId);
     PartsDto.closeResponse closeParts(Long userId, Long partId);
+    void deleteParts(Long userId, Long partId);
 
 }

@@ -42,4 +42,11 @@ public class PartsController {
     public ResponseEntity<BaseResponse<PartsDto.closeResponse>> closeParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
         return ResponseEntity.ok(BaseResponse.create(CLOSE_PARTS_SUCCESS.getMessage(),partsService.closeParts(tempMemberId, partId)));
     }
+
+    @ApiOperation(value = "팟 삭제", notes = "요청한 멤버가 방장일시, 팟을 삭제한다.")
+    @DeleteMapping("/{prodId}/{partId}")
+    public ResponseEntity<BaseResponse<String>> deleteParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        partsService.deleteParts(tempMemberId, partId);
+        return ResponseEntity.ok(BaseResponse.create(DELETE_PARTS_SUCCESS.getMessage()));
+    }
 }
