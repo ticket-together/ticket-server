@@ -1,9 +1,11 @@
 package com.tickettogether.domain.chat.controller;
 
 import com.tickettogether.global.common.Constant;
+import com.tickettogether.global.config.redis.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -12,6 +14,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.tickettogether.domain.chat.dto.ChatDto.*;
@@ -20,16 +24,23 @@ import static com.tickettogether.domain.chat.dto.ChatDto.*;
 @RequiredArgsConstructor
 @Slf4j
 public class StompChatController {
-
     private final RabbitTemplate rabbitTemplate;
+
+    private final RedisUtil<String, String> redisUtil;
 
     @MessageMapping("chat.enter.{roomId}")
     @SendTo("/topic/room.{roomId}")
     public ChatMessageResponse enter(@Payload ChatStompRequest message, @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
-        Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", message.getSender());
-        Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("roomId", roomId);
+        Objects.requireNonNull(headerAccessor.getSessionAttributes());
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+        headerAccessor.getSessionAttributes().put("roomId", roomId);
 
         ChatMessageResponse sendEnterMessage = ChatMessageResponse.create(message, Long.parseLong(roomId));
+
+        Map<String, String> enterMemberList = redisUtil.getHashKeys(roomId);
+        if (enterMemberList.containsKey(message.getSender())) return null;
+        redisUtil.setValue(roomId, message.getSender(), LocalDateTime.now().toString());
+
         sendEnterMessage.setData(message.getSender() + "님이 들어왔습니다.");
         rabbitTemplate.convertAndSend(Constant.CHAT_QUEUE_NAME, sendEnterMessage);
         return sendEnterMessage;
