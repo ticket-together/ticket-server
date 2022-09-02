@@ -49,4 +49,10 @@ public class PartsController {
         partsService.deleteParts(tempMemberId, partId);
         return ResponseEntity.ok(BaseResponse.create(DELETE_PARTS_SUCCESS.getMessage()));
     }
+
+    @ApiOperation(value = "팟 멤버 조회", notes = "팟에 참여중인 멤버들의 기본 정보를 조회한다.")
+    @GetMapping("/{prodId}/{partId}/member")
+    public ResponseEntity<BaseResponse<List<PartsDto.memberInfo>>> searchPartMembers(@PathVariable("partId") Long partId) {
+        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_MEMBER_SUCCESS.getMessage(),partsService.searchPartMembers(tempMemberId, partId)));
+    }
 }

@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
@@ -115,6 +117,39 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         partsRepository.deleteById(partId);
 
     }
+
+    @Override
+    public List<PartsDto.memberInfo> searchPartMembers(Long userId, Long partId) {
+
+        Parts parts = findPartsById(partId);
+
+        List<Member> memberList = getPartsMember(parts);
+        List<PartsDto.memberInfo> partMemberInfoList = new ArrayList<>();
+
+        for (Member member : memberList) {
+            partMemberInfoList.add(getMemberInfo(member, parts));
+        }
+
+        return partMemberInfoList;
+    }
+
+    private List<Member> getPartsMember(Parts parts){
+        List<MemberParts> memberPartsList = memberPartsRepository.findMemberPartsByParts(parts);
+        return memberPartsList.stream()
+                .filter(m -> m.getMember() != null)
+                .map(m -> m.getMember())
+                .collect(Collectors.toList());
+    }
+
+    private PartsDto.memberInfo getMemberInfo(Member member, Parts parts) {
+        return PartsDto.memberInfo.builder()
+                .memberId(member.getId())
+                .memberName(member.getName())
+                .memberImgUrl(member.getImgUrl())
+                .isManager(parts.getManager().equals(member))
+                .build();
+    }
+
 
     private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
         for (MemberParts memberParts : memberPartsList) {

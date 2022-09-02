@@ -11,5 +11,6 @@ public interface MemberPartsService {
     void joinParts(Long userId, Long partId);
     PartsDto.closeResponse closeParts(Long userId, Long partId);
     void deleteParts(Long userId, Long partId);
+    List<PartsDto.memberInfo> searchPartMembers(Long userId, Long partId);
 
 }
