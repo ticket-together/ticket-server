@@ -82,8 +82,18 @@
         });
 
         $("#button-leave").on("click", function(e){
-            stomp.disconnect(function(frame) {
-                console.log("stomp client successfully disconnected");
+            $.ajax({
+                url : "/api/v1/chat/1/" + username,
+                type : "delete",
+                dataType : "json",
+                success: function(response) {
+                    stomp.disconnect(function(frame) {
+                        console.log("stomp client successfully disconnected");
+                    });
+                },
+                error: function(xhr) {
+                    console.log("[requestPostBodyJson] : [error] : " + JSON.stringify(xhr));
+                }
             });
         });
     });

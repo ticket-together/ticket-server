@@ -67,6 +67,11 @@ public class RedisUtil<K, V> {
         redisTemplate.delete(key);
     }
 
+    public void deleteHashValue(K key, K hashKey){
+        HashOperations<K, Object, Object> values = redisTemplate.opsForHash();
+        values.delete(key, hashKey);
+    }
+
     public boolean hasKeyBlackList(K key){
         return Boolean.TRUE.equals(redisBlackListTemplate.hasKey(key));
     }
