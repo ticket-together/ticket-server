@@ -90,6 +90,13 @@ public class ChatDto {
         private Long roomId;
         private String roomName;
         private PageDto<ChatMessageResponse> messageList;
+
+        public static ChatSearchResponse create(Long roomId, String roomName, PageDto<ChatMessageResponse> messageList){
+            return ChatDto.ChatSearchResponse.builder()
+                    .roomId(roomId)
+                    .roomName(roomName)
+                    .messageList(messageList).build();
+        }
     }
 
     @Getter
