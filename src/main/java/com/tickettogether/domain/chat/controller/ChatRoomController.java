@@ -27,15 +27,17 @@ public class ChatRoomController {
         return ResponseEntity.ok(BaseResponse.create(ChatResponseMessage.ENTER_CHATROOM_SUCCESS.getMessage(), chatRoomService.createChatRoom(request)));
     }
 
-    @GetMapping("/{roomId}")
-    public ResponseEntity<BaseResponse<ChatDto.ChatSearchResponse>> getChatRoom(@PathVariable("roomId") Long roomId, @PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(BaseResponse.create(ChatResponseMessage.GET_CHATROOM_SUCCESS.getMessage(), chatRoomService.getChatListByRoomId(roomId, pageable)));
+    @GetMapping("/{roomId}/{username}")
+    public ResponseEntity<BaseResponse<ChatDto.ChatSearchResponse>> getChatRoom(@PathVariable("roomId") Long roomId,
+                                                                                @PathVariable("username") String username, @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(BaseResponse.create(ChatResponseMessage.GET_CHATROOM_SUCCESS.getMessage(), chatRoomService.getChatListByRoomId(roomId, username, pageable)));
     }
 
-    @GetMapping("/{roomId}/test")    // STOMP 테스트용
-    public String getChatRoom(@PathVariable("roomId") Long roomId, Model model){
+    @GetMapping("/{roomId}/test/{username}")    // STOMP 테스트용
+    public String getChatRoom(@PathVariable("roomId") Long roomId, @PathVariable("username") String name, Model model){
         ChatRoom chatRoom = chatRoomRepository.getById(roomId);
         model.addAttribute("room", chatRoom);
+        model.addAttribute("user", name);
         return "Room";
     }
 }
