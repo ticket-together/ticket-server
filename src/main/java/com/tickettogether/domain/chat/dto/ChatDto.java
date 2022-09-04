@@ -59,16 +59,6 @@ public class ChatDto {
             this.data = data;
         }
 
-        public ChatMessage toEntity(ChatRoom chatRoom){
-            return ChatMessage.builder()
-                    .sender(sender)
-                    .type(MessageType.valueOf(MessageType.class, type))
-                    .data(data)
-                    .chatRoom(chatRoom)
-                    .createdAt(LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)))
-                    .build();
-        }
-
         private static ChatMessageResponse chatMessageResponseBuilder(Long roomId, String sender, String data, String type, LocalDateTime time){
             String createdAt = null;
             if (time != null) createdAt = time.format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN));
@@ -79,6 +69,16 @@ public class ChatDto {
                     .data(data)
                     .type(type)
                     .createdAt(createdAt).build();
+        }
+
+        public ChatMessage toEntity(ChatRoom chatRoom){
+            return ChatMessage.builder()
+                    .sender(sender)
+                    .type(MessageType.valueOf(MessageType.class, type))
+                    .data(data)
+                    .chatRoom(chatRoom)
+                    .createdAt(LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)))
+                    .build();
         }
     }
 

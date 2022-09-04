@@ -16,7 +16,7 @@ import static com.tickettogether.domain.parts.dto.PartsResponseMessage.*;
 public class PartsController {
     private final MemberPartsService partsService;
 
-    private Long tempMemberId = 1L;
+    private Long tempMemberId = 6L;
 
     @ApiOperation(value = "팟 생성", notes = "요청한 멤버가 방장으로, 팟을 생성한다.")
     @PostMapping("/{prodId}")
@@ -28,5 +28,31 @@ public class PartsController {
     @GetMapping("/{prodId}")
     public ResponseEntity<BaseResponse<List<PartsDto.SearchResponse>>> getParts(@PathVariable("prodId") Long prodId) {
         return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(prodId)));
+    }
+
+    @ApiOperation(value = "팟 참여", notes = "사용자가 원하는 팟에 참여한다.")
+    @PostMapping("/{prodId}/{partId}/join")
+    public ResponseEntity<BaseResponse<String>> joinParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        partsService.joinParts(tempMemberId, partId);
+        return ResponseEntity.ok(BaseResponse.create(JOIN_PARTS_SUCCESS.getMessage()));
+    }
+
+    @ApiOperation(value = "팟 마감", notes = "요청한 멤버가 방장일시, 팟을 마감한다.")
+    @PatchMapping("/{prodId}/{partId}/close")
+    public ResponseEntity<BaseResponse<PartsDto.closeResponse>> closeParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        return ResponseEntity.ok(BaseResponse.create(CLOSE_PARTS_SUCCESS.getMessage(),partsService.closeParts(tempMemberId, partId)));
+    }
+
+    @ApiOperation(value = "팟 삭제", notes = "요청한 멤버가 방장일시, 팟을 삭제한다.")
+    @DeleteMapping("/{prodId}/{partId}")
+    public ResponseEntity<BaseResponse<String>> deleteParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        partsService.deleteParts(tempMemberId, partId);
+        return ResponseEntity.ok(BaseResponse.create(DELETE_PARTS_SUCCESS.getMessage()));
+    }
+
+    @ApiOperation(value = "팟 멤버 조회", notes = "팟에 참여중인 멤버들의 기본 정보를 조회한다.")
+    @GetMapping("/{prodId}/{partId}/member")
+    public ResponseEntity<BaseResponse<List<PartsDto.memberInfo>>> searchPartMembers(@PathVariable("partId") Long partId) {
+        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_MEMBER_SUCCESS.getMessage(),partsService.searchPartMembers(tempMemberId, partId)));
     }
 }

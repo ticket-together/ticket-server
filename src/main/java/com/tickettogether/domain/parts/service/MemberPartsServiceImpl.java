@@ -9,12 +9,15 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
+import com.tickettogether.domain.parts.exception.*;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
@@ -63,6 +66,100 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public void joinParts(Long userId, Long partId) {
+
+        Parts parts = findPartsById(partId);
+        Member user = findMemberById(userId);
+
+        if (checkParticipation(user, parts.getMemberParts())){
+            throw new PartsJoinDeniedException();
+        }
+
+        if (parts.getCurrentPartTotal() >= parts.getPartTotal()){
+            throw new PartsFullException();
+        }
+
+        memberPartsRepository.save(
+                MemberParts.builder()
+                        .member(user)
+                        .parts(parts.addMember())
+                        .build()
+        );
+
+    }
+
+    @Override
+    @Transactional
+    public PartsDto.closeResponse closeParts(Long userId, Long partId){
+
+        Member user = findMemberById(userId);
+        Parts parts = findPartsById(partId);
+
+        if (!parts.getManager().equals(user)) {
+            throw new PartsCloseDeniedException();
+        }
+
+        parts.changePartStatus();
+        return new PartsDto.closeResponse(parts);
+    }
+
+    @Override
+    @Transactional
+    public void deleteParts(Long userId, Long partId){
+
+        Member user = findMemberById(userId);
+        Parts parts = findPartsById(partId);
+
+        if (!parts.getManager().equals(user)) {
+            throw new PartsDeleteDeniedException();
+        }
+        partsRepository.deleteById(partId);
+
+    }
+
+    @Override
+    public List<PartsDto.memberInfo> searchPartMembers(Long userId, Long partId) {
+
+        Parts parts = findPartsById(partId);
+
+        List<Member> memberList = getPartsMember(parts);
+        List<PartsDto.memberInfo> partMemberInfoList = new ArrayList<>();
+
+        for (Member member : memberList) {
+            partMemberInfoList.add(getMemberInfo(member, parts));
+        }
+
+        return partMemberInfoList;
+    }
+
+    private List<Member> getPartsMember(Parts parts){
+        List<MemberParts> memberPartsList = memberPartsRepository.findMemberPartsByParts(parts);
+        return memberPartsList.stream()
+                .filter(m -> m.getMember() != null)
+                .map(m -> m.getMember())
+                .collect(Collectors.toList());
+    }
+
+    private PartsDto.memberInfo getMemberInfo(Member member, Parts parts) {
+        return PartsDto.memberInfo.builder()
+                .memberId(member.getId())
+                .memberName(member.getName())
+                .memberImgUrl(member.getImgUrl())
+                .isManager(parts.getManager().equals(member))
+                .build();
+    }
+
+
+    private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
+        for (MemberParts memberParts : memberPartsList) {
+            if (memberParts.getMember().equals(user)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private Member findMemberById(Long userId) {
         return memberRepository.findById(userId)
@@ -72,6 +169,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     private Culture findCultureById(Long prodId) {
         return cultureRepository.findByProdId(prodId)
                 .orElseThrow(CultureEmptyException::new);
+    }
+
+    private Parts findPartsById(Long partId) {
+        return partsRepository.findById(partId)
+                .orElseThrow(PartsEmptyException::new);
     }
 }
 

@@ -1,5 +1,6 @@
 package com.tickettogether.domain.parts.dto;
 
+import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import lombok.*;
@@ -68,6 +69,30 @@ public class PartsDto {
             this.currentPartTotal = parts.getCurrentPartTotal();
             this.status = parts.getStatus();
         }
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    public static class closeResponse{
+        private Parts.Status status;
+
+        public closeResponse(Parts parts) {
+            this.status = parts.getStatus();
+        }
+
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Builder
+    public static class memberInfo{
+        private Long memberId;
+        private String memberName;
+        private String memberImgUrl;
+        private boolean isManager;
+
     }
 }
 
