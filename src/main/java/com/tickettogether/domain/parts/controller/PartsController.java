@@ -16,7 +16,7 @@ import static com.tickettogether.domain.parts.dto.PartsResponseMessage.*;
 public class PartsController {
     private final MemberPartsService partsService;
 
-    private Long tempMemberId = 10L;
+    private Long tempMemberId = 6L;
 
     @ApiOperation(value = "팟 생성", notes = "요청한 멤버가 방장으로, 팟을 생성한다.")
     @PostMapping("/{prodId}")

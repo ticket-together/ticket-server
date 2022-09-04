@@ -9,10 +9,7 @@ import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.dto.PartsDto;
-import com.tickettogether.domain.parts.exception.PartsCloseDeniedException;
-import com.tickettogether.domain.parts.exception.PartsDeleteDeniedException;
-import com.tickettogether.domain.parts.exception.PartsEmptyException;
-import com.tickettogether.domain.parts.exception.PartsJoinDeniedException;
+import com.tickettogether.domain.parts.exception.*;
 import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
@@ -78,6 +75,10 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
         if (checkParticipation(user, parts.getMemberParts())){
             throw new PartsJoinDeniedException();
+        }
+
+        if (parts.getCurrentPartTotal() >= parts.getPartTotal()){
+            throw new PartsFullException();
         }
 
         memberPartsRepository.save(

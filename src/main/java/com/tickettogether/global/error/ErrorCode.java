@@ -63,6 +63,7 @@ public enum ErrorCode {
     PARTS_JOIN_DENIED(3041, "해당 팟에 이미 참여되어있습니다."),
     PARTS_CLOSE_DENIED(3042, "해당 팟 마감에 대한 권한이 없습니다."),
     PARTS_DELETE_DENIED(3042, "해당 팟 삭제에 대한 권한이 없습니다."),
+    PARTS_FULL(3044, "해당 팟의 인원이 모두 찼습니다."),
 
 
     /**
