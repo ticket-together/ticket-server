@@ -3,7 +3,7 @@ package com.tickettogether.global.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -15,8 +15,6 @@ import java.util.List;
 public class PageDto<T> {
 
     private int pageNumber;
-
-    private int contentsCount;
 
     @JsonProperty("isFirst")
     private boolean first;
@@ -35,10 +33,9 @@ public class PageDto<T> {
 
     private List<T> contents;
 
-    public static <T> PageDto<T> create(Page<T> page, List<T> contents) {
+    public static <T> PageDto<T> create(Slice<T> page, List<T> contents) {
         return PageDto.<T>builder()
                 .pageNumber(page.getNumber() + 1)
-                .contentsCount(page.getContent().size())
                 .first(page.isFirst())
                 .last(page.isLast())
                 .hasNext(page.hasNext())
