@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CultureRepository extends JpaRepository<Culture, Long> {
+public interface CultureRepository extends JpaRepository<Culture, Long>, CultureRepositoryCustom {
     @Query("SELECT distinct c FROM Culture c  where (c.name like concat('%', :query, '%')  or c.hallName like concat('%', :query, '%'))")
     Slice<Culture> searchCultureByName(Pageable pageable, @Param("query") String query);
 

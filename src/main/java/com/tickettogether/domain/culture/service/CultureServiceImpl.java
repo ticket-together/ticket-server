@@ -19,19 +19,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CultureServiceImpl implements CultureService{
+public class CultureServiceImpl implements CultureService {
 
     private final CultureRepository cultureRepository;
     private final MemberRepository memberRepository;
     private static final int MAX_KEYWORD_COUNT = 2;
 
-    public CultureDto.CultureResponse getCulture(Long id){
+    public CultureDto.CultureResponse getCulture(Long id) {
         Culture culture = cultureRepository.findByProdId(id).orElseThrow(CultureEmptyException::new);
         return new CultureDto.CultureResponse(culture);
     }
 
     public CultureDto.CultureSearchResponse searchCulture(String search, Pageable pageable) {
-        return new CultureDto.CultureSearchResponse(cultureRepository.searchCultureByName(pageable, search));
+        return new CultureDto.CultureSearchResponse(cultureRepository.searchCultureByQuery(pageable, search));
     }
 
     public List<CultureDto.MainCultureResponse> getMainCulture(Long id) {
@@ -52,13 +52,12 @@ public class CultureServiceImpl implements CultureService{
     }
 
     private Set<CultureKeyword> getMemberKeywords(Member member) {
-        List<CultureKeyword> memberKeywords = member
+        Set<CultureKeyword> cultureKeywords = member
                 .getMemberKeywords()
                 .stream()
                 .map(MemberKeyword::getKeyword)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        Set<CultureKeyword> cultureKeywords = new HashSet<>(memberKeywords);
         int i = 0;
         while (cultureKeywords.size() < MAX_KEYWORD_COUNT) {
             cultureKeywords.add(CultureKeyword.values()[i]);
