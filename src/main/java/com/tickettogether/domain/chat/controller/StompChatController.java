@@ -30,11 +30,9 @@ public class StompChatController {
 
     @MessageMapping("chat.enter.{roomId}")
     @SendTo("/topic/room.{roomId}")
-    public ChatMessageResponse enter(@Payload ChatStompRequest message, @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
-        Objects.requireNonNull(headerAccessor.getSessionAttributes());
-        headerAccessor.getSessionAttributes().put("username", message.getSender());
-        headerAccessor.getSessionAttributes().put("roomId", roomId);
-
+    public ChatMessageResponse enter(@Payload ChatStompRequest message,
+                                     @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
+        setSessionAttributes(message.getSender(), roomId, headerAccessor);
         ChatMessageResponse sendEnterMessage = ChatMessageResponse.create(message, Long.parseLong(roomId));
 
         Map<String, String> enterMemberList = redisUtil.getHashKeys(roomId);
@@ -48,9 +46,17 @@ public class StompChatController {
 
     @MessageMapping("chat.message.{roomId}")
     @SendTo("/topic/room.{roomId}")
-    public ChatMessageResponse message(@Payload ChatStompRequest message, @DestinationVariable String roomId){
+    public ChatMessageResponse message(@Payload ChatStompRequest message,
+                                       @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
+        setSessionAttributes(message.getSender(), roomId, headerAccessor);
         ChatMessageResponse sendChatMessage = ChatMessageResponse.create(message, Long.parseLong(roomId), LocalDateTime.now());
         rabbitTemplate.convertAndSend(Constant.CHAT_QUEUE_NAME, sendChatMessage);
         return sendChatMessage;
+    }
+
+    private void setSessionAttributes(String username, String roomId, SimpMessageHeaderAccessor headerAccessor){
+        Objects.requireNonNull(headerAccessor.getSessionAttributes());
+        headerAccessor.getSessionAttributes().put("username", username);
+        headerAccessor.getSessionAttributes().put("roomId", roomId);
     }
 }
