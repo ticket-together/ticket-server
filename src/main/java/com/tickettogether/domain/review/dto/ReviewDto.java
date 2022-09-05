@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @Setter
 public class ReviewDto {
 
-    // 리뷰 저장시 request
     @Setter
     @Getter
     public static class addRequest {
@@ -24,7 +23,6 @@ public class ReviewDto {
         private String record;
         private String number;
 
-        // dto -> entity
         public Review toEntity() {
             return Review.builder()
                     .hallName(hallName)
@@ -39,7 +37,6 @@ public class ReviewDto {
 
     }
 
-    // 리뷰 저장시 response
     @Getter
     public static class addResponse {
         private Member member;
@@ -67,7 +64,6 @@ public class ReviewDto {
 
     }
 
-    // 리뷰 수정시 request
     @Getter
     @Setter
     public static class updateRequest {
