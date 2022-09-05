@@ -2,6 +2,7 @@ package com.tickettogether.global.config.redis.util;
 
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -29,6 +32,11 @@ public class RedisUtil<K, V> {
         redisTemplate.expire(key, Long.parseLong(jwtConfig.getRefreshExpiry()), TimeUnit.MILLISECONDS);
     }
 
+    public void setValue(K key, K hashKey, V value){
+        HashOperations<K, Object, Object> hashOperations = redisTemplate.opsForHash();
+        hashOperations.put(key, hashKey, value);
+    }
+
     public void setValueBlackList(K key, V value, Long milliSeconds){
         redisBlackListTemplate.opsForValue().set(key, value, milliSeconds, TimeUnit.MILLISECONDS);
     }
@@ -43,8 +51,25 @@ public class RedisUtil<K, V> {
         return values.range(key, 0, 1);
     }
 
+    @SuppressWarnings(value = "unchecked")
+    public V getHashValue(K key, K hashKey){
+        HashOperations<K, Object, Object> values = redisTemplate.opsForHash();
+        return (V) values.get(key, hashKey);
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public Map<K, V> getHashKeys(K key){
+        HashOperations<K, Object, Object> values = redisTemplate.opsForHash();
+        return (Map<K, V>) values.entries(key);
+    }
+
     public void deleteValue(K key){
         redisTemplate.delete(key);
+    }
+
+    public void deleteHashValue(K key, K hashKey){
+        HashOperations<K, Object, Object> values = redisTemplate.opsForHash();
+        values.delete(key, hashKey);
     }
 
     public boolean hasKeyBlackList(K key){
