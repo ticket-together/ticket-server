@@ -11,11 +11,11 @@ import com.tickettogether.domain.parts.repository.PartsRepository;
 import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.dto.PageDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
@@ -34,6 +34,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final RedisUtil<String, String> redisUtil;
 
+    @Transactional
     public ChatDto.ChatEnterResponse createChatRoom(ChatDto.ChatEnterRequest request) {
         Parts parts = partsRepository.findById(request.getPartsId()).orElseThrow(PartsEmptyException::new);
         ChatRoom chatRoom = chatRoomRepository.save(
@@ -44,22 +45,22 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return ChatDto.ChatEnterResponse.builder().roomId(chatRoom.getId()).build();
     }
 
+    @Transactional
+    public void saveChatMessage(ChatDto.ChatMessageResponse chatMessage){
+        ChatRoom chatRoom = chatRoomRepository.findById(chatMessage.getRoomId()).orElseThrow(ChatRoomEmptyException::new);
+        chatMessageRepository.save(chatMessage.toEntity(chatRoom));
+    }
+
     public ChatDto.ChatSearchResponse getChatListByRoomId(Long roomId, String username, Pageable pageable) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(ChatRoomEmptyException::new);
         Map<String, String> enterMemberList = redisUtil.getHashKeys(roomId.toString());
 
         if (enterMemberList.containsKey(username)) {    // 재접속인 경우 입장 시간 이후의 데이터 반환
             LocalDateTime enterTime = LocalDateTime.parse(redisUtil.getHashValue(roomId.toString(), username));
-
-            Page<ChatDto.ChatMessageResponse> messageDtoList = chatMessageRepository.findAllByChatRoomAndCreatedAtGreaterThanEqualOrderByCreatedAt(pageable, chatRoom, enterTime)
+            Slice<ChatDto.ChatMessageResponse> messageDtoList = chatMessageRepository.findAllByChatRoomAndCreatedAtGreaterThanEqualOrderByCreatedAt(pageable, chatRoom, enterTime)
                     .map(ChatDto.ChatMessageResponse::create);
             return ChatDto.ChatSearchResponse.create(roomId, chatRoom.getName(), PageDto.create(messageDtoList, messageDtoList.getContent()));
         }
         return ChatDto.ChatSearchResponse.create(roomId, chatRoom.getName(),PageDto.create(new PageImpl<>(List.of()), List.of()));      // 처음 입장인 경우 빈 배열 반환
-    }
-
-    public void saveChatMessage(ChatDto.ChatMessageResponse chatMessage){
-        ChatRoom chatRoom = chatRoomRepository.findById(chatMessage.getRoomId()).orElseThrow(ChatRoomEmptyException::new);
-        chatMessageRepository.save(chatMessage.toEntity(chatRoom));
     }
 }

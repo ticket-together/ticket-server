@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(indexes = @Index(name = "time", columnList = "createdAt"))
 public class ChatMessage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
