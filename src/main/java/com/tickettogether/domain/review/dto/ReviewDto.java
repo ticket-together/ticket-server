@@ -5,6 +5,7 @@ import com.tickettogether.domain.review.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -28,10 +29,10 @@ public class ReviewDto {
                     .hallName(hallName)
                     .starPoint(starPoint)
                     .contents(contents)
-                    .floor(floor)
-                    .part(part)
-                    .record(record)
-                    .number(number)
+                    .floor(floor.toUpperCase(Locale.ROOT))
+                    .part(part.toUpperCase(Locale.ROOT))
+                    .record(record.toUpperCase(Locale.ROOT))
+                    .number(number.toUpperCase(Locale.ROOT))
                     .build();
         }
 
