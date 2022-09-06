@@ -5,12 +5,12 @@ import com.tickettogether.domain.review.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 @Getter
 @Setter
 public class ReviewDto {
 
-    // 리뷰 저장시 request
     @Setter
     @Getter
     public static class addRequest {
@@ -24,22 +24,20 @@ public class ReviewDto {
         private String record;
         private String number;
 
-        // dto -> entity
         public Review toEntity() {
             return Review.builder()
                     .hallName(hallName)
                     .starPoint(starPoint)
                     .contents(contents)
-                    .floor(floor)
-                    .part(part)
-                    .record(record)
-                    .number(number)
+                    .floor(floor.toUpperCase(Locale.ROOT))
+                    .part(part.toUpperCase(Locale.ROOT))
+                    .record(record.toUpperCase(Locale.ROOT))
+                    .number(number.toUpperCase(Locale.ROOT))
                     .build();
         }
 
     }
 
-    // 리뷰 저장시 response
     @Getter
     public static class addResponse {
         private Member member;
@@ -67,7 +65,6 @@ public class ReviewDto {
 
     }
 
-    // 리뷰 수정시 request
     @Getter
     @Setter
     public static class updateRequest {
