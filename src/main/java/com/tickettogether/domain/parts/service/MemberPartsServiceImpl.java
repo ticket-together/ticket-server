@@ -107,6 +107,25 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     @Transactional
+    public void leaveParts(Long userId, Long partId){
+
+        Member user = findMemberById(userId);
+        Parts parts = findPartsById(partId);
+
+        if (parts.getManager().equals(user) || (!checkParticipation(user, parts.getMemberParts()))) {
+            throw new PartsLeaveDeniedException();
+        }
+
+        List<MemberParts> memberPartsList = memberPartsRepository.findByParts(parts);
+        MemberParts memberParts = memberPartsList.stream()
+                .filter(m -> m.getMember() == user)
+                .findAny().get();
+
+        memberParts.removeMember(user,parts.removeMember());
+    }
+
+    @Override
+    @Transactional
     public void deleteParts(Long userId, Long partId){
 
         Member user = findMemberById(userId);
@@ -135,7 +154,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     }
 
     private List<Member> getPartsMember(Parts parts){
-        List<MemberParts> memberPartsList = memberPartsRepository.findMemberPartsByParts(parts);
+        List<MemberParts> memberPartsList = memberPartsRepository.findByParts(parts);
         return memberPartsList.stream()
                 .filter(m -> m.getMember() != null)
                 .map(m -> m.getMember())
@@ -175,6 +194,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partsRepository.findById(partId)
                 .orElseThrow(PartsEmptyException::new);
     }
+
 }
 
 

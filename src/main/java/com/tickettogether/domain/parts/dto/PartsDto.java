@@ -94,5 +94,6 @@ public class PartsDto {
         private boolean isManager;
 
     }
+
 }
 

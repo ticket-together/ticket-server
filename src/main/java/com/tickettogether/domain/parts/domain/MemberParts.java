@@ -29,4 +29,9 @@ public class MemberParts {
         this.member = member;
         this.parts = parts;
     }
+
+    public void removeMember(Member member, Parts parts) {
+        this.member = null;
+        this.parts = parts;
+    }
 }

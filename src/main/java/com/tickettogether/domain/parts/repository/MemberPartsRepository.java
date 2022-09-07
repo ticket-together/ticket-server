@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MemberPartsRepository extends JpaRepository<MemberParts, Long> {
-    List<MemberParts> findMemberPartsByParts(Parts parts);
+    List<MemberParts> findByParts(Parts parts);
 }
