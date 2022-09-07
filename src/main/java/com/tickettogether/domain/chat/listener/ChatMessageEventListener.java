@@ -13,7 +13,7 @@ public class ChatMessageEventListener {
     private final ChatRoomServiceImpl chatRoomService;
 
     @EventListener
-    @Async
+    @Async("threadPoolTaskExecutor")
     public void receiveMessage(final ChatSendEvent chatSendEvent){
         chatRoomService.saveChatMessage(chatSendEvent.getResponse());
     }
