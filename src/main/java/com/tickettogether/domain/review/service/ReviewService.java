@@ -16,5 +16,7 @@ public interface ReviewService {
     ReviewDto.addResponse updateReview(String hallName, Long reviewId, ReviewDto.updateRequest requestDto);
 
     void deleteReview(Long reviewId);
+
+    List<ReviewInfoDto> getReviewsByMember(Long memberId);
 }
 
