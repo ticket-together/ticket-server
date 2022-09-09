@@ -12,7 +12,7 @@ public class MemberDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class SaveRequest{
-        private String phoneNumber;
+        private String nickname;
         private List<String> keywords;
     }
 
