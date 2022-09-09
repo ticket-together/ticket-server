@@ -11,20 +11,20 @@ import com.tickettogether.domain.review.exception.ReviewEmptyException;
 import com.tickettogether.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
-    private Long memberId = 1L;
 
     @Override
+    @Transactional
     public ReviewDto.addResponse addReview(Long memberId, String hallName, ReviewDto.addRequest requestDto) {
         Member member = getMember(memberId);
 
@@ -48,6 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public ReviewDto.addResponse updateReview(String hallName, Long reviewId, ReviewDto.updateRequest requestDto) {
         Review review = getReview(reviewId);
 
@@ -58,9 +59,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void deleteReview(Long reviewId) {
         Review review = getReview(reviewId);
-        this.reviewRepository.delete(review);
+        reviewRepository.delete(review);
+    }
+
+    @Override
+    public List<ReviewInfoDto> getReviewsByMember(Long memberId) {
+        Member member = getMember(memberId);
+        return reviewRepository.findByMemberOrderByCreatedAtDesc(member)
+                .stream()
+                .map(ReviewInfoDto::new)
+                .collect(Collectors.toList());
     }
 
     private Review getReview(Long reviewId) {
