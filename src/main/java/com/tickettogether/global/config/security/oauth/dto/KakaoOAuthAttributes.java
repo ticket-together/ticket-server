@@ -7,6 +7,7 @@ import java.util.Map;
 @Getter
 public class KakaoOAuthAttributes extends OAuthAttributes {
 
+    @SuppressWarnings(value = "unchecked")
     public static OAuthAttributes of(String userNameAttribute, Map<String, Object> attributes) {
         Map<String, Object> attributeMap = (HashMap<String, Object>) attributes.get("kakao_account");
         if(!attributeMap.isEmpty()){
@@ -18,11 +19,13 @@ public class KakaoOAuthAttributes extends OAuthAttributes {
                     .nickName((String) profilesMap.get("nickname"))
                     .email((String) attributeMap.get("email"))
                     .imgUrl((String) profilesMap.get("thumbnail_image_url"))
+                    .phoneNumber((String) attributeMap.get("phone_number"))
                     .build();
         }
         return null;
     }
 
+    @SuppressWarnings(value = "unchecked")
     public static OAuthAttributes of(String registerId, String userNameAttribute, Map<String, Object> attributes) {
         Map<String, Object> attributeMap = (HashMap<String, Object>) attributes.get("kakao_account");
         if(!attributeMap.isEmpty()){
@@ -35,6 +38,7 @@ public class KakaoOAuthAttributes extends OAuthAttributes {
                     .nickName((String) profilesMap.get("nickname"))
                     .email((String) attributeMap.get("email"))
                     .imgUrl((String) profilesMap.get("thumbnail_image_url"))
+                    .phoneNumber((String) attributeMap.get("phone_number"))
                     .build();
         }
         return null;

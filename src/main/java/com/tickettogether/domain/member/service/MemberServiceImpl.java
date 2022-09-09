@@ -27,7 +27,9 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public MemberDto.SaveResponse saveMemberProfile(MemberDto.SaveRequest saveRequest, Long userId){
         Member member = findMemberById(userId);
-        member.saveMemberProfile(saveRequest.getPhoneNumber());
+        if(saveRequest.getNickname() != null) {
+            member.saveMemberProfile(saveRequest.getNickname());
+        }
 
         for(String k : saveRequest.getKeywords()){
             try{
@@ -56,7 +58,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     public MemberDto.SearchResponse getOtherMemberProfile(Long userId) {
-        Member member = memberRepository.findById(userId).orElseThrow(UserEmptyException::new);
+        Member member = findMemberById(userId);
         return createSearchResponse(member);
     }
 
