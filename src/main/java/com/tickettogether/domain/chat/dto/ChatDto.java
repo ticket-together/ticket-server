@@ -73,6 +73,7 @@ public class ChatDto {
 
         public ChatMessage toEntity(ChatRoom chatRoom){
             return ChatMessage.builder()
+                    .chatRoom(chatRoom)
                     .sender(sender)
                     .type(MessageType.valueOf(MessageType.class, type))
                     .data(data)
