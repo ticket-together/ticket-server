@@ -46,6 +46,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .getUserNameAttributeName();
 
         OAuthAttributes attr = KakaoOAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        assert attr != null;
         Member member = saveOrUpdateMemberToDB(attr);
 
         return UserPrincipal.create(member, attr.getNameKey(), attr.getAttributes());
@@ -67,8 +68,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private void updateMember(Member member, OAuthAttributes attrs){
         //하나라도 다르면 업데이트 해주기
-        boolean update = false;
-        if(member.getName() != null & !member.getName().equals(attrs.getNickName())) update = true;
+        boolean update = member.getPhoneNumber() != null & !member.getPhoneNumber().equals(attrs.getPhoneNumber());
 
         if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())) update = true;
 

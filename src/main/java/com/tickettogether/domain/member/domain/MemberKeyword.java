@@ -23,4 +23,8 @@ public class MemberKeyword {
 
     @Enumerated(EnumType.STRING)
     private CultureKeyword keyword;
+
+    public void setMember(Member member){
+        this.member = member;
+    }
 }

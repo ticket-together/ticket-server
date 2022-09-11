@@ -7,7 +7,9 @@ import lombok.*;
 import java.util.Map;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class OAuthAttributes {
     private String registerId;
     private Map<String, Object> attributes;
@@ -15,23 +17,14 @@ public class OAuthAttributes {
     private String nickName;
     private String email;
     private String imgUrl;
-
-    @Builder
-    public OAuthAttributes(String registerId, Map<String, Object> attributes,
-                           String nameKey, String nickName, String email, String imgUrl){
-        this.registerId = registerId;
-        this.attributes = attributes;
-        this.nameKey = nameKey;
-        this.nickName = nickName;
-        this.email = email;
-        this.imgUrl = imgUrl;
-    }
+    private String phoneNumber;
 
     public Member toEntity(){
         return Member.builder()
                 .name(nickName)
                 .email(email)
                 .imgUrl(imgUrl)
+                .phoneNumber(phoneNumber)
                 .role(Role.USER)
                 .build();
     }

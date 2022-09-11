@@ -10,11 +10,9 @@ import java.util.Locale;
 @Getter
 @Setter
 public class ReviewDto {
-
     @Setter
     @Getter
     public static class addRequest {
-
         private Member member;
         private String hallName;
         private BigDecimal starPoint;
@@ -35,7 +33,6 @@ public class ReviewDto {
                     .number(number.toUpperCase(Locale.ROOT))
                     .build();
         }
-
     }
 
     @Getter
@@ -60,9 +57,7 @@ public class ReviewDto {
             this.record = review.getRecord();
             this.number = review.getNumber();
             this.writeDate = review.getCreatedAt().toString();
-
         }
-
     }
 
     @Getter
@@ -74,6 +69,5 @@ public class ReviewDto {
         private String part;
         private String record;
         private String number;
-
     }
 }
