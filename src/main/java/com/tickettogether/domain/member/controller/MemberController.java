@@ -6,10 +6,8 @@ import com.tickettogether.global.error.dto.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static com.tickettogether.domain.member.dto.MemberResponseMessage.*;
@@ -32,7 +30,7 @@ public class MemberController {
     @ApiOperation(value = "본인 정보 조회", notes = "로그인 유저의 정보를 조회한다.")
     @ApiResponse(code = 2011, message = "존재하지 않는 회원입니다.")
     @GetMapping
-    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchMemberInfo(){
+    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchLoginMemberInfo(){
         return ResponseEntity.ok(BaseResponse.create(GET_PROFILE_SUCCESS.getMessage(),
                 memberService.getMemberProfile(tempMemberId)));
     }
@@ -40,7 +38,7 @@ public class MemberController {
     @ApiOperation(value = "다른 회원 정보 조회", notes = "로그인 유저가 아닌 다른 회원의 정보를 조회한다.")
     @ApiResponse(code = 2011, message = "존재하지 않는 회원입니다.")
     @GetMapping("/{memberId}")
-    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchMemberInfo(@PathVariable("memberId") Long memberId){
+    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchOtherMemberInfo(@PathVariable("memberId") Long memberId){
         return ResponseEntity.ok(BaseResponse.create(GET_PROFILE_SUCCESS.getMessage(),
                 memberService.getOtherMemberProfile(memberId)));
     }

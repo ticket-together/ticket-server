@@ -29,7 +29,7 @@ public class AuthService {
     private final static long THREE_DAYS_MSEC = 259200000;
     private AuthToken newRefreshToken;
     private AuthToken newAccessToken;
-    private String userEmail;
+    private String userId;
     private Role userRole;
     private long refreshExpiry;
 
@@ -42,7 +42,7 @@ public class AuthService {
         if(claims == null){              //expired
             throw new TokenValidFailedException("Access Token must be expired");
         }
-        this.userEmail = claims.getId();
+        this.userId = claims.getId();
         this.userRole =  Role.of(claims.get("role", String.class));
     }
 
@@ -54,25 +54,25 @@ public class AuthService {
         List<String> values = redisUtil.getValues(refreshToken);
         if(values != null) {
             if(values.get(0) == null || !StringUtils.equals(values.get(1),accessToken) ){
-                throw new TokenRefreshException("Not equal to user email and access token");
+                throw new TokenRefreshException("Not equal to userId and access token");
             }
         }else throw new TokenRefreshException("No Data in Redis Server");
         return true;
     }
 
     public void renewAccessTokenAndRefreshToken(AuthToken authToken, String refreshToken, String accessToken){
-        this.newAccessToken = authTokenProvider.createAuthToken(userEmail, userRole.getKey());   //액세스 토큰 재발급
+        this.newAccessToken = authTokenProvider.createAuthToken(userId, userRole.getKey());   //액세스 토큰 재발급
         redisUtil.deleteValue(refreshToken);
 
         if (authToken.getRemainMilliSeconds(accessToken) < THREE_DAYS_MSEC){   //3일 이하로 남으면 리프레시 재발급
             this.refreshExpiry = Long.parseLong(jwtConfig.getRefreshExpiry());
-            this.newRefreshToken = authTokenProvider.createRefreshToken(userEmail,
+            this.newRefreshToken = authTokenProvider.createRefreshToken(userId,
                     newAccessToken.getToken(),
                     refreshExpiry);
 
-            setRefreshValue(newRefreshToken.getToken(), userEmail, this.newAccessToken.getToken());
+            setRefreshValue(newRefreshToken.getToken(), userId, this.newAccessToken.getToken());
         }
-        setRefreshValue(refreshToken, userEmail, this.newAccessToken.getToken());
+        setRefreshValue(refreshToken, userId, this.newAccessToken.getToken());
     }
 
     public void logoutAndDeleteToken(String accessToken, String refreshToken){

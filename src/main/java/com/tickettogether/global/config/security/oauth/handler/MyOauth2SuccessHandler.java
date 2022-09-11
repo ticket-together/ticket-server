@@ -38,8 +38,8 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
     private final RedisUtil<String, String> redisUtil;
     private final AuthTokenProvider authTokenProvider;
     private final JwtConfig jwtConfig;
-    private RequestCache requestCache = new HttpSessionRequestCache();
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private final RequestCache requestCache = new HttpSessionRequestCache();
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -76,16 +76,17 @@ public class MyOauth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuthAttributes userInfo = KakaoOAuthAttributes.of(principal.getUserNameAttribute(), principal.getAttributes());
         Assert.notNull(userInfo, "userInfo cannot be null");
 
+        String userId = principal.getUserId().toString();
         Collection<? extends GrantedAuthority> authorities = principal.getAuthorities();
         if (!hasAuthority(authorities, Role.USER.getKey())){
             throw new IllegalArgumentException("grant authority does not exist");
         }
-        AuthToken authToken = authTokenProvider.createAuthToken(userInfo.getEmail(), Role.USER.getKey());
+        AuthToken authToken = authTokenProvider.createAuthToken(userId, Role.USER.getKey());
 
         //3. 리프레시 토큰 생성 후 쿠키와 redis 에 저장
         long refreshExpiry = Long.parseLong(jwtConfig.getRefreshExpiry());
-        AuthToken refreshToken = authTokenProvider.createRefreshToken(userInfo.getEmail(), authToken.getToken(), refreshExpiry);
-        setRefreshValue(refreshToken.getToken(), userInfo.getEmail(), authToken.getToken());
+        AuthToken refreshToken = authTokenProvider.createRefreshToken(userId, authToken.getToken(), refreshExpiry);
+        setRefreshValue(refreshToken.getToken(), userId, authToken.getToken());
 
         int cookieMaxAge = (int) refreshExpiry / 60;
         CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);

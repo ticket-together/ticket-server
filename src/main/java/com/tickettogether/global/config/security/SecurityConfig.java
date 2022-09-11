@@ -35,12 +35,10 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomUserDetailsService customUserDetailsService;
     private final AuthTokenProvider authTokenProvider;
     private final RedisUtil<String, String> redisUtil;
     private final JwtConfig jwtConfig;
     private final BaseExceptionHandlerFilter baseExceptionHandlerFilter;
-
     private final CorsProperties corsProperties;
 
     @Override
@@ -86,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter(){
-        return new TokenAuthenticationFilter(authTokenProvider, customUserDetailsService, redisUtil);
+        return new TokenAuthenticationFilter(authTokenProvider, redisUtil);
     }
     @Bean
     public AuthenticationSuccessHandler myOauth2SuccessHandler(){
