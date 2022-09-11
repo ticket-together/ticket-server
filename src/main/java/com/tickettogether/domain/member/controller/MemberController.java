@@ -2,11 +2,11 @@ package com.tickettogether.domain.member.controller;
 
 import com.tickettogether.domain.member.dto.MemberDto;
 import com.tickettogether.domain.member.service.MemberServiceImpl;
+import com.tickettogether.global.config.security.annotation.LoginUser;
 import com.tickettogether.global.error.dto.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +17,21 @@ import static com.tickettogether.domain.member.dto.MemberResponseMessage.*;
 @RequestMapping("/api/v1/member")
 public class MemberController {
     private final MemberServiceImpl memberService;
-    private Long tempMemberId = 1L;
 
     @ApiOperation(value = "회원 정보 저장", notes = "카카오 로그인 후 입력 받은 정보를 가지고 회원 정보를 마저 저장한다.")
     @ApiResponse(code = 2012, message = "존재하지 않는 키워드입니다.")
     @PostMapping
-    public ResponseEntity<BaseResponse<MemberDto.SaveResponse>> saveMemberInfo(@RequestBody MemberDto.SaveRequest saveRequest){
+    public ResponseEntity<BaseResponse<MemberDto.SaveResponse>> saveMemberInfo(@RequestBody MemberDto.SaveRequest saveRequest, @LoginUser Long memberId){
         return ResponseEntity.ok(BaseResponse.create(SAVE_MEMBER_SUCCESS.getMessage(),
-                memberService.saveMemberProfile(saveRequest, tempMemberId)));
+                memberService.saveMemberProfile(saveRequest, memberId)));
     }
 
     @ApiOperation(value = "본인 정보 조회", notes = "로그인 유저의 정보를 조회한다.")
     @ApiResponse(code = 2011, message = "존재하지 않는 회원입니다.")
     @GetMapping
-    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchLoginMemberInfo(){
+    public ResponseEntity<BaseResponse<MemberDto.SearchResponse>> searchLoginMemberInfo(@LoginUser Long memberId){
         return ResponseEntity.ok(BaseResponse.create(GET_PROFILE_SUCCESS.getMessage(),
-                memberService.getMemberProfile(tempMemberId)));
+                memberService.getMemberProfile(memberId)));
     }
 
     @ApiOperation(value = "다른 회원 정보 조회", notes = "로그인 유저가 아닌 다른 회원의 정보를 조회한다.")
@@ -46,8 +45,8 @@ public class MemberController {
     @ApiOperation(value = "회원 정보 수정", notes = "로그인 유저의 정보를 수정한다.")
     @ApiResponse(code = 2011, message = "존재하지 않는 회원입니다.")
     @PatchMapping
-    public ResponseEntity<BaseResponse<MemberDto.UpdateResponse>> updateMemberInfo(@RequestBody MemberDto.UpdateRequest updateRequest){
+    public ResponseEntity<BaseResponse<MemberDto.UpdateResponse>> updateMemberInfo(@RequestBody MemberDto.UpdateRequest updateRequest, @LoginUser Long memberId){
         return ResponseEntity.ok(BaseResponse.create(UPDATE_PROFILE_SUCCESS.getMessage(),
-                memberService.updateMemberProfile(updateRequest, tempMemberId)));
+                memberService.updateMemberProfile(updateRequest, memberId)));
     }
 }
