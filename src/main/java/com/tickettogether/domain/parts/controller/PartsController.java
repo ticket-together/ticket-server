@@ -44,7 +44,7 @@ public class PartsController {
     }
 
     @ApiOperation(value = "팟 나가기", notes = "요청한 멤버가 방장일시, 팟을 나간다.")
-    @PatchMapping("/{prodId}/{partId}/leave")
+    @DeleteMapping("/{prodId}/{partId}/leave")
     public ResponseEntity<BaseResponse<String>> leaveParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
         partsService.leaveParts(tempMemberId, partId);
         return ResponseEntity.ok(BaseResponse.create(LEAVE_PARTS_SUCCESS.getMessage()));
