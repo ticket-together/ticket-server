@@ -81,10 +81,10 @@ public class Member extends BaseEntity {
         ACTIVE, INACTIVE
     }
 
-    public void setReviews(Review review){
-        this.reviews.add(review);
-        if (review.getMember() != this){
-            review.addMember(this);
+    public void setMemberKeywords(MemberKeyword keyword){
+        this.memberKeywords.add(keyword);
+        if(keyword.getMember() != this){
+            keyword.setMember(this);
         }
     }
 
