@@ -31,7 +31,7 @@ public class Parts extends BaseEntity {
     private Culture culture;
 
     @OneToMany(mappedBy = "parts", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<MemberParts> memberParts = new ArrayList<>();
+    private List<MemberParts> memberParts = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Status status;
