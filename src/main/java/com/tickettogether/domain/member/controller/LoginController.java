@@ -3,7 +3,6 @@ import com.tickettogether.domain.member.domain.Member;
 import com.tickettogether.domain.member.dto.TokenResponseDto;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
-import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.config.security.jwt.service.AuthService;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
@@ -15,11 +14,9 @@ import com.tickettogether.global.error.dto.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +25,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static com.tickettogether.domain.member.dto.MemberResponseMessage.*;
 import static com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository.REFRESH_TOKEN_COOKIE_NAME;
 
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/api/v1")
 public class LoginController {
     private final MemberRepository memberRepository;
@@ -42,7 +39,6 @@ public class LoginController {
     private final String DEFAULT_REDIRECT_URL = "/main";
     private final boolean invalidateMember = true;
 
-    //액세스 + 리프레시 토큰 갱신
     @ApiOperation(value = "리프레시 토큰 발급 및 갱신", notes = "리프레시 토큰을 발급 및 갱신한다.")
     @ApiResponse(code = 2003, message = "유효하지 않은 리프레시 토큰입니다.")
     @PostMapping("/refresh")
@@ -63,17 +59,18 @@ public class LoginController {
             CookieUtils.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
             CookieUtils.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, authService.getNewRefreshToken().getToken(), cookieMaxAge);
         }
-        return ResponseEntity.ok(BaseResponse.create("refresh success", new TokenResponseDto(authService.getNewAccessToken().getToken())));
+        return ResponseEntity.ok(BaseResponse.create(REFRESH_ISSUE_SUCCESS.getMessage(), new TokenResponseDto(authService.getNewAccessToken().getToken())));
     }
 
     @ApiOperation(value = "로그아웃", notes = "액세스 토큰을 블랙리스트에 추가하고 리프레시 토큰을 삭제한다.")
     @ApiResponse(code = 2002, message = "유효하지 않은 JWT 입니다.")
     @PostMapping("/logout")
-    public BaseResponse<String> logout(HttpServletRequest request){
+    public ResponseEntity<BaseResponse<String>> logout(HttpServletRequest request){
         String accessToken = HeaderUtil.getAccessToken(request);
         String refreshToken = getRefreshTokenFromCookie(request);
+
         authService.logoutAndDeleteToken(accessToken,refreshToken);
-        return BaseResponse.create("logout success");
+        return ResponseEntity.ok(BaseResponse.create(LOGOUT_SUCCESS.getMessage()));
     }
 
     @ApiOperation(value = "회원 탈퇴", notes = "서비스에서 탈퇴한다.")
