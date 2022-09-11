@@ -16,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
 
@@ -73,11 +73,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         Parts parts = findPartsById(partId);
         Member user = findMemberById(userId);
 
-        if (checkParticipation(user, parts.getMemberParts())){
+        if (checkParticipation(user, parts.getMemberParts())) {
             throw new PartsJoinDeniedException();
         }
 
-        if (parts.getCurrentPartTotal() >= parts.getPartTotal()){
+        if (parts.getCurrentPartTotal() >= parts.getPartTotal()) {
             throw new PartsFullException();
         }
 
@@ -92,7 +92,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     @Transactional
-    public PartsDto.closeResponse closeParts(Long userId, Long partId){
+    public PartsDto.closeResponse closeParts(Long userId, Long partId) {
 
         Member user = findMemberById(userId);
         Parts parts = findPartsById(partId);
@@ -107,26 +107,25 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     @Transactional
-    public void leaveParts(Long userId, Long partId){
+    public void leaveParts(Long userId, Long partId) {
 
-        Member user = findMemberById(userId);
+        Member member = findMemberById(userId);
         Parts parts = findPartsById(partId);
 
-        if (parts.getManager().equals(user) || (!checkParticipation(user, parts.getMemberParts()))) {
+        if (parts.getManager().equals(member)) {
             throw new PartsLeaveDeniedException();
         }
 
-        List<MemberParts> memberPartsList = memberPartsRepository.findByParts(parts);
-        MemberParts memberParts = memberPartsList.stream()
-                .filter(m -> m.getMember() == user)
-                .findAny().get();
+        MemberParts memberParts = memberPartsRepository.findByPartsAndMember(parts, member)
+                .orElseThrow(PartsLeaveDeniedException::new);
 
-        memberParts.removeMember(user,parts.removeMember());
+        memberPartsRepository.delete(memberParts);
+        parts.removeMember();
     }
 
     @Override
     @Transactional
-    public void deleteParts(Long userId, Long partId){
+    public void deleteParts(Long userId, Long partId) {
 
         Member user = findMemberById(userId);
         Parts parts = findPartsById(partId);
@@ -153,11 +152,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partMemberInfoList;
     }
 
-    private List<Member> getPartsMember(Parts parts){
+    private List<Member> getPartsMember(Parts parts) {
         List<MemberParts> memberPartsList = memberPartsRepository.findByParts(parts);
         return memberPartsList.stream()
-                .filter(m -> m.getMember() != null)
-                .map(m -> m.getMember())
+                .map(MemberParts::getMember)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -171,7 +170,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     }
 
 
-    private boolean checkParticipation(Member user, List<MemberParts> memberPartsList){
+    private boolean checkParticipation(Member user, List<MemberParts> memberPartsList) {
         for (MemberParts memberParts : memberPartsList) {
             if (memberParts.getMember().equals(user)) {
                 return true;

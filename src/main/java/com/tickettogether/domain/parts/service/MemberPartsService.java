@@ -13,5 +13,4 @@ public interface MemberPartsService {
     void deleteParts(Long userId, Long partId);
     List<PartsDto.memberInfo> searchPartMembers(Long userId, Long partId);
     void leaveParts(Long userId, Long partId);
-
 }
