@@ -34,10 +34,10 @@ public class MemberServiceImpl implements MemberService{
         for(String k : saveRequest.getKeywords()){
             try{
                 CultureKeyword keyword = CultureKeyword.valueOf(k);
-                memberKeywordRepository.save(
+                member.setMemberKeywords((
                         MemberKeyword.builder()
                                 .member(member)
-                                .keyword(keyword).build());
+                                .keyword(keyword).build()));
             }catch (Exception ex){
                 throw new KeywordEmptyException();
             }
@@ -48,7 +48,26 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public MemberDto.UpdateResponse updateMemberProfile(MemberDto.UpdateRequest updateRequest, Long userId) {
         Member member = findMemberById(userId);
-        member.updateMemberProfile(updateRequest.getUsername(), updateRequest.getPhoneNumber());
+        if (updateRequest.getUsername() != null && updateRequest.getPhoneNumber() != null) {
+            member.updateMemberProfile(updateRequest.getUsername(), updateRequest.getPhoneNumber());
+        }
+
+        List<MemberKeyword> allByMember = member.getMemberKeywords();
+        if(allByMember.size() != 0){
+                memberKeywordRepository.deleteAllInBatch(allByMember);
+        }
+
+        if(updateRequest.getKeywords().size() != 0) {
+            List<CultureKeyword> keywords = updateRequest.getKeywords().stream()
+                    .map(CultureKeyword::valueOf)
+                    .collect(Collectors.toList());
+
+            for (CultureKeyword keyword : keywords) {
+                member.setMemberKeywords(MemberKeyword.builder()
+                        .member(member)
+                        .keyword(keyword).build());
+            }
+        }
         return new MemberDto.UpdateResponse(member.getId());
     }
 
@@ -78,7 +97,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     private List<String> getKeywordList(Member member){
-        List<MemberKeyword> allByMember = memberKeywordRepository.findAllByMember(member);
+        List<MemberKeyword> allByMember = member.getMemberKeywords();
         return allByMember.stream()
                 .map(h -> h.getKeyword().toString())
                 .collect(Collectors.toList());

@@ -29,6 +29,7 @@ public class MemberDto {
     public static class UpdateRequest{
         private String username;
         private String phoneNumber;
+        private List<String> keywords;
     }
 
     @Getter
