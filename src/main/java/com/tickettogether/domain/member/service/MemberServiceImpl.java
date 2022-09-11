@@ -48,11 +48,13 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public MemberDto.UpdateResponse updateMemberProfile(MemberDto.UpdateRequest updateRequest, Long userId) {
         Member member = findMemberById(userId);
-        member.updateMemberProfile(updateRequest.getUsername(), updateRequest.getPhoneNumber());
+        if (updateRequest.getUsername() != null && updateRequest.getPhoneNumber() != null) {
+            member.updateMemberProfile(updateRequest.getUsername(), updateRequest.getPhoneNumber());
+        }
 
         List<MemberKeyword> allByMember = member.getMemberKeywords();
         if(allByMember.size() != 0){
-            memberKeywordRepository.deleteAllInBatch(allByMember);
+                memberKeywordRepository.deleteAllInBatch(allByMember);
         }
 
         if(updateRequest.getKeywords().size() != 0) {
