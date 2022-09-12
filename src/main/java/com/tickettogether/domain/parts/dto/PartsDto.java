@@ -1,6 +1,6 @@
 package com.tickettogether.domain.parts.dto;
 
-import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import lombok.*;
@@ -57,18 +57,8 @@ public class PartsDto {
         private int partTotal;
         private int currentPartTotal;
         private Parts.Status status;
+        private Role role;
 
-        public SearchResponse(Parts parts) {
-            this.managerId = parts.getManager().getId();
-            this.cultureName = parts.getCulture().getName();
-            this.partId = parts.getId();
-            this.partName = parts.getPartName();
-            this.partContent =  parts.getPartContent();
-            this.partDate = parts.getPartDate();
-            this.partTotal = parts.getPartTotal();
-            this.currentPartTotal = parts.getCurrentPartTotal();
-            this.status = parts.getStatus();
-        }
     }
 
     @Getter
@@ -94,6 +84,7 @@ public class PartsDto {
         private boolean isManager;
 
     }
+
 
 }
 

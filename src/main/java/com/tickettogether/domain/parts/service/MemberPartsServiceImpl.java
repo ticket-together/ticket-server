@@ -4,6 +4,7 @@ import com.tickettogether.domain.culture.domain.Culture;
 import com.tickettogether.domain.culture.exception.CultureEmptyException;
 import com.tickettogether.domain.culture.repository.CultureRepository;
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
@@ -35,19 +36,19 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
     @Override
     @Transactional
-    public PartsDto.CreateResponse createParts(Long memberId, Long prodId, PartsDto.CreateRequest request) {
+    public PartsDto.CreateResponse createParts(Long userId, Long prodId, PartsDto.CreateRequest request) {
 
-        Member member = findMemberById(memberId);
+        Member user = findMemberById(userId);
         Culture culture = findCultureById(prodId);
 
         MemberParts memberParts = memberPartsRepository.save(
                 MemberParts.builder()
-                        .member(member)
+                        .member(user)
                         .parts(Parts.builder()
                                 .culture(culture)
                                 .request(request)
                                 .currentPartTotal(1)
-                                .manager(member)
+                                .manager(user)
                                 .status(ACTIVE)
                                 .build())
                         .build()
@@ -56,14 +57,19 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     }
 
     @Override
-    public List<PartsDto.SearchResponse> searchParts(Long prodId) {
+    public List<PartsDto.SearchResponse> searchParts(Long userId, Long prodId) {
+
+        Member user = findMemberById(userId);
         Culture culture = findCultureById(prodId);
 
         List<Parts> partsList = partsRepository.findByCultureOrderByPartDate(culture);
+        List<PartsDto.SearchResponse> partsInfoList = new ArrayList<>();
 
-        return partsList.stream()
-                .map(PartsDto.SearchResponse::new)
-                .collect(Collectors.toList());
+        for (Parts parts : partsList) {
+            partsInfoList.add(createSearchResponse(user, parts));
+        }
+
+        return partsInfoList;
     }
 
     @Override
@@ -109,14 +115,14 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     @Transactional
     public void leaveParts(Long userId, Long partId) {
 
-        Member member = findMemberById(userId);
+        Member user = findMemberById(userId);
         Parts parts = findPartsById(partId);
 
-        if (parts.getManager().equals(member)) {
+        if (parts.getManager().equals(user)) {
             throw new PartsLeaveDeniedException();
         }
 
-        MemberParts memberParts = memberPartsRepository.findByPartsAndMember(parts, member)
+        MemberParts memberParts = memberPartsRepository.findByPartsAndMember(parts, user)
                 .orElseThrow(PartsLeaveDeniedException::new);
 
         memberPartsRepository.delete(memberParts);
@@ -160,15 +166,14 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .collect(Collectors.toList());
     }
 
-    private PartsDto.memberInfo getMemberInfo(Member member, Parts parts) {
+    private PartsDto.memberInfo getMemberInfo(Member user, Parts parts) {
         return PartsDto.memberInfo.builder()
-                .memberId(member.getId())
-                .memberName(member.getName())
-                .memberImgUrl(member.getImgUrl())
-                .isManager(parts.getManager().equals(member))
+                .memberId(user.getId())
+                .memberName(user.getName())
+                .memberImgUrl(user.getImgUrl())
+                .isManager(parts.getManager().equals(user))
                 .build();
     }
-
 
     private boolean checkParticipation(Member user, List<MemberParts> memberPartsList) {
         for (MemberParts memberParts : memberPartsList) {
@@ -177,6 +182,32 @@ public class MemberPartsServiceImpl implements MemberPartsService {
             }
         }
         return false;
+    }
+
+    private Role getMemberRole(Member user, Parts parts) {
+        if (parts.getManager().equals(user)) {
+            return Role.PART_MANAGER;
+        }
+        else if (checkParticipation(user, parts.getMemberParts())){
+            return Role.PART_MEMBER;
+        }
+        else
+            return Role.PART_USER;
+    }
+
+    private PartsDto.SearchResponse createSearchResponse(Member user, Parts parts){
+        return PartsDto.SearchResponse.builder()
+                .managerId(parts.getManager().getId())
+                .cultureName(parts.getCulture().getName())
+                .partId(parts.getId())
+                .partName(parts.getPartName())
+                .partContent(parts.getPartContent())
+                .partDate(parts.getPartDate())
+                .partTotal(parts.getPartTotal())
+                .currentPartTotal(parts.getCurrentPartTotal())
+                .status(parts.getStatus())
+                .role(getMemberRole(user, parts))
+                .build();
     }
 
     private Member findMemberById(Long userId) {

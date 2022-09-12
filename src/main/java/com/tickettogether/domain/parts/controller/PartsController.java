@@ -27,7 +27,7 @@ public class PartsController {
     @ApiOperation(value = "팟 조회", notes = "공연 정보에 맞는 팟을 조회한다.")
     @GetMapping("/{prodId}")
     public ResponseEntity<BaseResponse<List<PartsDto.SearchResponse>>> getParts(@PathVariable("prodId") Long prodId) {
-        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(prodId)));
+        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(tempMemberId, prodId)));
     }
 
     @ApiOperation(value = "팟 참여", notes = "사용자가 원하는 팟에 참여한다.")
