@@ -16,7 +16,7 @@ import static com.tickettogether.domain.parts.dto.PartsResponseMessage.*;
 public class PartsController {
     private final MemberPartsService partsService;
 
-    private final Long tempMemberId = 1L;
+    private final Long tempMemberId = 6L;
 
     @ApiOperation(value = "팟 생성", notes = "요청한 멤버가 방장으로, 팟을 생성한다.")
     @PostMapping("/{prodId}")
@@ -27,7 +27,7 @@ public class PartsController {
     @ApiOperation(value = "팟 조회", notes = "공연 정보에 맞는 팟을 조회한다.")
     @GetMapping("/{prodId}")
     public ResponseEntity<BaseResponse<List<PartsDto.SearchResponse>>> getParts(@PathVariable("prodId") Long prodId) {
-        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(prodId)));
+        return ResponseEntity.ok(BaseResponse.create(GET_PARTS_SUCCESS.getMessage(),partsService.searchParts(tempMemberId, prodId)));
     }
 
     @ApiOperation(value = "팟 참여", notes = "사용자가 원하는 팟에 참여한다.")
