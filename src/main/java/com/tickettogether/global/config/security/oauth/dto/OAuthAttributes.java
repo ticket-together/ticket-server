@@ -11,12 +11,19 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class OAuthAttributes {
+
     private String registerId;
+
     private Map<String, Object> attributes;
+
     private String nameKey;   //pk
+
     private String nickName;
+
     private String email;
+
     private String imgUrl;
+
     private String phoneNumber;
 
     public Member toEntity(){
