@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -157,6 +158,19 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partMemberInfoList;
     }
 
+    @Override
+    public List<PartsDto.SearchResponse> findPartsByMember(Long memberId) {
+        Member member = memberRepository.findMember(memberId)
+                .orElseThrow(UserEmptyException::new);
+
+        return member.getMemberPartsList()
+                .stream()
+                .map(MemberParts::getParts)
+                .sorted(Comparator.comparing(Parts::getPartDate).reversed())
+                .map(PartsDto.SearchResponse::new)
+                .collect(Collectors.toList());
+    }
+
     private List<Member> getPartsMember(Parts parts) {
         List<MemberParts> memberPartsList = memberPartsRepository.findByParts(parts);
         return memberPartsList.stream()
@@ -186,15 +200,14 @@ public class MemberPartsServiceImpl implements MemberPartsService {
     private PartsDto.memberRole getMemberRole(Member user, Parts parts) {
         if (parts.getManager().equals(user)) {
             return PartsDto.memberRole.MANAGER;
-        }
-        else if (checkParticipation(user, parts.getMemberParts())){
+        } else if (checkParticipation(user, parts.getMemberParts())) {
             return PartsDto.memberRole.MEMBER;
-        }
-        else
+        } else {
             return PartsDto.memberRole.USER;
+        }
     }
 
-    private PartsDto.SearchResponse createSearchResponse(Member user, Parts parts){
+    private PartsDto.SearchResponse createSearchResponse(Member user, Parts parts) {
         return PartsDto.SearchResponse.builder()
                 .managerId(parts.getManager().getId())
                 .cultureName(parts.getCulture().getName())
@@ -223,7 +236,6 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partsRepository.findById(partId)
                 .orElseThrow(PartsEmptyException::new);
     }
-
 }
 
 
