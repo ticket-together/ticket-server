@@ -1,7 +1,7 @@
 package com.tickettogether.domain.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
 import java.util.List;
 
 @Getter
@@ -13,6 +13,8 @@ public class MemberDto {
     @AllArgsConstructor
     public static class SaveRequest{
         private String nickname;
+
+        @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
         private List<String> keywords;
     }
 
@@ -29,6 +31,8 @@ public class MemberDto {
     public static class UpdateRequest{
         private String username;
         private String phoneNumber;
+
+        @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
         private List<String> keywords;
     }
 

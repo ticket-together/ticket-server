@@ -4,6 +4,7 @@ import com.tickettogether.domain.culture.domain.Culture;
 import com.tickettogether.domain.culture.exception.CultureEmptyException;
 import com.tickettogether.domain.culture.repository.CultureRepository;
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
@@ -16,11 +17,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
 
 @Slf4j
@@ -188,6 +191,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .build();
     }
 
+
     private boolean checkParticipation(Member user, List<MemberParts> memberPartsList) {
         for (MemberParts memberParts : memberPartsList) {
             if (memberParts.getMember().equals(user)) {
@@ -197,13 +201,13 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return false;
     }
 
-    private PartsDto.memberRole getMemberRole(Member user, Parts parts) {
+    private Role getMemberRole(Member user, Parts parts) {
         if (parts.getManager().equals(user)) {
-            return PartsDto.memberRole.MANAGER;
+            return Role.PART_MANAGER;
         } else if (checkParticipation(user, parts.getMemberParts())) {
-            return PartsDto.memberRole.MEMBER;
+            return Role.PART_MEMBER;
         } else {
-            return PartsDto.memberRole.USER;
+            return Role.PART_USER;
         }
     }
 
