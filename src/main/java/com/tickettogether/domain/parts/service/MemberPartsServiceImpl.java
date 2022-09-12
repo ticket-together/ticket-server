@@ -4,6 +4,7 @@ import com.tickettogether.domain.culture.domain.Culture;
 import com.tickettogether.domain.culture.exception.CultureEmptyException;
 import com.tickettogether.domain.culture.repository.CultureRepository;
 import com.tickettogether.domain.member.domain.Member;
+import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.domain.parts.domain.MemberParts;
@@ -183,15 +184,15 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return false;
     }
 
-    private PartsDto.memberRole getMemberRole(Member user, Parts parts) {
+    private Role getMemberRole(Member user, Parts parts) {
         if (parts.getManager().equals(user)) {
-            return PartsDto.memberRole.MANAGER;
+            return Role.PART_MANAGER;
         }
         else if (checkParticipation(user, parts.getMemberParts())){
-            return PartsDto.memberRole.MEMBER;
+            return Role.PART_MEMBER;
         }
         else
-            return PartsDto.memberRole.USER;
+            return Role.PART_USER;
     }
 
     private PartsDto.SearchResponse createSearchResponse(Member user, Parts parts){

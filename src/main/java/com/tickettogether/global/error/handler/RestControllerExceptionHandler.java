@@ -84,7 +84,7 @@ public class RestControllerExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error("handleEntityNotFoundException: {}", ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.create(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }

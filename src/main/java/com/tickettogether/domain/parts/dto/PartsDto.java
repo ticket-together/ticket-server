@@ -1,5 +1,6 @@
 package com.tickettogether.domain.parts.dto;
 
+import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
 import lombok.*;
@@ -56,7 +57,7 @@ public class PartsDto {
         private int partTotal;
         private int currentPartTotal;
         private Parts.Status status;
-        private memberRole role;
+        private Role role;
 
     }
 
@@ -84,18 +85,6 @@ public class PartsDto {
 
     }
 
-    @Getter
-    @RequiredArgsConstructor
-    public enum memberRole{
-
-        MANAGER("ROLE_MANAGER", "방장"),
-        MEMBER("ROLE_MEMBER", "팟 멤버"),
-        USER("ROLE_USER", "팟에 참여되지 않은 사용자");
-
-        private final String companyCode;
-        private final String viewName;
-
-    }
 
 }
 
