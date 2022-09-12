@@ -169,8 +169,9 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return member.getMemberPartsList()
                 .stream()
                 .map(MemberParts::getParts)
-                .sorted(Comparator.comparing(Parts::getPartDate).reversed())
+                .sorted(Comparator.comparing(Parts::getCreatedAt).reversed())
                 .map(PartsDto.SearchResponse::new)
+                .peek(p -> p.updateRole(checkManager(member.getId(), p.getManagerId())))
                 .collect(Collectors.toList());
     }
 
@@ -199,6 +200,13 @@ public class MemberPartsServiceImpl implements MemberPartsService {
             }
         }
         return false;
+    }
+
+    private Role checkManager(Long memberId, Long managerId) {
+        if (memberId.equals(managerId)) {
+            return Role.PART_MANAGER;
+        }
+        return Role.PART_MEMBER;
     }
 
     private Role getMemberRole(Member user, Parts parts) {

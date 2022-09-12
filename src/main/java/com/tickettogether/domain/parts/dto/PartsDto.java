@@ -57,7 +57,7 @@ public class PartsDto {
         private int partTotal;
         private int currentPartTotal;
         private Parts.Status status;
-        private Role role = Role.PART_MEMBER;
+        private Role role;
 
         public SearchResponse(Parts parts) {
             this.managerId = parts.getManager().getId();
@@ -69,6 +69,10 @@ public class PartsDto {
             this.partTotal = parts.getPartTotal();
             this.currentPartTotal = parts.getCurrentPartTotal();
             this.status = parts.getStatus();
+        }
+
+        public void updateRole(Role role) {
+            this.role = role;
         }
     }
 
