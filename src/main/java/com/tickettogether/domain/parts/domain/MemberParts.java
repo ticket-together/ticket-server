@@ -20,13 +20,18 @@ public class MemberParts {
     @JoinColumn(name="member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parts_id")
     private Parts parts;
 
     @Builder
     public MemberParts(Member member, Parts parts){
         this.member = member;
+        this.parts = parts;
+    }
+
+    public void removeMember(Member member, Parts parts) {
+        this.member = null;
         this.parts = parts;
     }
 }

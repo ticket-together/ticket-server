@@ -71,4 +71,8 @@ public class Parts extends BaseEntity {
         this.currentPartTotal++;
         return this;
     }
+
+    public void removeMember() {
+        this.currentPartTotal--;
+    }
 }

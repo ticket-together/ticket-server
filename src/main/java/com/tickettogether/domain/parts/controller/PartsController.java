@@ -16,7 +16,7 @@ import static com.tickettogether.domain.parts.dto.PartsResponseMessage.*;
 public class PartsController {
     private final MemberPartsService partsService;
 
-    private Long tempMemberId = 6L;
+    private final Long tempMemberId = 1L;
 
     @ApiOperation(value = "팟 생성", notes = "요청한 멤버가 방장으로, 팟을 생성한다.")
     @PostMapping("/{prodId}")
@@ -37,10 +37,17 @@ public class PartsController {
         return ResponseEntity.ok(BaseResponse.create(JOIN_PARTS_SUCCESS.getMessage()));
     }
 
-    @ApiOperation(value = "팟 마감", notes = "요청한 멤버가 방장일시, 팟을 마감한다.")
+    @ApiOperation(value = "팟 마감", notes = "요청한 멤버가 팟의 방장일시, 팟을 마감한다.")
     @PatchMapping("/{prodId}/{partId}/close")
     public ResponseEntity<BaseResponse<PartsDto.closeResponse>> closeParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
         return ResponseEntity.ok(BaseResponse.create(CLOSE_PARTS_SUCCESS.getMessage(),partsService.closeParts(tempMemberId, partId)));
+    }
+
+    @ApiOperation(value = "팟 나가기", notes = "요청한 멤버가 멤버일시, 팟을 나간다.")
+    @DeleteMapping("/{prodId}/{partId}/leave")
+    public ResponseEntity<BaseResponse<String>> leaveParts(@PathVariable("prodId") Long prodId, @PathVariable("partId") Long partId) {
+        partsService.leaveParts(tempMemberId, partId);
+        return ResponseEntity.ok(BaseResponse.create(LEAVE_PARTS_SUCCESS.getMessage()));
     }
 
     @ApiOperation(value = "팟 삭제", notes = "요청한 멤버가 방장일시, 팟을 삭제한다.")
