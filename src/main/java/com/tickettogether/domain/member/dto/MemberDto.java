@@ -13,6 +13,7 @@ public class MemberDto {
     @AllArgsConstructor
     public static class SaveRequest{
         private String nickname;
+        private String phoneNumber;
 
         @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
         private List<String> keywords;

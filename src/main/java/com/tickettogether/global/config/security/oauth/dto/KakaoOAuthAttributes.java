@@ -19,7 +19,6 @@ public class KakaoOAuthAttributes extends OAuthAttributes {
                     .nickName((String) profilesMap.get("nickname"))
                     .email((String) attributeMap.get("email"))
                     .imgUrl((String) profilesMap.get("thumbnail_image_url"))
-                    .phoneNumber((String) attributeMap.get("phone_number"))
                     .build();
         }
         return null;
@@ -38,7 +37,6 @@ public class KakaoOAuthAttributes extends OAuthAttributes {
                     .nickName((String) profilesMap.get("nickname"))
                     .email((String) attributeMap.get("email"))
                     .imgUrl((String) profilesMap.get("thumbnail_image_url"))
-                    .phoneNumber((String) attributeMap.get("phone_number"))
                     .build();
         }
         return null;
