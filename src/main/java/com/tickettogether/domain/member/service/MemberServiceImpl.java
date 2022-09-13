@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService{
     public MemberDto.SaveResponse saveMemberProfile(MemberDto.SaveRequest saveRequest, Long userId){
         Member member = findMemberById(userId);
         if(saveRequest.getNickname() != null) {
-            member.saveMemberProfile(saveRequest.getNickname());
+            member.saveMemberProfile(saveRequest.getNickname(), saveRequest.getPhoneNumber());
         }
 
         for(String k : saveRequest.getKeywords()){

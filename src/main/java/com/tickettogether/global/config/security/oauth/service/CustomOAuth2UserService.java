@@ -1,7 +1,6 @@
 package com.tickettogether.global.config.security.oauth.service;
 
 import com.tickettogether.domain.member.domain.Member;
-import com.tickettogether.domain.member.exception.UserEmptyException;
 import com.tickettogether.domain.member.repository.MemberRepository;
 import com.tickettogether.global.config.security.UserPrincipal;
 import com.tickettogether.global.config.security.oauth.dto.KakaoOAuthAttributes;
@@ -9,15 +8,12 @@ import com.tickettogether.global.config.security.oauth.dto.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -67,13 +63,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private void updateMember(Member member, OAuthAttributes attrs){
-        //하나라도 다르면 업데이트 해주기
-        boolean update = member.getPhoneNumber() != null & !member.getPhoneNumber().equals(attrs.getPhoneNumber());
-
-        if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())) update = true;
-
-        if(update){
-            member.updateOAuthProfile(attrs.getNickName(),attrs.getImgUrl());
+        if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())){
+            member.updateOAuthProfile(attrs.getImgUrl());
         }
     }
 }
