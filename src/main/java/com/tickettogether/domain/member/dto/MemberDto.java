@@ -2,7 +2,6 @@ package com.tickettogether.domain.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
 import java.util.List;
 
 @Getter

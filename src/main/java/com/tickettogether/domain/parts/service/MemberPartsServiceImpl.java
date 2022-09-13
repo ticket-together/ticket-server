@@ -17,10 +17,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
 
 @Slf4j
@@ -158,6 +161,20 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partMemberInfoList;
     }
 
+    @Override
+    public List<PartsDto.SearchResponse> findPartsByMember(Long memberId) {
+        Member member = memberRepository.findMember(memberId)
+                .orElseThrow(UserEmptyException::new);
+
+        return member.getMemberPartsList()
+                .stream()
+                .map(MemberParts::getParts)
+                .sorted(Comparator.comparing(Parts::getCreatedAt).reversed())
+                .map(PartsDto.SearchResponse::new)
+                .peek(p -> p.updateRole(checkManager(member.getId(), p.getManagerId())))
+                .collect(Collectors.toList());
+    }
+
     private List<Member> getPartsMember(Parts parts) {
         List<MemberParts> memberPartsList = memberPartsRepository.findByParts(parts);
         return memberPartsList.stream()
@@ -175,6 +192,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .build();
     }
 
+
     private boolean checkParticipation(Member user, List<MemberParts> memberPartsList) {
         for (MemberParts memberParts : memberPartsList) {
             if (memberParts.getMember().equals(user)) {
@@ -184,18 +202,24 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return false;
     }
 
+    private Role checkManager(Long memberId, Long managerId) {
+        if (memberId.equals(managerId)) {
+            return Role.PART_MANAGER;
+        }
+        return Role.PART_MEMBER;
+    }
+
     private Role getMemberRole(Member user, Parts parts) {
         if (parts.getManager().equals(user)) {
             return Role.PART_MANAGER;
-        }
-        else if (checkParticipation(user, parts.getMemberParts())){
+        } else if (checkParticipation(user, parts.getMemberParts())) {
             return Role.PART_MEMBER;
-        }
-        else
+        } else {
             return Role.PART_USER;
+        }
     }
 
-    private PartsDto.SearchResponse createSearchResponse(Member user, Parts parts){
+    private PartsDto.SearchResponse createSearchResponse(Member user, Parts parts) {
         return PartsDto.SearchResponse.builder()
                 .managerId(parts.getManager().getId())
                 .cultureName(parts.getCulture().getName())
@@ -224,7 +248,6 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         return partsRepository.findById(partId)
                 .orElseThrow(PartsEmptyException::new);
     }
-
 }
 
 

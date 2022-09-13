@@ -59,6 +59,21 @@ public class PartsDto {
         private Parts.Status status;
         private Role role;
 
+        public SearchResponse(Parts parts) {
+            this.managerId = parts.getManager().getId();
+            this.cultureName = parts.getCulture().getName();
+            this.partId = parts.getId();
+            this.partName = parts.getPartName();
+            this.partContent =  parts.getPartContent();
+            this.partDate = parts.getPartDate();
+            this.partTotal = parts.getPartTotal();
+            this.currentPartTotal = parts.getCurrentPartTotal();
+            this.status = parts.getStatus();
+        }
+
+        public void updateRole(Role role) {
+            this.role = role;
+        }
     }
 
     @Getter
@@ -84,7 +99,5 @@ public class PartsDto {
         private boolean isManager;
 
     }
-
-
 }
 
