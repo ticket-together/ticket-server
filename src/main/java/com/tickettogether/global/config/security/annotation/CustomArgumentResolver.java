@@ -25,6 +25,7 @@ public class CustomArgumentResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) return null;
+        log.info("principal = {}", authentication.getPrincipal());
 
         UserDetails principal = (User) authentication.getPrincipal();
         return Long.parseLong(principal.getUsername());
