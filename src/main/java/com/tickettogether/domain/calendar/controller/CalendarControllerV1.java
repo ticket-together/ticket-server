@@ -10,13 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-
 import static com.tickettogether.domain.calendar.dto.CalendarResponseMessage.*;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1/calendar")
-public class CalendarController {
+public class CalendarControllerV1 {
 
     private final CalendarService calendarService;
     private Long memberId = 1L; //테스트 용
@@ -24,15 +23,21 @@ public class CalendarController {
     @ApiOperation(value = "캘린더 전체 목록 조회")
     @GetMapping
     public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendars() {
-        return ResponseEntity.ok(BaseResponse.create(GET_CALENDARS_SUCCESS.getMessage(),calendarService.getCalendars(memberId)));
+        return ResponseEntity.ok(BaseResponse.create(GET_CALENDARS_SUCCESS.getMessage(), calendarService.getCalendars(memberId)));
+    }
+
+    @ApiOperation(value = "다른 유저의 캘린더 전체 목록 조회")
+    @GetMapping("/{memberId}")
+    public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendarsByMember(@PathVariable("memberId") Long memberId) {
+        return ResponseEntity.ok(BaseResponse.create(GET_CALENDARS_SUCCESS.getMessage(), calendarService.getCalendars(memberId)));
     }
 
     @ApiOperation(value = "캘린더 항목 추가", notes = "포스터 사진을 추가할 날짜에 맞게 캘린더에 추가한다.")
-    @ApiResponse(code = 2020,message = "최대 캘린더 개수를 초과하였습니다.")
+    @ApiResponse(code = 2020, message = "최대 캘린더 개수를 초과하였습니다.")
     @PostMapping
     public ResponseEntity<BaseResponse<CalendarDto.PostResponse>> createCalendar(
             @RequestBody CalendarDto.PostRequest newCalendar) {
-        return ResponseEntity.ok(BaseResponse.create(POST_CALENDAR_SUCCESS.getMessage(),calendarService.createCalendar(newCalendar, memberId)));
+        return ResponseEntity.ok(BaseResponse.create(POST_CALENDAR_SUCCESS.getMessage(), calendarService.createCalendar(newCalendar, memberId)));
     }
 
     @ApiOperation(value = "캘린더 삭제")
@@ -52,5 +57,4 @@ public class CalendarController {
         calendarService.updateCalendar(calendarId, memberId, multipartFile, newCalendar);
         return ResponseEntity.ok(BaseResponse.create(UPDATE_CALENDAR_SUCCESS.getMessage()));
     }
-
 }
