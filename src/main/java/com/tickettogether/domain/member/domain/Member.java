@@ -43,8 +43,9 @@ public class Member extends BaseEntity {
 
     private String name;
 
-    public void saveMemberProfile(String name){
+    public void saveMemberProfile(String name, String phoneNumber){
         this.name = name;
+        this.phoneNumber = phoneNumber;
     }
 
     @Lob
@@ -67,9 +68,8 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-    public void updateOAuthProfile(String imgUrl, String phoneNumber){  //DTO 대체
+    public void updateOAuthProfile(String imgUrl){  //DTO 대체
         this.imgUrl = imgUrl;
-        this.phoneNumber = phoneNumber;
     }
 
     public void updateMemberProfile(String name, String phoneNumber){  //DTO 대체

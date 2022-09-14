@@ -24,14 +24,11 @@ public class OAuthAttributes {
 
     private String imgUrl;
 
-    private String phoneNumber;
-
     public Member toEntity(){
         return Member.builder()
                 .name(nickName)
                 .email(email)
                 .imgUrl(imgUrl)
-                .phoneNumber(phoneNumber)
                 .role(Role.USER)
                 .build();
     }
