@@ -61,7 +61,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
         return member;
     }
-
+    
     private void updateMember(Member member, OAuthAttributes attrs) {
         if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())){
             member.updateOAuthProfile(attrs.getImgUrl());
