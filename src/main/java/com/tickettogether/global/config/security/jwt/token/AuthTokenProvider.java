@@ -1,5 +1,4 @@
 package com.tickettogether.global.config.security.jwt.token;
-import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -41,17 +40,12 @@ public class AuthTokenProvider {
     }
 
     public Authentication getAuthentication(AuthToken authToken){
-        if (authToken.validate()){
-            Claims claims = authToken.getTokenClaims();
-            //role
-            Collection<? extends GrantedAuthority> authorities = Arrays.stream(new String[] {claims.get(AUTHORITIES_KEY).toString()} )
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+        Claims claims = authToken.getTokenClaims();
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(new String[] {claims.get(AUTHORITIES_KEY).toString()} )
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
 
-            User principal = new User(claims.getSubject(), "", authorities);
-            return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
-        }else{
-            throw new TokenValidFailedException("token expired : Please renew access token");
-        }
+        User principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
     }
 }

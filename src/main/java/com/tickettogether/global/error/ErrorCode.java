@@ -22,6 +22,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(5000, "서버 오류입니다. "),
     METHOD_NOT_ALLOWED(4000, "요청 방식이 잘못되었습니다."),
     INVALID_SECRET_KEY(2007, "유효하지 않은 시크릿 키입니다."),
+    JWT_IN_BLACKLIST(2008, "블랙리스트에 의해 차단된 액세스 토큰입니다."),
+    EXPIRED_TOKEN(2009, "기한이 만료된 토큰입니다."),
 
     /**
      * calender
