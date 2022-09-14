@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -64,7 +63,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private void updateMember(Member member, OAuthAttributes attrs) {
-
         if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())){
             member.updateOAuthProfile(attrs.getImgUrl());
         }
