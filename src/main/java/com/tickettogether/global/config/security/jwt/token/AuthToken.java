@@ -1,11 +1,11 @@
 package com.tickettogether.global.config.security.jwt.token;
 
+import com.tickettogether.global.config.security.exception.TokenExpiredException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import java.security.Key;
 import java.util.Date;
 
@@ -17,17 +17,17 @@ public class AuthToken {
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
 
-    public AuthToken(String id, Key key, Date expiry){
+    public AuthToken(String id, Key key, Date expiry) {
         this.key = key;
         this.token = createToken(id, expiry);
     }
 
-    public AuthToken(String id, String role, Key key, Date expiry){
+    public AuthToken(String id, String role, Key key, Date expiry) {
         this.key = key;
         this.token = createToken(id, role, expiry);
     }
 
-    private String createToken(String id, Date expiry){
+    private String createToken(String id, Date expiry) {
         return Jwts.builder()
                 .setSubject(id)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -35,7 +35,7 @@ public class AuthToken {
                 .compact();
     }
 
-    private String createToken(String id, String role, Date expiry){
+    private String createToken(String id, String role, Date expiry) {
         return Jwts.builder()
                 .setSubject(id)
                 .claim(AUTHORITIES_KEY, role)
@@ -47,15 +47,15 @@ public class AuthToken {
     public boolean validate() {
         return this.getTokenClaims() != null;
     }
-    //토큰 Claim 가져오기
-    public Claims getTokenClaims(){
-        try{
+
+    public Claims getTokenClaims() {
+        try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        }catch (SecurityException e) {
+        } catch (SecurityException e) {
             log.info("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
@@ -69,15 +69,15 @@ public class AuthToken {
         return null;
     }
 
-    public Claims getRefreshTokenClaims(String accessToken){
-        try{
+    public Claims getRefreshTokenClaims(String accessToken) {
+        try {
             Key new_key = Keys.hmacShaKeyFor(accessToken.getBytes());
             return Jwts.parserBuilder()
                     .setSigningKey(new_key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        }catch (SecurityException e) {
+        } catch (SecurityException e) {
             log.info("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
@@ -104,6 +104,13 @@ public class AuthToken {
             return e.getClaims();
         }
         return null;
+    }
+
+    public Jws<Claims> parseClaims() {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
     }
 
     public long getRemainMilliSeconds() {
