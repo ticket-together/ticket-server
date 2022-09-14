@@ -23,12 +23,15 @@ import java.io.IOException;
 public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
         try{
             filterChain.doFilter(request, response);
         }catch(TokenValidFailedException e){
             log.error(e.getMessage());
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.getWriter().write(convertObjectToJson(ErrorResponse.create(ErrorCode.INTERNAL_SERVER_ERROR)));
+            response.getWriter().write(convertObjectToJson(ErrorResponse.create(e.getErrorCode())));
         }catch(RuntimeException e){
             log.error(e.getMessage());
         }

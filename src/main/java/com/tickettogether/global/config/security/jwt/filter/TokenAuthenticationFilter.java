@@ -1,6 +1,7 @@
 package com.tickettogether.global.config.security.jwt.filter;
 
 import com.tickettogether.global.config.redis.util.RedisUtil;
+import com.tickettogether.global.config.security.exception.TokenBlackListException;
 import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.utils.HeaderUtil;
@@ -32,15 +33,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = HeaderUtil.getAccessToken(request);
         if(accessToken != null){
             if(redisUtil.hasKeyBlackList(accessToken)){
-                throw new TokenValidFailedException("access token in blacklist");
+                throw new TokenBlackListException();
             }
 
             AuthToken authToken = authTokenProvider.convertToAuthToken(accessToken);
 
             if(authToken.validate()) {
                 Authentication authentication = authTokenProvider.getAuthentication(authToken);
-                log.info("authentication = {}", authentication.getPrincipal());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else{
+                throw new TokenValidFailedException("token expired : Please renew access token");
             }
         }
         filterChain.doFilter(request, response);
