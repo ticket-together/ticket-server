@@ -2,15 +2,14 @@ package com.tickettogether.global.error;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tickettogether.global.config.security.exception.TokenBlackListException;
 import com.tickettogether.global.config.security.exception.TokenExpiredException;
 import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import com.tickettogether.global.error.dto.ErrorResponse;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } catch (TokenValidFailedException | TokenExpiredException e) {
+        } catch (TokenValidFailedException | TokenExpiredException | TokenBlackListException e) {
             log.error(e.getMessage());
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.getWriter().write(convertObjectToJson(ErrorResponse.create(e.getErrorCode())));
