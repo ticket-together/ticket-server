@@ -2,8 +2,10 @@ package com.tickettogether.global.error;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tickettogether.global.config.security.exception.TokenExpiredException;
 import com.tickettogether.global.config.security.exception.TokenValidFailedException;
 import com.tickettogether.global.error.dto.ErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -26,13 +28,13 @@ public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        try{
+        try {
             filterChain.doFilter(request, response);
-        }catch(TokenValidFailedException e){
+        } catch (TokenValidFailedException | TokenExpiredException e) {
             log.error(e.getMessage());
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.getWriter().write(convertObjectToJson(ErrorResponse.create(e.getErrorCode())));
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
         }
     }
