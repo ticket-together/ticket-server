@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 import java.util.Optional;
 
@@ -32,15 +33,15 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         DefaultOAuth2UserService defaultService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = defaultService.loadUser(userRequest);
 
-        try{
+        try {
             return this.process(userRequest, oAuth2User);
-        }catch (AuthenticationException ex){
+        } catch (AuthenticationException ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User oAuth2User){
+    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); //로그인 진행 중인 서비스를 구분하는 코드
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()   //로그인 진행 시 키가 되는 필드값(pk)
                 .getUserNameAttributeName();
@@ -52,28 +53,28 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return UserPrincipal.create(member, attr.getNameKey(), attr.getAttributes());
     }
 
-    private Member saveOrUpdateMemberToDB(OAuthAttributes attrs){
+    private Member saveOrUpdateMemberToDB(OAuthAttributes attrs) {
         Member member = memberRepository.findByEmail(attrs.getEmail()).orElse(null);
-        if (Optional.ofNullable(member).isEmpty()){
+        if (Optional.ofNullable(member).isEmpty()) {
             return memberRepository.save(attrs.toEntity());
         }
 
         updateMember(member, attrs);
 
-        if(member.getStatus().equals(Member.Status.INACTIVE)){
+        if (member.getStatus().equals(Member.Status.INACTIVE)) {
             member.changeStatus(member.getStatus());
         }
         return member;
     }
 
-    private void updateMember(Member member, OAuthAttributes attrs){
-        //하나라도 다르면 업데이트 해주기
-        boolean update = member.getPhoneNumber() != null & !member.getPhoneNumber().equals(attrs.getPhoneNumber());
+    private void updateMember(Member member, OAuthAttributes attrs) {
 
-        if(member.getImgUrl() != null & !member.getImgUrl().equals(attrs.getImgUrl())) update = true;
+        boolean update = member.getPhoneNumber() != null && !member.getPhoneNumber().equals(attrs.getPhoneNumber());
 
-        if(update){
-            member.updateOAuthProfile(attrs.getNickName(),attrs.getImgUrl());
+        if (member.getImgUrl() != null && !member.getImgUrl().equals(attrs.getImgUrl())) update = true;
+
+        if (update) {
+            member.updateOAuthProfile(attrs.getNickName(), attrs.getImgUrl());
         }
     }
 }
