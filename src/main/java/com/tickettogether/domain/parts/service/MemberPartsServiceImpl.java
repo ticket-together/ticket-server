@@ -17,14 +17,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.tickettogether.domain.parts.domain.Parts.Status.ACTIVE;
+import static com.tickettogether.domain.parts.domain.Status.*;
 
 @Slf4j
 @Service
@@ -110,7 +108,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
             throw new PartsCloseDeniedException();
         }
 
-        parts.changePartStatus();
+        parts.close();
         return new PartsDto.closeResponse(parts);
     }
 

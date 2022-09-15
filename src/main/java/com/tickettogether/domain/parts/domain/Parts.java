@@ -15,19 +15,16 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parts extends BaseEntity {
 
-    public enum Status {
-        ACTIVE, CLOSED
-    }
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="parts_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "parts_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="culture_id")
+    @JoinColumn(name = "culture_id")
     private Culture culture;
 
     @OneToMany(mappedBy = "parts", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -51,7 +48,7 @@ public class Parts extends BaseEntity {
     private Member manager;
 
     @Builder
-    public Parts(Culture culture, Integer currentPartTotal, Status status, Member manager, PartsDto.CreateRequest request){
+    public Parts(Culture culture, Integer currentPartTotal, Status status, Member manager, PartsDto.CreateRequest request) {
         this.culture = culture;
         this.partName = request.getPartName();
         this.partContent = request.getPartContent();
@@ -62,7 +59,7 @@ public class Parts extends BaseEntity {
         this.manager = manager;
     }
 
-    public Parts changePartStatus(){    //팟 마감
+    public Parts close() {
         this.status = Status.CLOSED;
         return this;
     }
