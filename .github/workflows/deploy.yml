@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - fix/docker-timezone
   workflow_dispatch:
 
 env:
@@ -57,4 +58,4 @@ jobs:
       - name: Docker run
         run: |
           docker stop $REPO && docker rm $REPO && docker rmi $NAME/$REPO:latest
-          docker run -d -p 8080:8080 --name $REPO --restart always $NAME/$REPO:latest
+          docker run -e TZ=Asia/Seoul -d -p 8080:8080 --name $REPO --restart always $NAME/$REPO:latest
