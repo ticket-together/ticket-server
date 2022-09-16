@@ -6,13 +6,14 @@ import com.tickettogether.domain.parts.domain.Parts;
 import com.tickettogether.domain.parts.domain.Status;
 import lombok.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class PartsDto {
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
-    public static class CreateRequest{
+    public static class CreateRequest {
         private String partName;
         private String partContent;
         private LocalDate partDate;
@@ -22,7 +23,7 @@ public class PartsDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
-    public static class CreateResponse{
+    public static class CreateResponse {
         private Long managerId;
         private String cultureName;
         private String cultureImgUrl;
@@ -30,6 +31,7 @@ public class PartsDto {
         private String partContent;
         private Integer partTotal;
         private LocalDate partDate;
+        private LocalDateTime createdAt;
         private Status status;
 
         public CreateResponse(MemberParts memberParts) {
@@ -41,6 +43,7 @@ public class PartsDto {
             this.partTotal = memberParts.getParts().getPartTotal();
             this.partDate = memberParts.getParts().getPartDate();
             this.status = memberParts.getParts().getStatus();
+            this.createdAt = memberParts.getParts().getCreatedAt();
         }
     }
 
@@ -48,13 +51,14 @@ public class PartsDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Builder
-    public static class SearchResponse{
+    public static class SearchResponse {
         private Long managerId;
         private String cultureName;
         private Long partId;
         private String partName;
         private String partContent;
         private LocalDate partDate;
+        private LocalDateTime createdAt;
         private int partTotal;
         private int currentPartTotal;
         private Status status;
@@ -65,11 +69,12 @@ public class PartsDto {
             this.cultureName = parts.getCulture().getName();
             this.partId = parts.getId();
             this.partName = parts.getPartName();
-            this.partContent =  parts.getPartContent();
+            this.partContent = parts.getPartContent();
             this.partDate = parts.getPartDate();
             this.partTotal = parts.getPartTotal();
             this.currentPartTotal = parts.getCurrentPartTotal();
             this.status = parts.getStatus();
+            this.createdAt = parts.getCreatedAt();
         }
 
         public void updateRole(Role role) {
@@ -80,7 +85,7 @@ public class PartsDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
-    public static class closeResponse{
+    public static class closeResponse {
         private Status status;
 
         public closeResponse(Parts parts) {
@@ -93,12 +98,11 @@ public class PartsDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Builder
-    public static class memberInfo{
+    public static class memberInfo {
         private Long memberId;
         private String memberName;
         private String memberImgUrl;
         private boolean isManager;
-
     }
 }
 
