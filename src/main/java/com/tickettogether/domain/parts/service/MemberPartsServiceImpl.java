@@ -229,6 +229,7 @@ public class MemberPartsServiceImpl implements MemberPartsService {
                 .currentPartTotal(parts.getCurrentPartTotal())
                 .status(parts.getStatus())
                 .role(getMemberRole(user, parts))
+                .createdAt(parts.getCreatedAt())
                 .build();
     }
 
