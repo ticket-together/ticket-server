@@ -3,6 +3,7 @@ package com.tickettogether.domain.parts.dto;
 import com.tickettogether.domain.member.domain.Role;
 import com.tickettogether.domain.parts.domain.MemberParts;
 import com.tickettogether.domain.parts.domain.Parts;
+import com.tickettogether.domain.parts.domain.Status;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -29,7 +30,7 @@ public class PartsDto {
         private String partContent;
         private Integer partTotal;
         private LocalDate partDate;
-        private Parts.Status status;
+        private Status status;
 
         public CreateResponse(MemberParts memberParts) {
             this.managerId = memberParts.getParts().getManager().getId();
@@ -56,7 +57,7 @@ public class PartsDto {
         private LocalDate partDate;
         private int partTotal;
         private int currentPartTotal;
-        private Parts.Status status;
+        private Status status;
         private Role role;
 
         public SearchResponse(Parts parts) {
@@ -80,7 +81,7 @@ public class PartsDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     public static class closeResponse{
-        private Parts.Status status;
+        private Status status;
 
         public closeResponse(Parts parts) {
             this.status = parts.getStatus();
