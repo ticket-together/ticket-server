@@ -15,7 +15,6 @@ import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.loader.plan.build.internal.CascadeStyleLoadPlanBuildingAssociationVisitationStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
