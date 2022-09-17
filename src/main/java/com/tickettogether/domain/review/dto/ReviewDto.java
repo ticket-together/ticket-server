@@ -24,6 +24,7 @@ public class ReviewDto {
 
         public Review toEntity() {
             return Review.builder()
+                    .member(member)
                     .hallName(hallName)
                     .starPoint(starPoint)
                     .contents(contents)
@@ -37,7 +38,8 @@ public class ReviewDto {
 
     @Getter
     public static class addResponse {
-        private Member member;
+        private Long memberId;
+        private String memberName;
         private String hallName;
         private BigDecimal starPoint;
         private String contents;
@@ -48,7 +50,8 @@ public class ReviewDto {
         private String writeDate;
 
         public addResponse(Review review) {
-            this.member = review.getMember();
+            this.memberId = review.getMember().getId();
+            this.memberName = review.getMember().getName();
             this.hallName = review.getHallName();
             this.starPoint = review.getStarPoint();
             this.contents = review.getContents();
