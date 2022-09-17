@@ -80,6 +80,10 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         Parts parts = findPartsById(partId);
         Member user = findMemberById(userId);
 
+        if (parts.getStatus() == CLOSED) {
+            throw new PartsClosedException();
+        }
+
         if (checkParticipation(user, parts.getMemberParts())) {
             throw new PartsJoinDeniedException();
         }
@@ -121,6 +125,10 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
         if (parts.getManager().equals(user)) {
             throw new PartsLeaveDeniedException();
+        }
+
+        if (parts.getStatus() == CLOSED) {
+            throw new PartsClosedException();
         }
 
         MemberParts memberParts = memberPartsRepository.findByPartsAndMember(parts, user)
