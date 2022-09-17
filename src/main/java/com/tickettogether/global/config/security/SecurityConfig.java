@@ -63,6 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logout().logoutUrl("/api/v1/logout")
 //                .logoutSuccessHandler(myLogoutHandler())
                 .and()
+                .addFilterBefore(new TokenAuthenticationFilter(authTokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new BaseExceptionHandlerFilter(), TokenAuthenticationFilter.class)
                 .oauth2Login()
                 .authorizationEndpoint()
                 .authorizationRequestRepository(myAuthorizationRequestRepository())
@@ -71,43 +73,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userService(customOAuth2UserService)
                 .and()
                 .successHandler(myOauth2SuccessHandler());  //성공 핸들러;
-
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(baseExceptionHandlerFilter, TokenAuthenticationFilter.class);
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         super.configure(web);
         web.httpFirewall(defaultHttpFirewall());
+        //TODO 로그인 도입 이후 삭제
+        web.ignoring()
+                .antMatchers("/oauth2/**", "/ws/**", "api/v1/chat/**", "/api/v1/login", "/api/v1/logout", "/main",
+                        "/api/v1/oauth/redirect", "/test", "/api/v1/culture/**", "/api/v1/refresh", "/api/v1/calendar/**", "/v3/api-docs",
+                        "/swagger*/**", "/api/v1/parts/**", "/api/v1/reservation/**", "/api/v1/reviews/**");
     }
 
     @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter(){
-        return new TokenAuthenticationFilter(authTokenProvider, redisUtil);
-    }
-    @Bean
-    public AuthenticationSuccessHandler myOauth2SuccessHandler(){
+    public AuthenticationSuccessHandler myOauth2SuccessHandler() {
         return new MyOauth2SuccessHandler(redisUtil, authTokenProvider, jwtConfig);
     }
 
     @Bean
-    public LogoutSuccessHandler myLogoutHandler(){
+    public LogoutSuccessHandler myLogoutHandler() {
         return new MyOauth2LogoutSuccessHandler();
     }
 
     @Bean
-    public OAuth2AuthorizationRequestRepository myAuthorizationRequestRepository(){
+    public OAuth2AuthorizationRequestRepository myAuthorizationRequestRepository() {
         return new OAuth2AuthorizationRequestRepository();
     }
 
-    @Bean public HttpFirewall defaultHttpFirewall() {
+    @Bean
+    public HttpFirewall defaultHttpFirewall() {
         return new DefaultHttpFirewall();
     }
 
-    // cors 설정
     @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource(){
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfig = new CorsConfiguration();
 
