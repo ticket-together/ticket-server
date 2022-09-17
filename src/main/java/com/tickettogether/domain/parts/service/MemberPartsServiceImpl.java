@@ -15,6 +15,7 @@ import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.loader.plan.build.internal.CascadeStyleLoadPlanBuildingAssociationVisitationStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -80,6 +81,10 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         Parts parts = findPartsById(partId);
         Member user = findMemberById(userId);
 
+        if (parts.getStatus() == CLOSED) {
+            throw new PartsClosedException();
+        }
+
         if (checkParticipation(user, parts.getMemberParts())) {
             throw new PartsJoinDeniedException();
         }
@@ -121,6 +126,10 @@ public class MemberPartsServiceImpl implements MemberPartsService {
 
         if (parts.getManager().equals(user)) {
             throw new PartsLeaveDeniedException();
+        }
+
+        if (parts.getStatus() == CLOSED) {
+            throw new PartsClosedException();
         }
 
         MemberParts memberParts = memberPartsRepository.findByPartsAndMember(parts, user)
