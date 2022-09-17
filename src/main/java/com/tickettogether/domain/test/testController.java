@@ -1,5 +1,6 @@
 package com.tickettogether.domain.test;
 
+import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class testController {
     @RequestMapping("/test")
     public String sample(){
-        return "ticket together deploy 확인입니당.";
+        return DateTime.now() + "ticket together deploy 확인입니당.";
     }
 }
