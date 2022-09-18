@@ -32,30 +32,30 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         Assert.notNull(request, "request cannot be null");
         String accessToken = HeaderUtil.getAccessToken(request);
 
-        if (!request.getContextPath().startsWith("/oauth2")) {
+        if (request.getContextPath().startsWith("/oauth2")) {
+            return;
+        }
 
-            if (accessToken == null) {
-                throw new TokenValidFailedException();
-            }
+        if (accessToken == null) {
+            throw new TokenValidFailedException();
+        }
 
-            if (redisUtil.hasKeyBlackList(accessToken)) {
-                throw new TokenBlackListException();
-            }
+        if (redisUtil.hasKeyBlackList(accessToken)) {
+            throw new TokenBlackListException();
+        }
 
-            AuthToken authToken = authTokenProvider.convertToAuthToken(accessToken);
+        AuthToken authToken = authTokenProvider.convertToAuthToken(accessToken);
 
-            try {
-                authToken.parseClaims();
-                Authentication authentication = authTokenProvider.getAuthentication(authToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (ExpiredJwtException e) {
-                log.info(e.getMessage());
-                throw new TokenExpiredException();
-            } catch (Exception e) {
-                log.info(e.getMessage());
-                throw new TokenValidFailedException();
-            }
-
+        try {
+            authToken.parseClaims();
+            Authentication authentication = authTokenProvider.getAuthentication(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (ExpiredJwtException e) {
+            log.info(e.getMessage());
+            throw new TokenExpiredException();
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new TokenValidFailedException();
         }
 
         filterChain.doFilter(request, response);
