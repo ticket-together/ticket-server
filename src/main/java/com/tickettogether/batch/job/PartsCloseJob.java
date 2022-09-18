@@ -59,7 +59,7 @@ public class PartsCloseJob {
 
         reader.setPageSize(chunkSize);
         reader.setQueryString("select p " +
-                "from Parts p join fetch p.manager m join fetch m.memberKeywords mk " +
+                "from Parts p join fetch p.manager m " +
                 "where part_date = DATE(now()) and p.status = 'ACTIVE' " +
                 "order by p.id");
         reader.setEntityManagerFactory(entityManagerFactory);
