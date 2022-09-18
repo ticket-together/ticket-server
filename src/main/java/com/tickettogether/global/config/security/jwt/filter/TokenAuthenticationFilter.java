@@ -32,6 +32,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         Assert.notNull(request, "request cannot be null");
         String accessToken = HeaderUtil.getAccessToken(request);
 
+        if (request.getContextPath().startsWith("/oauth2")) {
+            return;
+        }
+
         if (accessToken == null) {
             throw new TokenValidFailedException();
         }
