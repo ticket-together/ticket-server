@@ -68,6 +68,7 @@ public enum ErrorCode {
     PARTS_FULL(3044, "해당 팟의 인원이 모두 찼습니다."),
     PARTS_LEAVE_DENIED(3045, "해당 팟에서 나갈 권한이 없습니다."),
     PARTS_CLOSED(3046, "해당 팟은 이미 마감되었습니다."),
+    PARTS_MEMBER_EXISTED(3047, "해당 팟에 멤버가 존재하여 삭제할 수 없습니다."),
 
 
     /**

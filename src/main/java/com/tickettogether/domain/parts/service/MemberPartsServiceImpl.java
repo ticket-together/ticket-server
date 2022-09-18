@@ -148,6 +148,11 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         if (!parts.getManager().equals(user)) {
             throw new PartsDeleteDeniedException();
         }
+
+        if (parts.getCurrentPartTotal() > 1) {
+            throw new PartsMemberExistedException();
+        }
+
         partsRepository.deleteById(partId);
 
     }
