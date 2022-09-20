@@ -4,7 +4,6 @@ import com.tickettogether.global.config.redis.util.RedisUtil;
 import com.tickettogether.global.config.security.jwt.JwtConfig;
 import com.tickettogether.global.config.security.jwt.filter.TokenAuthenticationFilter;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
-import com.tickettogether.global.config.security.oauth.dto.CorsProperties;
 import com.tickettogether.global.config.security.oauth.handler.MyOauth2LogoutSuccessHandler;
 import com.tickettogether.global.config.security.oauth.repository.OAuth2AuthorizationRequestRepository;
 import com.tickettogether.global.config.security.oauth.service.CustomOAuth2UserService;
@@ -23,11 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -38,13 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthTokenProvider authTokenProvider;
     private final RedisUtil<String, String> redisUtil;
     private final JwtConfig jwtConfig;
-    private final CorsProperties corsProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -77,8 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(defaultHttpFirewall());
         //TODO 로그인 도입 이후 삭제
         web.ignoring()
-                .antMatchers("/ws/**", "/api/v1/chat/**", "/api/v1/login", "/api/v1/logout", "/main",
-                        "/api/v1/oauth/redirect", "/test", "/api/v1/culture/**", "/api/v1/refresh", "/api/v1/calendar/**", "/v3/api-docs",
+                .antMatchers("/ws/**", "/api/v1/login", "/api/v1/logout", "/main",
+                        "/api/v1/oauth/redirect", "/test", "/api/v1/chat/**", "/api/v1/culture/**", "/api/v1/refresh", "/api/v1/calendar/**", "/v3/api-docs",
                         "/swagger*/**", "/api/v1/parts/**", "/api/v1/reservation/**", "/api/v1/reviews/**");
     }
 
@@ -100,20 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public HttpFirewall defaultHttpFirewall() {
         return new DefaultHttpFirewall();
-    }
-
-    @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration corsConfig = new CorsConfiguration();
-
-        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
-        corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsConfig.getMaxAge());
-        corsConfigSource.registerCorsConfiguration("/**", corsConfig);
-        return corsConfigSource;
     }
 }
 
