@@ -57,8 +57,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         if (enterMemberList.containsKey(username)) {    // 재접속인 경우 입장 시간 이후의 데이터 반환
             LocalDateTime enterTime = LocalDateTime.parse(redisUtil.getHashValue(roomId.toString(), username));
-            Slice<ChatDto.ChatMessageResponse> messageDtoList = chatMessageRepository.findAllByChatRoomAndCreatedAtGreaterThanEqualOrderByCreatedAt(pageable, chatRoom, enterTime)
-                    .map(ChatDto.ChatMessageResponse::create);
+            Slice<ChatDto.ChatMessageResponse> messageDtoList =
+                    chatMessageRepository.findAllByChatRoomAndCreatedAtGreaterThanEqualOrderByCreatedAtDesc(pageable, chatRoom, enterTime)
+                            .map(ChatDto.ChatMessageResponse::create);
+
             return ChatDto.ChatSearchResponse.create(roomId, chatRoom.getName(), PageDto.create(messageDtoList, messageDtoList.getContent()));
         }
         return ChatDto.ChatSearchResponse.create(roomId, chatRoom.getName(),PageDto.create(new PageImpl<>(List.of()), List.of()));      // 처음 입장인 경우 빈 배열 반환

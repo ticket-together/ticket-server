@@ -27,7 +27,7 @@ public class RabbitConfig {
 
     @Bean
     public Queue Queue(){
-        return new Queue(Constant.CHAT_QUEUE_NAME, true);
+        return new Queue(Constant.CHAT_QUEUE_NAME, false);
     }
 
     @Bean
