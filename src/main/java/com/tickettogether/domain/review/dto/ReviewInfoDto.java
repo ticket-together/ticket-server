@@ -3,6 +3,7 @@ package com.tickettogether.domain.review.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import com.tickettogether.domain.review.domain.Review;
 import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -22,7 +23,8 @@ public class ReviewInfoDto {
     private LocalDateTime createdAt;
 
     @QueryProjection
-    public ReviewInfoDto(Long memberId, String name, String imgUrl, Long reviewId, String hallName, BigDecimal starPoint, String contents, String floor, String part, String record, String number) {
+    public ReviewInfoDto(Long memberId, String name, String imgUrl, Long reviewId, String hallName, BigDecimal starPoint,
+                         String contents, String floor, String part, String record, String number, LocalDateTime createdAt) {
         this.memberId = memberId;
         this.name = name;
         this.imgUrl = imgUrl;
@@ -34,6 +36,7 @@ public class ReviewInfoDto {
         this.part = part;
         this.record = record;
         this.number = number;
+        this.createdAt = createdAt;
     }
 
     public ReviewInfoDto(Review review) {

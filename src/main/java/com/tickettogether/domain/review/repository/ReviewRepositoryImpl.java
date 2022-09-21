@@ -33,7 +33,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.floor,
                         review.part,
                         review.record,
-                        review.number))
+                        review.number,
+                        review.createdAt))
                 .from(review)
                 .leftJoin(review.member, member)
                 .where(HallEq(condition.getHallName()),
