@@ -45,12 +45,9 @@ public class ChatDto {
         private String type;
 
         public static ChatMessageResponse create(ChatMessage x){
-            return chatMessageResponseBuilder(null, x.getSender(), x.getData(), x.getType().toString(), x.getCreatedAt());
+            return chatMessageResponseBuilder(x.getChatRoom().getId(), x.getSender(), x.getData(), x.getType().toString(), x.getCreatedAt());
         }
 
-        public static ChatMessageResponse create(ChatStompRequest x, Long roomId){
-            return chatMessageResponseBuilder(roomId, x.getSender(), x.getData(), x.getType(), null);
-        }
         public static ChatMessageResponse create(ChatStompRequest x, Long roomId, LocalDateTime createdAt){
             return chatMessageResponseBuilder(roomId, x.getSender(), x.getData(), x.getType(), createdAt);
         }

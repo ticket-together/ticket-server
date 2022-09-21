@@ -32,11 +32,11 @@ public class StompChatController {
     public ChatMessageResponse enter(@Payload ChatStompRequest message,
                                      @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor){
         setSessionAttributes(message.getSender(), roomId, headerAccessor);
-        ChatMessageResponse sendEnterMessage = ChatMessageResponse.create(message, Long.parseLong(roomId));
+        ChatMessageResponse sendEnterMessage = ChatMessageResponse.create(message, Long.parseLong(roomId), LocalDateTime.now());
 
         Map<String, String> enterMemberList = redisUtil.getHashKeys(roomId);
         if (enterMemberList.containsKey(message.getSender())) return null;
-        redisUtil.setValue(roomId, message.getSender(), LocalDateTime.now().toString());
+        redisUtil.setValue(roomId, message.getSender(), sendEnterMessage.getCreatedAt());
 
         sendEnterMessage.setData(message.getSender() + "님이 들어왔습니다.");
         applicationEventPublisher.publishEvent(new ChatSendEvent(sendEnterMessage));
