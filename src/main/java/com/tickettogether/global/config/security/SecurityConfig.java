@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/oauth2/**", "/ws/**").permitAll()
-                .antMatchers("/api/v1/login", "/api/v1/logout", "/main",
+                .antMatchers("/api/v1/login", "/main",
                         "/test", "/api/v1/refresh", "/v3/api-docs", "/swagger*/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(defaultHttpFirewall());
         //TODO 로그인 도입 이후 삭제
         web.ignoring()
-                .antMatchers("/ws/**", "/api/v1/login", "/api/v1/logout", "/main",
+                .antMatchers("/ws/**", "/api/v1/login", "/main",
                         "/test", "/api/v1/chat/1/test/**", "/api/v1/refresh", "/v3/api-docs",
                         "/swagger*/**");
     }
