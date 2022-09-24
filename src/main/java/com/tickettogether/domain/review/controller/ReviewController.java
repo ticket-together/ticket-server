@@ -4,6 +4,7 @@ import com.tickettogether.domain.review.dto.ReviewDto;
 import com.tickettogether.domain.review.dto.ReviewSearchCondition;
 import com.tickettogether.domain.review.dto.ReviewInfoDto;
 import com.tickettogether.domain.review.service.ReviewService;
+import com.tickettogether.global.config.security.annotation.LoginUser;
 import com.tickettogether.global.error.dto.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,11 @@ import static com.tickettogether.domain.review.dto.ReviewResponseMessage.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private Long memberId = 1L;  // 테스트 용
 
     @ApiOperation(value = "리뷰 작성")
     @PostMapping("/add")
-    public ResponseEntity<BaseResponse<ReviewDto.addResponse>> addReview(@RequestParam("hall") String hallName, @RequestBody ReviewDto.addRequest reviewDto) {
+    public ResponseEntity<BaseResponse<ReviewDto.addResponse>> addReview(@RequestParam("hall") String hallName,
+                                                                         @RequestBody ReviewDto.addRequest reviewDto, @LoginUser Long memberId) {
         return ResponseEntity.ok(BaseResponse.create(SAVE_REVIEW_SUCCESS.getMessage(), reviewService.addReview(memberId, hallName, reviewDto)));
     }
 
@@ -56,7 +57,7 @@ public class ReviewController {
 
     @ApiOperation(value = "현재 로그인한 멤버가 작성한 리뷰 조회")
     @GetMapping
-    public ResponseEntity<BaseResponse<List<ReviewInfoDto>>> getReviewsByCurrentMember() {
+    public ResponseEntity<BaseResponse<List<ReviewInfoDto>>> getReviewsByCurrentMember(@LoginUser Long memberId) {
         return ResponseEntity.ok(BaseResponse.create(GET_REVIEW_SUCCESS.getMessage(), reviewService.getReviewsByMember(memberId)));
     }
 }

@@ -3,6 +3,7 @@ package com.tickettogether.domain.culture.controller;
 import com.tickettogether.domain.culture.dto.CultureDto;
 import com.tickettogether.domain.culture.dto.CultureResponseMessage;
 import com.tickettogether.domain.culture.service.CultureService;
+import com.tickettogether.global.config.security.annotation.LoginUser;
 import com.tickettogether.global.error.dto.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,6 @@ import java.util.List;
 public class CultureController {
 
     private final CultureService cultureService;
-    private Long memberId = 1L; //테스트 용
 
     @ApiOperation(value = "공연 상세 조회")
     @GetMapping("/{id}")
@@ -39,7 +39,7 @@ public class CultureController {
 
     @ApiOperation(value = "메인 페이지 공연 목록")
     @GetMapping
-    public ResponseEntity<BaseResponse<List<CultureDto.MainCultureResponse>>> getMainCulture() {
+    public ResponseEntity<BaseResponse<List<CultureDto.MainCultureResponse>>> getMainCulture(@LoginUser Long memberId) {
         return  ResponseEntity.ok(BaseResponse.create(CultureResponseMessage.GET_CULTURE_SUCCESS.getMessage(), cultureService.getMainCulture(memberId)));
     }
 }

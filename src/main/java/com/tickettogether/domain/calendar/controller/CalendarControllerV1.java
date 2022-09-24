@@ -2,6 +2,7 @@ package com.tickettogether.domain.calendar.controller;
 
 import com.tickettogether.domain.calendar.dto.CalendarDto;
 import com.tickettogether.domain.calendar.service.CalendarService;
+import com.tickettogether.global.config.security.annotation.LoginUser;
 import com.tickettogether.global.error.dto.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -18,11 +19,10 @@ import static com.tickettogether.domain.calendar.dto.CalendarResponseMessage.*;
 public class CalendarControllerV1 {
 
     private final CalendarService calendarService;
-    private Long memberId = 1L; //테스트 용
 
     @ApiOperation(value = "캘린더 전체 목록 조회")
     @GetMapping
-    public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendars() {
+    public ResponseEntity<BaseResponse<List<CalendarDto.PostResponse>>> getCalendars(@LoginUser Long memberId) {
         return ResponseEntity.ok(BaseResponse.create(GET_CALENDARS_SUCCESS.getMessage(), calendarService.getCalendars(memberId)));
     }
 
@@ -36,14 +36,14 @@ public class CalendarControllerV1 {
     @ApiResponse(code = 2020, message = "최대 캘린더 개수를 초과하였습니다.")
     @PostMapping
     public ResponseEntity<BaseResponse<CalendarDto.PostResponse>> createCalendar(
-            @RequestBody CalendarDto.PostRequest newCalendar) {
+            @RequestBody CalendarDto.PostRequest newCalendar, @LoginUser Long memberId) {
         return ResponseEntity.ok(BaseResponse.create(POST_CALENDAR_SUCCESS.getMessage(), calendarService.createCalendar(newCalendar, memberId)));
     }
 
     @ApiOperation(value = "캘린더 삭제")
     @ApiResponse(code = 2021, message = "존재하지 않는 캘린더입니다.")
     @DeleteMapping("/{calendarId}")
-    public ResponseEntity<BaseResponse<String>> deleteCalendar(@PathVariable("calendarId") Long calendarId) {
+    public ResponseEntity<BaseResponse<String>> deleteCalendar(@PathVariable("calendarId") Long calendarId, @LoginUser Long memberId) {
         calendarService.deleteCalendar(calendarId, memberId);
         return ResponseEntity.ok(BaseResponse.create(DELETE_CALENDAR_SUCCESS.getMessage()));
     }
@@ -53,7 +53,7 @@ public class CalendarControllerV1 {
     @PutMapping("/{calendarId}")
     public ResponseEntity<BaseResponse<String>> updateCalendar(@PathVariable("calendarId") Long calendarId,
                                                                @RequestPart("files") MultipartFile multipartFile,
-                                                               @RequestPart("calendar") CalendarDto.PostRequest newCalendar) {
+                                                               @RequestPart("calendar") CalendarDto.PostRequest newCalendar, @LoginUser Long memberId) {
         calendarService.updateCalendar(calendarId, memberId, multipartFile, newCalendar);
         return ResponseEntity.ok(BaseResponse.create(UPDATE_CALENDAR_SUCCESS.getMessage()));
     }
