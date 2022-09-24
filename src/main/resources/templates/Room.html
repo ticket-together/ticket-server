@@ -12,6 +12,7 @@
         var roomName = [[${room.name}]];
         var roomId = [[${room.id}]];
         var username = [[${user}]];
+        var acToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTY2NTIxNjI2NH0.4kex8Yx0owlTYdETE1oGMlcqHdklqOkoYMySZaA5YkY"
 
         console.log(roomName + ", " + roomId + ", " + username);
 
@@ -20,7 +21,8 @@
         var stomp = Stomp.over(sockJs);
 
         //2. connection이 맺어지면 실행
-        stomp.connect({}, function (){
+        stomp.connect(
+            { Authorization : `Bearer ${acToken}`, "roomId" : roomId }, function (){
             console.log("STOMP Connection")
 
             //4. subscribe(path, callback)으로 메세지를 받을 수 있음
@@ -46,16 +48,20 @@
             });
 
             $.ajax({
-                url : "/api/v1/chat/1/" + username,
+                url : "/api/v1/chat/1",
                 type : "get",
                 dataType : "json",
+                beforeSend : function (xhr) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${acToken}`)
+                },
                 success: function(response) {
                     var temp = JSON.stringify(response.result.messageList);
                     var content = JSON.parse(temp);
                     var t = content.contents;
                     var str1 = '';
-                    if(t.length === 0){
-                        stomp.send('/pub/chat.enter.' + roomId, {}, JSON.stringify({type:"JOIN", sender: username}));
+                    console.log(t);
+                    if(t.length === 0){ // 이미 입장했는데 새로운 데이터가 0 인 경우는..?
+                        stomp.send('/pub/chat.enter.' + roomId, {}, JSON.stringify({type:"JOIN"}));
                     }else{
                         for(var i = 0; i <= t.length ; i++){
                             var a = JSON.parse(JSON.stringify(t[i]));
@@ -77,15 +83,18 @@
             var msg = document.getElementById("msg");
 
             console.log(username + ":" + msg.value);
-            stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, type:"CHAT", sender: username}));
+            stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, type:"CHAT"}));
             msg.value = '';
         });
 
         $("#button-leave").on("click", function(e){
             $.ajax({
-                url : "/api/v1/chat/1/" + username,
+                url : "/api/v1/chat/1",
                 type : "delete",
                 dataType : "json",
+                beforeSend : function (xhr) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${acToken}`)
+                },
                 success: function(response) {
                     stomp.disconnect(function(frame) {
                         console.log("stomp client successfully disconnected");

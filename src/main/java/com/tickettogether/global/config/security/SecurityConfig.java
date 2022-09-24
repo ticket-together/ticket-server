@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         super.configure(web);
         web.httpFirewall(defaultHttpFirewall());
-        //TODO 로그인 도입 이후 삭제
+        // TODO 로그인 도입 이후 삭제
         web.ignoring()
                 .antMatchers("/ws/**", "/api/v1/login", "/main",
                         "/test", "/api/v1/chat/1/test/**", "/api/v1/refresh", "/v3/api-docs",

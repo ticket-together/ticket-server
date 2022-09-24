@@ -1,10 +1,7 @@
 package com.tickettogether.global.config.security.jwt.filter;
 
 import com.tickettogether.global.config.redis.util.RedisUtil;
-import com.tickettogether.global.config.security.exception.TokenBlackListException;
-import com.tickettogether.global.config.security.exception.TokenExpiredException;
-import com.tickettogether.global.config.security.exception.TokenRefreshException;
-import com.tickettogether.global.config.security.exception.TokenValidFailedException;
+import com.tickettogether.global.config.security.exception.*;
 import com.tickettogether.global.config.security.jwt.token.AuthTokenProvider;
 import com.tickettogether.global.config.security.utils.HeaderUtil;
 import com.tickettogether.global.config.security.jwt.token.AuthToken;
@@ -37,7 +34,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (accessToken == null) {
-            throw new TokenValidFailedException();
+            throw new TokenEmptyException();
         }
 
         if (redisUtil.hasKeyBlackList(accessToken)) {
