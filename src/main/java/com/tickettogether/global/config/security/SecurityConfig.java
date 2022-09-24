@@ -46,10 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/oauth2/**", "/ws/**", "/api/v1/chat/**").permitAll()
-                .antMatchers("/api/v1/login", "/api/v1/logout", "/main", "/api/v1/oauth/redirect",
-                        "/test", "/api/v1/refresh", "/api/v1/member/**", "/api/v1/**",
-                        "/v3/api-docs", "/swagger*/**").permitAll()
+                .antMatchers("/oauth2/**", "/ws/**").permitAll()
+                .antMatchers("/api/v1/login", "/api/v1/logout", "/main",
+                        "/test", "/api/v1/refresh", "/v3/api-docs", "/swagger*/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new TokenAuthenticationFilter(authTokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class)
@@ -71,8 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //TODO 로그인 도입 이후 삭제
         web.ignoring()
                 .antMatchers("/ws/**", "/api/v1/login", "/api/v1/logout", "/main",
-                        "/api/v1/oauth/redirect", "/test", "/api/v1/chat/**", "/api/v1/culture/**", "/api/v1/refresh", "/api/v1/calendar/**", "/v3/api-docs",
-                        "/swagger*/**", "/api/v1/parts/**", "/api/v1/reservation/**", "/api/v1/reviews/**");
+                        "/test", "/api/v1/chat/1/test/**", "/api/v1/refresh", "/v3/api-docs",
+                        "/swagger*/**");
     }
 
     @Bean
