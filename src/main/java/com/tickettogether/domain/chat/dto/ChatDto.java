@@ -48,12 +48,8 @@ public class ChatDto {
             return chatMessageResponseBuilder(x.getChatRoom().getId(), x.getSender(), x.getData(), x.getType().toString(), x.getCreatedAt());
         }
 
-        public static ChatMessageResponse create(ChatStompRequest x, Long roomId, LocalDateTime createdAt){
-            return chatMessageResponseBuilder(roomId, x.getSender(), x.getData(), x.getType(), createdAt);
-        }
-
-        public void setData(String data){
-            this.data = data;
+        public static ChatMessageResponse create(ChatStompRequest x, Long roomId){
+            return chatMessageResponseBuilder(roomId, x.getSender(), x.getData(), x.getType(), LocalDateTime.now());
         }
 
         private static ChatMessageResponse chatMessageResponseBuilder(Long roomId, String sender, String data, String type, LocalDateTime time){
@@ -74,7 +70,6 @@ public class ChatDto {
                     .sender(sender)
                     .type(MessageType.valueOf(MessageType.class, type))
                     .data(data)
-                    .chatRoom(chatRoom)
                     .createdAt(LocalDateTime.parse(createdAt, DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)))
                     .build();
         }
@@ -112,6 +107,11 @@ public class ChatDto {
                     .data(data)
                     .chatRoom(chatRoom)
                     .build();
+        }
+
+        public void setData(String sender, String data){
+            this.sender = sender;
+            if (data != null) this.data = data;
         }
     }
 }
