@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_SECRET_KEY(2007, "유효하지 않은 시크릿 키입니다."),
     JWT_IN_BLACKLIST(2008, "블랙리스트에 의해 차단된 액세스 토큰입니다."),
     EXPIRED_TOKEN(2009, "기한이 만료된 토큰입니다."),
+    EMPTY_TOKEN(2010, "토큰이 존재하지 않습니다."),
 
     /**
      * calender
