@@ -26,30 +26,30 @@ public class RabbitConfig {
     private String password;
 
     @Bean
-    public Queue Queue(){
+    public Queue Queue() {
         return new Queue(Constant.CHAT_QUEUE_NAME, true);
     }
 
     @Bean
-    public TopicExchange exchange(){
+    public TopicExchange exchange() {
         return new TopicExchange(Constant.CHAT_EXCHANGE_NAME);
     }
 
     @Bean
-    public Binding binding(Queue queue, TopicExchange exchange){
+    public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constant.ROUTING_KEY);
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(){
+    public RabbitTemplate rabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());   // json 형식 지원
+        rabbitTemplate.setMessageConverter(jsonMessageConverter());
         rabbitTemplate.setRoutingKey(Constant.ROUTING_KEY);
         return rabbitTemplate;
     }
 
     @Bean
-    public ConnectionFactory connectionFactory(){
+    public ConnectionFactory connectionFactory() {
         CachingConnectionFactory factory = new CachingConnectionFactory();
         factory.setHost(host);
         factory.setUsername(userName);
@@ -58,7 +58,7 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Jackson2JsonMessageConverter jsonMessageConverter(){
+    public Jackson2JsonMessageConverter jsonMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         return new Jackson2JsonMessageConverter(objectMapper);
     }
