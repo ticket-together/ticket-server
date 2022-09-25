@@ -15,6 +15,7 @@ import com.tickettogether.domain.parts.repository.MemberPartsRepository;
 import com.tickettogether.domain.parts.repository.PartsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -63,7 +64,9 @@ public class MemberPartsServiceImpl implements MemberPartsService {
         Member user = findMemberById(userId);
         Culture culture = findCultureById(prodId);
 
-        List<Parts> partsList = partsRepository.findByCultureOrderByPartDate(culture);
+        Sort sort = Sort.by(Sort.Direction.ASC, "status", "partDate");
+        List<Parts> partsList = partsRepository.findByCulture(culture, sort);
+
         List<PartsDto.SearchResponse> partsInfoList = new ArrayList<>();
 
         for (Parts parts : partsList) {
