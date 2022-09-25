@@ -46,12 +46,7 @@ public class StompChatController {
 
     @MessageMapping("chat.message.{roomId}")
     @SendTo("/topic/room.{roomId}")
-    public ChatMessageResponse message(@Payload ChatStompRequest message,
-                                       @DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
-        Objects.requireNonNull(headerAccessor.getSessionAttributes());
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        message.setData(username, null);
-
+    public ChatMessageResponse message(@Payload ChatStompRequest message, @DestinationVariable String roomId) {
         ChatMessageResponse sendChatMessage = ChatMessageResponse.create(message, Long.parseLong(roomId));
         applicationEventPublisher.publishEvent(new ChatSendEvent(sendChatMessage));
         return sendChatMessage;

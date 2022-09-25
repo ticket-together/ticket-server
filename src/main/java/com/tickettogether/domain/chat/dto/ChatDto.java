@@ -111,7 +111,7 @@ public class ChatDto {
 
         public void setData(String sender, String data){
             this.sender = sender;
-            if (data != null) this.data = data;
+            this.data = data;
         }
     }
 }
