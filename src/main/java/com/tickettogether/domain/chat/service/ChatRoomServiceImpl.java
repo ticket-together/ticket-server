@@ -2,6 +2,7 @@ package com.tickettogether.domain.chat.service;
 
 import com.tickettogether.domain.chat.domain.ChatRoom;
 import com.tickettogether.domain.chat.dto.ChatDto;
+import com.tickettogether.domain.chat.dto.ChatSendEvent;
 import com.tickettogether.domain.chat.exception.ChatRoomEmptyException;
 import com.tickettogether.domain.chat.repository.ChatMessageRepository;
 import com.tickettogether.domain.chat.repository.ChatRoomRepository;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.tickettogether.global.common.Constant.DATETIME_FORMAT_PATTERN;
 
@@ -41,14 +44,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public ChatDto.ChatEnterResponse createChatRoom(ChatDto.ChatEnterRequest request, Long memberId) {
         Parts parts = partsRepository.findById(request.getPartsId()).orElseThrow(PartsEmptyException::new);
         Member member = memberService.findMemberById(memberId);
+        ChatRoom chatRoom = chatRoomRepository.findByNameAndParts(request.getRoomName(), parts);
 
-        ChatRoom chatRoom = chatRoomRepository.save(
+        Long chatRoomId = Objects.requireNonNullElseGet(chatRoom, () -> chatRoomRepository.save(
                 ChatRoom.builder()
                         .member(member)
                         .name(request.getRoomName())
                         .parts(parts).build()
-        );
-        return ChatDto.ChatEnterResponse.builder().roomId(chatRoom.getId()).build();
+        )).getId();
+
+        return ChatDto.ChatEnterResponse.builder().roomId(chatRoomId).build();
     }
 
     @Transactional

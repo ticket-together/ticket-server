@@ -25,7 +25,7 @@
             { Authorization : `Bearer ${acToken}`, "roomId" : roomId }, function (){
             console.log("STOMP Connection")
 
-            //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+            //4. subscribe(path, callback)으로 메세지를 받을 수 있
             stomp.subscribe("/topic/room." + roomId, function (chat) {    // binding key 설정(구독할 때)
                 var content = JSON.parse(chat.body);
                 var writer = content.sender;
@@ -83,7 +83,7 @@
             var msg = document.getElementById("msg");
 
             console.log(username + ":" + msg.value);
-            stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, type:"CHAT"}));
+            stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, sender: username, type:"CHAT"}));
             msg.value = '';
         });
 
